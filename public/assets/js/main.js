@@ -1348,7 +1348,7 @@ function ecCheckCookie()
     
     /*----------------------------- Cart Page Qty Plus Minus Button  ------------------------------ */
     var CartQtyPlusMinus = $(".cart-qty-plus-minus");
-    CartQtyPlusMinus.append('<div class="ec_cart_qtybtn"><div class="inc ec_qtybtn">+</div><div class="dec ec_qtybtn">-</div></div>');
+    CartQtyPlusMinus.append();
     $(".cart-qty-plus-minus .ec_cart_qtybtn .ec_qtybtn").on("click", function() {
         var $cartqtybutton = $(this);
         var CartQtyoldValue = $cartqtybutton.parent().parent().find("input").val();

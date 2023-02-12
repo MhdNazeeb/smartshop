@@ -169,17 +169,19 @@
                             <form action="/login" method="post">
                                 <span class="ec-login-wrap">
                                     <label>Email Address*</label>
-                                    <input type="text" name="email" placeholder="Enter your email add..." required />
+                                    <input type="text" name="email" id="email" placeholder="Enter your email add..." required />
+                                    <span id="email-error""></span>
                                 </span>
                                 <span class="ec-login-wrap">
                                     <label>Password*</label>
-                                    <input type="password" name="password" placeholder="Enter your password" required />
+                                    <input type="password" id="password" name="password" placeholder="Enter your password" required />
+                                    <span id="password-error"></span>
                                 </span>
                                 <span class="ec-login-wrap ec-login-fp">
                                     <label><a href="#">Forgot Password?</a></label>
                                 </span>
                                 <span class="ec-login-wrap ec-login-btn">
-                                    <button class="btn btn-primary" type="submit">Login</button>
+                                    <button class="btn btn-primary" type="submit" onclick="verifyPassword()">Login</button>
                                     <a href="/phone" class="btn btn-secondary">Create an account</a>
                                 </span>
                             </form>
@@ -468,3 +470,13 @@
 
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-html/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:18:35 GMT -->
 </html>
+<script>
+    function verifyPassword() { 
+        
+    }
+</script>
+
+    
+   
+
+ 

@@ -5,7 +5,7 @@ const { login } = require("./admin");
 const product = require("../models/product");
 const category = require("../models/category");
 const cart = require("../models/cart");
-const {ObjectId}=require("mongodb")
+const { ObjectId } = require("mongodb");
 
 const accountSid = process.env.account_id;
 const authToken = process.env.authToken;
@@ -48,6 +48,7 @@ const postSignup = async (req, res) => {
   console.log("sdfghjkl");
   try {
     const { firstname, password, password1, email } = req.body;
+    const { newusermobile } = req.session;
     if (password && password1) {
       const hashedpassword = await bcrypt.hash(password, 10);
       const hashedconfirmpassword = await bcrypt.hash(password1, 10);
@@ -58,6 +59,7 @@ const postSignup = async (req, res) => {
           email: email,
           password: hashedpassword,
           confirm_password: hashedconfirmpassword,
+          phone: newusermobile,
         })
         .then(() => {
           res.redirect("/login");
@@ -181,8 +183,8 @@ const addToCart = async (req, res) => {
     const { proid, quantity } = req.query;
     const { userlogin } = req.session;
     console.log(proid, "this is product id");
-    trimmed_id = proid.trim()
-    console.log(trimmed_id,'after trim');
+    trimmed_id = proid.trim();
+    console.log(trimmed_id, "after trim");
     console.log(userlogin, "this user log");
     console.log(quantity, "this  is  stock ");
     const findProduct = await product.findOne({ _id: trimmed_id });
@@ -190,72 +192,136 @@ const addToCart = async (req, res) => {
     let price = findProduct.price;
     let stock = findProduct.quantity;
     console.log(price, "this is price");
-    console.log(typeof(trimmed_id))
+    console.log(typeof trimmed_id);
     const cartFind = await cart.findOne({ user: userlogin });
-    if (!cartFind) {
-      if (stock > 1) {
-        await cart.create({
+    if (stock > 1) {
+      if (!cartFind) {
+        const cartCreate = await cart.create({
           user: userlogin,
           items: [
             {
-              product:ObjectId(trimmed_id),
+              product: ObjectId(trimmed_id),
               quantity: quantity,
               total: quantity * price,
-              cartquantity: quantity,
             },
           ],
           grandTotal: quantity * price,
-          finalTotal: 0,
+          cartquantity: 1,
         });
-        res.json({ message: true });
-      } else {
-        console.log("stock is zero");
-        res.json({ messag1: true });
+        res.json({ cartCreated: true });
       }
+      const findproduct = await cart.findOne({
+        user: userlogin,
+        "items.product": trimmed_id,
+      });
+      console.log(findproduct, "this is checking");
+      if (findproduct) {
+        console.log("checking complite");
+        const updateptodut = await cart
+          .updateOne(
+            { user: userlogin, "items.product": trimmed_id },
+            {
+              $inc: {
+                "items.$.total": price,
+                "items.$.quantity": quantity,
+                grandTotal: quantity * price,
+              },
+            }
+          )
+          .then(() => {
+            res.json({ incriment: true });
+          })
+          .catch((err) => {
+            console.log(err.message, "this error");
+          });
+      } else {
+        console.log("cart found");
+        await cart.updateOne(
+          { user: userlogin },
+          {
+            $push: {
+              items: {
+                product: proid,
+                quantity: quantity,
+                total: quantity * price,
+              },
+            },
+            $inc: { cartquantity: 1 },
+          }
+        );
+        res.json({ push: true });
+      }
+    } else {
+      res.json({ outofstock: true });
     }
-    const findproduct = await cart.findOne({
-      user: userlogin,
-      "items.product": trimmed_id,
-    });
-    console.log(findproduct, "this is checking");
-    if (findproduct) {
-      console.log("checking complite");
-      const updateptodut = await cart.updateOne(
-        { user: userlogin, "items.product":trimmed_id },
-        {
-          $inc: {
-            "items.$.total": price,
-            "items.$.quantity": quantity,
-          },
-        }
-      ).then(()=>{
-        res.json({messag1:true})
-      }).catch((err)=>{
-        console.log(err.message,'this error');
-      })
-
-      
-    }
-
-    console.log("cart found");
-    await cart.updateOne(
-      { user: userlogin },
+  } catch (error) {
+    res.render("user404");
+  }
+};
+const getCart = async (req, res) => {
+  console.log("reach here");
+  const { userlogin } = req.session;
+  const findCart = await cart.findOne({ user: userlogin });
+  if (userlogin && findCart) {
+    console.log(userlogin, "this populate user");
+    const findProduct = await cart
+      .findOne({ user: userlogin })
+      .populate("items.product");
+    console.log(findProduct, "this cart product");
+    res.render("usercartlist", { findProduct });
+  } else {
+    console.log("empty cart ");
+    res.render("emptycart");
+  }
+};
+const changeQty = async (req, res) => {
+  const { proid, count } = req.query;
+  const { userlogin } = req.session;
+  const productFind = await product.findOne({ _id: proid });
+  const price = productFind.price;
+  if (count == 1) {
+    const cartFind = await cart.findOneAndUpdate(
       {
-        $push: {
-          items: {
-            product: proid,
-            quantity: quantity,
-            totel: quantity * price,
-          },
+        user: userlogin,
+        "items.product": proid,
+      },
+      {
+        $inc: {
+          "items.$.total": price,
+          "items.$.quantity": 1,
+          grandTotal: price,
         },
       }
     );
-    res.json({ message2: true });
-    const upCart=await cart.updateOne({user:userlogin,'items.product':proid})
-  } catch (error){
-    
+
+    console.log(cartFind, "this incriment");
+    const index = cartFind.items.findIndex((obj) => obj.product == proid);
+    console.log(index, "this is index");
+    let newcart = await cart.findOne({ user: userlogin });
+    console.log(newcart,'this user');
+    let total = newcart.items[index].total;
+    let totalprice = newcart.grandTotal;
+    console.log(total,totalprice,'this is totals');
+
+    res.json({ total, totalprice });
+  } else {
+    const findCartde = await cart.findOneAndUpdate(
+      { user: userlogin, "items.product": proid },
+      {
+        $inc: {
+          "items.$.total": -price,
+          "items.$.quantity": -1,
+          grandTotal: -price,
+        },
+      }
+    );
+   const index= findCartde.items.findIndex((obj)=>obj.product==proid)
+   const userCart= await cart.findOne({user:userlogin}) 
+   
+   
+    res.json({ decriment: true });
   }
-}
+};
 module.exports = {
   home,
   getsignup,
@@ -269,4 +335,6 @@ module.exports = {
   verifyOtp,
   productDetails,
   addToCart,
+  getCart,
+  changeQty,
 };

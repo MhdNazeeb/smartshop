@@ -1585,6 +1585,7 @@
 
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-html/product-360-right-sidebar.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:18:52 GMT -->
 </html>
+
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
@@ -1592,20 +1593,31 @@
         console.log(proid)
        const quantity =document.getElementById('quantity').value
        console.log(quantity)
-     axios.post(`/cart?proid=${proid}&quantity=${quantity}`)
+     axios.get(`/cart?proid=${proid}&quantity=${quantity}`)
      .then((res)=>{
-        if(res.data.message){
+        console.log(res.data,"res data mssge")
+        if(res.data.cartCreated){
+           
             console.log('cart made');
-            window.location.replace='/productDetails'
-        }else if(res.data.message1){
-            console.log('stock is zero')
-            swal("Good job!", "You clicked the button!", "error");
+            location.href='/cartList'
+        }else if(res.data.incriment){
+            console.log('incriment sucess ')
+            swal("Good job!", "You clicked the button!", "success");
             window.location.replace='/productDetails'
               
-        }else if(res.data.message2){
+        }else if(res.data.push){
             console.log('cart updated')
             swal("Good job!", "You clicked the button!", "success");
             window.location.replace='/productDetails'
+
+        }else if(res.data.outofstock){
+            console.log('incriment sucess ')
+            swal("oops!", "out of stock", "error");
+            window.location.replace='/productDetails'
+        }else if(res.data.session){
+            swal("Hello world!");
+            location.href='/login'
+          
 
         }
 
