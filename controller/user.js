@@ -6,6 +6,7 @@ const product = require("../models/product");
 const category = require("../models/category");
 const cart = require("../models/cart");
 const { ObjectId } = require("mongodb");
+const { findOne } = require("../models/singnup");
 
 const accountSid = process.env.account_id;
 const authToken = process.env.authToken;
@@ -246,7 +247,7 @@ const addToCart = async (req, res) => {
                 total: quantity * price,
               },
             },
-            $inc: { cartquantity: 1 },
+            $inc: { cartquantity: 1, grandTotal: price },
           }
         );
         res.json({ push: true });
@@ -298,12 +299,13 @@ const changeQty = async (req, res) => {
     const index = cartFind.items.findIndex((obj) => obj.product == proid);
     console.log(index, "this is index");
     let newcart = await cart.findOne({ user: userlogin });
-    console.log(newcart,'this user');
+    console.log(newcart, "this user");
     let total = newcart.items[index].total;
-    let totalprice = newcart.grandTotal;
-    console.log(total,totalprice,'this is totals');
+    console.log(total,'total price');
+    let grandTotal = newcart.grandTotal;
+    console.log(total, "this is totals");
 
-    res.json({ total, totalprice });
+    res.json({ total, grandTotal });
   } else {
     const findCartde = await cart.findOneAndUpdate(
       { user: userlogin, "items.product": proid },
@@ -315,13 +317,41 @@ const changeQty = async (req, res) => {
         },
       }
     );
-   const index= findCartde.items.findIndex((obj)=>obj.product==proid)
-   const userCart= await cart.findOne({user:userlogin}) 
-   
-   
-    res.json({ decriment: true });
+
+    const index = findCartde.items.findIndex((obj) => obj.product == proid);
+    const userCart = await cart.findOne({ user: userlogin });
+    const total = userCart.items[index].total;
+    const grandTotal = userCart.grandTotal;
+    console.log(grandTotal, "this grand total");
+    console.log(total, grandTotal, "this is minus true");
+    res.json({ total, grandTotal });
   }
 };
+const removeCart = async (req, res) => {
+  console.log('delete reach');
+  const { proid } = req.query;
+  const {userlogin}=req.session
+  const products=await product.findOne({_id:proid})
+  const cartFind=await cart.findOne({user:userlogin})
+  const index= cartFind.items.findIndex((val)=>val.product==proid)
+  const grandTotalremove=cartFind.items[index].total
+  console.log(grandTotalremove,'this is grand total');
+
+  console.log(index,'this is for remove from cart');
+  console.log(proid,'this product id');
+  console.log("product delete here");
+  const deleteProduct = await cart.updateOne(
+    { user: userlogin, "items.product": proid },
+
+    {$pull:{items:{product:proid}},$inc:{grandTotal:-grandTotalremove}}
+  );
+   const findCartdb=await cart.findOne({user:userlogin})
+   console.log(findCartdb,'this new cart');
+   const newGrand=findCartdb.grandTotal
+    res.json({newGrand})
+  
+};
+
 module.exports = {
   home,
   getsignup,
@@ -337,4 +367,5 @@ module.exports = {
   addToCart,
   getCart,
   changeQty,
+  removeCart,
 };

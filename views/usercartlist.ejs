@@ -161,7 +161,7 @@
                     <div class="ec-cart-content">
                         <div class="ec-cart-inner">
                             <div class="row">
-                                <form action="#">
+                                <form id="remove">
                                     <div class="table-content cart-table-content">
                                         <table>
                                             <thead>
@@ -177,7 +177,7 @@
                                                 <%for(i=0; i <findProduct.items.length ;i++){%>
                                                 <tr id="<%=findProduct.items[i].product._id%>">
                                                     <td data-label="Product" class="ec-cart-pro-name"><a
-                                                            href="product-left-sidebar.html"><img class="ec-cart-pro-img mr-4"
+                                                            href="product-left-"><img class="ec-cart-pro-img mr-4"
                                                                 src="/images/uploads/<%=findProduct.items[i].product.image[0]%>"
                                                                 alt="" /></a></td>
                                                     <td data-label="Price" class="ec-cart-pro-price"><span
@@ -186,8 +186,8 @@
                                                         style="text-align: center;">
                                                         <div class="cart-qty-plus-minus">
                                                             
-                                                            <input class="cart-plus-minus" type="text
-                                                                name="cartqtybutton" value="<%=findProduct.items[i].quantity%>" />
+                                                            <input class="cart-plus-minus" type="text "
+                                                               id="quantity<%=findProduct.items[i].product._id%>" value="<%=findProduct.items[i].quantity%>" />
                                                                 <div class="ec_cart_qtybtn">
                                                                     <div class="inc ec_qtybtn"  onclick="changeQuantity('<%=findProduct.items[i].product._id%>','1')">+</div>
                                                                     <div class="dec ec_qtybtn" onclick="changeQuantity('<%=findProduct.items[i].product._id%>','-1')">-</div>
@@ -197,7 +197,7 @@
                                                     </td>
                                                     <td data-label="Total" class="ec-cart-pro-subtotal" id="total<%=findProduct.items[i].product._id%>">$<%=findProduct.items[i].total%></td>
                                                     <td data-label="Remove" class="ec-cart-pro-remove">
-                                                        <a href="#"><i class="ecicon eci-trash-o"></i></a>
+                                                         <button onclick="removeCart('<%=findProduct.items[i].product._id%>')"><i class="ecicon eci-trash-o" ></i></button>
                                                     </td>
                                                 </tr>
                                                 <%}%>
@@ -746,6 +746,7 @@
     <script src="assets/js/vendor/google-translate.js"></script>
     <script>
         function googleTranslateElementInit() {
+
             new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
         }
     </script>
@@ -760,20 +761,55 @@
 </html>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script>
     function changeQuantity(proid,count){
+        
+       let qty= document.getElementById(`quantity${proid}`).value
+       console.log(qty ,count,'this');
+        if(qty>1 && count=="-1"||qty>=1&&count=="1"){
+            console.log(qty,'thisaaaaaaaaaaa')
         console.log(proid,count,'this is product id count')
         axios.patch(`/incriment?proid=${proid}&count=${count}`)
         .then((res)=>{
             console.log(res.data.total);
           if(res.data){
-            document.getElementById(`total${proid}`).innerHTML=res.data.total
-            document.getElementById('grandTotel').innerHTML=res.data.totalprice
-           
+            document.getElementById(`total${proid}`).innerHTML=`$${res.data.total}`
+            document.getElementById('grandTotel').innerHTML='$'+res.data.grandTotal
+       
           }
         })
+    }
 
     }
-    
+    function removeCart(proid){
+        event.preventDefault();
+        console.log(`delete here${proid}`);
+        swal({
+  title: "Are you sure?",
+  text: "Once deleted, you will not be able to recover this imaginary file!",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+    axios.delete(`/cart?proid=${proid}`).then((res)=>{
+            console.log(res.data.newGrand);
+            if(res.data){
+                document.getElementById('grandTotel').innerHTML=`$${res.data.newGrand}`
+                document.getElementById(proid).style.display='none'
+
+            }
+        })
+    swal("Poof! Your imaginary file has been deleted!", {
+      icon: "success",
+    });
+  } else {
+    swal("Your imaginary file is safe!");
+  }
+});
+        
+    }
 </script>

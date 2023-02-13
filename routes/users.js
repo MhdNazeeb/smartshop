@@ -17,7 +17,8 @@ const {
   productDetails,
   addToCart,
   getCart,
-  changeQty
+  changeQty,
+  removeCart
 } = require("../controller/user");
 /* GET users listing. */
 
@@ -35,5 +36,6 @@ router.get("/productDetails", productDetails);
 router.get("/cart", axiosSession, addToCart);
 router.get("/cartList", session, getCart);
 router.patch('/incriment',axiosSession,changeQty)
+router.delete('/cart',removeCart)
 
 module.exports = router;
