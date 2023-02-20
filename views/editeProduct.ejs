@@ -197,7 +197,8 @@
 											</div>
 										</div>
 										<div class="col-lg-8">
-											<div class="ec-vendor-upload-detail" id="buttonform">
+											<div class="ec-vendor-upload-detail" id="buttondiv">
+												
 													<div class="col-md-6">
 														<label for="inputEmail4" class="form-label">Product name</label>
 														<input type="text" class="form-control slug-title" id="inputEmail4" value="<%=findProduct.name%>" name="name">
@@ -205,11 +206,11 @@
 													<div class="col-md-6">
 														<label class="form-label">Select Categories</label>
                                                         
-														<select name="categories" id="Categories" class="form-select" name="category">
+														<select name="categories" id="Categories" class="form-select" name="categories">
                                                             
 															<optgroup label="Fashion">
                                                                 <%for(i=0;i <findCategory.length ; i++){%>
-																<option value="<%findCategory._id%>"> <%=findCategory[i].name%></option>
+																<option id="catid" value="<%=findCategory[i]._id%>"> <%=findCategory[i].name%></option>
                                                                 <%}%>
 																<!-- <option value="dress">Dress</option>
 															</optgroup>
@@ -353,20 +354,24 @@
    
    
     function editeProduct(id){
+		console.log('this edite  product');
         const form = document.getElementById('buttonform');
         form.addEventListener('submit',(e)=>{
         e.preventDefault()
         const formData = new FormData(form)
-        const data = Object.fromEntries(formData)
-        console.log(data);
+		
+        console.log(formData,'this formm data');
+      
         console.log(id,'update id')
-	axios.put(`product?id=${id}`,data,{
+		const catid=document.getElementById("catid").value
+		console.log(catid,'this cat id');
+	axios.put(`product?id=${id}&catid=${catid}`,formData,{
      headers:{"Content-Type": "multipart/form-data"}
     
     }
     ).then((res)=>
 	{if(res.data.message){
-		location.href='/admin/productList'
+		swal("Good job!", "update", "success");
 	}
 		
 	})

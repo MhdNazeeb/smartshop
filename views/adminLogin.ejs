@@ -38,17 +38,22 @@
 								</a>
 							</div>
 						</div>
+						<div class="alert alert-danger" style="background-color: rgb(245, 51, 51);text-align: center;color: aliceblue;height: 60px;display: none;"id='alertid' role="alert">
+							incorrect email or password
+						  </div>
 						<div class="card-body p-5">
 							<h4 class="text-dark mb-5">Sign In</h4>
 							
-							<form action="/admin/login" method="post">
+							<form onsubmit="return validation()" action="/admin/login" method="post">
 								<div class="row">
 									<div class="form-group col-md-12 mb-4">
 										<input type="email" class="form-control" id="email" placeholder="Username" name="username">
+										<div id="err-name" style="color: red;margin-bottom: 13px;display: none;">email required</div>
 									</div>
 									
 									<div class="form-group col-md-12 ">
 										<input type="password" class="form-control" id="password" placeholder="Password" name="password">
+										<div id="err-pass" style="color: red;margin-bottom: 13px;display: none;">password required</div>
 									</div>
 									
 									<div class="col-md-12">
@@ -65,8 +70,8 @@
 										
 										<button type="submit" class="btn btn-primary btn-block mb-4">Sign In</button>
 										
-										<p class="sign-upp">Don't have an account yet ?
-											<a class="text-blue" href="sign-up.html">Sign Up</a>
+										<!-- <p class="sign-upp">Don't have an account yet ?
+											<a class="text-blue" href="sign-up.html">Sign Up</a> -->
 										</p>
 									</div>
 								</div>
@@ -89,3 +94,34 @@
 
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-admin/sign-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:28:55 GMT -->
 </html>
+<script>
+	if('<%=message%>'){
+		document.getElementById('alertid').style.display='block'
+    setTimeout(()=>{
+        document.getElementById('alertid').style.display='none'
+    },3000)
+
+	}
+	function validation(){
+   const email = document.getElementById('email').value
+   const password= document.getElementById('password').value
+   if(email==''||email==null){
+    console.log('email error');
+     document.getElementById('err-name').style.display='block'
+     setTimeout(()=>{
+        document.getElementById('err-name').style.display='none'
+     },3000)
+     return false
+   }else if(password==''||password==null){
+    document.getElementById('err-pass').style.display='block'
+    setTimeout(()=>{
+        document.getElementById('err-pass').style.display='none'
+     },3000)
+     return false
+	}else{
+		return true
+	 }
+	}
+   
+</script>
+

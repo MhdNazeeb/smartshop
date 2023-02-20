@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="assets/css/vendor/ecicons.min.css" />
 
     <!-- css All Plugins Files -->
+    <script src="https://kit.fontawesome.com/aa117e119d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="assets/css/plugins/animate.css" />
     <link rel="stylesheet" href="assets/css/plugins/swiper-bundle.min.css" />
     <link rel="stylesheet" href="assets/css/plugins/jquery-ui.min.css" />
@@ -36,6 +37,10 @@
     <link rel="stylesheet" href="assets/css/plugins/slick.min.css" />
     <link rel="stylesheet" href="assets/css/plugins/nouislider.css" />
     <link rel="stylesheet" href="assets/css/plugins/bootstrap.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <!-- Main Style -->
     <link rel="stylesheet" href="assets/css/style.css" />
@@ -119,6 +124,7 @@
                         </tbody>
                     </table>
                 </div>
+                
                 <div class="cart_btn">
                     <a href="cart.html" class="btn btn-primary">View Cart</a>
                     <a href="checkout.html" class="btn btn-secondary">Checkout</a>
@@ -127,7 +133,7 @@
         </div>
     </div>
     <!-- ekka Cart End -->
-
+   
     <!-- Ec breadcrumb start -->
     <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
         <div class="container">
@@ -156,123 +162,75 @@
     <section class="ec-page-content section-space-p">
         <div class="container">
             <div class="row">
+                
                 <div class="ec-cart-leftside col-lg-8 col-md-12 ">
                     <!-- cart content Start -->
-                    <div class="ec-cart-content">
-                        <div class="ec-cart-inner">
-                            <div class="row">
-                                <form id="remove">
-                                    <div class="table-content cart-table-content">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th>Price</th>
-                                                    <th style="text-align: center;">Quantity</th>
-                                                    <th>Total</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <%for(i=0; i <findProduct.items.length ;i++){%>
-                                                <tr id="<%=findProduct.items[i].product._id%>">
-                                                    <td data-label="Product" class="ec-cart-pro-name"><a
-                                                            href="product-left-"><img class="ec-cart-pro-img mr-4"
-                                                                src="/images/uploads/<%=findProduct.items[i].product.image[0]%>"
-                                                                alt="" /></a></td>
-                                                    <td data-label="Price" class="ec-cart-pro-price"><span
-                                                            class="amount">$<%=findProduct.items[i].product.price%></span></td>
-                                                    <td data-label="Quantity" class="ec-cart-pro-qty"
-                                                        style="text-align: center;">
-                                                        <div class="cart-qty-plus-minus">
-                                                            
-                                                            <input class="cart-plus-minus" type="text "
-                                                               id="quantity<%=findProduct.items[i].product._id%>" value="<%=findProduct.items[i].quantity%>" />
-                                                                <div class="ec_cart_qtybtn">
-                                                                    <div class="inc ec_qtybtn"  onclick="changeQuantity('<%=findProduct.items[i].product._id%>','1')">+</div>
-                                                                    <div class="dec ec_qtybtn" onclick="changeQuantity('<%=findProduct.items[i].product._id%>','-1')">-</div>
-                                                                </div>
-                                                              
-                                                        </div>
-                                                    </td>
-                                                    <td data-label="Total" class="ec-cart-pro-subtotal" id="total<%=findProduct.items[i].product._id%>">$<%=findProduct.items[i].total%></td>
-                                                    <td data-label="Remove" class="ec-cart-pro-remove">
-                                                         <button onclick="removeCart('<%=findProduct.items[i].product._id%>')"><i class="ecicon eci-trash-o" ></i></button>
-                                                    </td>
-                                                </tr>
-                                                <%}%>
-                                                <!-- <tr>
-                                                    <td data-label="Product" class="ec-cart-pro-name"><a
-                                                            href="product-left-sidebar.html"><img class="ec-cart-pro-img mr-4"
-                                                                src="assets/images/product-image/2.jpg"
-                                                                alt="" />Unisex Fully Solid Hoodie</a></td>
-                                                    <td data-label="Price" class="ec-cart-pro-price"><span
-                                                            class="amount">$75.00</span></td>
-                                                    <td data-label="Quantity" class="ec-cart-pro-qty"
-                                                        style="text-align: center;">
-                                                        <div class="cart-qty-plus-minus">
-                                                            <input class="cart-plus-minus" type="text"
-                                                                name="cartqtybutton" value="1" />
-                                                        </div>
-                                                    </td>
-                                                    <td data-label="Total" class="ec-cart-pro-subtotal">$75.00</td>
-                                                    <td data-label="Remove" class="ec-cart-pro-remove">
-                                                        <a href="#"><i class="ecicon eci-trash-o"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td data-label="Product" class="ec-cart-pro-name"><a
-                                                            href="product-left-sidebar.html"><img class="ec-cart-pro-img mr-4"
-                                                                src="assets/images/product-image/3.jpg"
-                                                                alt="" />Beautiful T-shirt For Women</a></td>
-                                                    <td data-label="Price" class="ec-cart-pro-price"><span
-                                                            class="amount">$48.00</span></td>
-                                                    <td data-label="Quantity" class="ec-cart-pro-qty"
-                                                        style="text-align: center;">
-                                                        <div class="cart-qty-plus-minus">
-                                                            <input class="cart-plus-minus" type="text"
-                                                                name="cartqtybutton" value="1" />
-                                                        </div>
-                                                    </td>
-                                                    <td data-label="Total" class="ec-cart-pro-subtotal">$48.00</td>
-                                                    <td data-label="Remove" class="ec-cart-pro-remove">
-                                                        <a href="#"><i class="ecicon eci-trash-o"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td data-label="Product" class="ec-cart-pro-name"><a
-                                                            href="product-left-sidebar.html"><img class="ec-cart-pro-img mr-4"
-                                                                src="assets/images/product-image/4.jpg"
-                                                                alt="" />Wool Hat For Men</a></td>
-                                                    <td data-label="Price" class="ec-cart-pro-price"><span
-                                                            class="amount">$95.00</span></td>
-                                                    <td data-label="Quantity" class="ec-cart-pro-qty"
-                                                        style="text-align: center;">
-                                                        <div class="cart-qty-plus-minus">
-                                                            <input class="cart-plus-minus" type="text"
-                                                                name="cartqtybutton" value="1" />
-                                                        </div>
-                                                    </td>
-                                                    <td data-label="Total" class="ec-cart-pro-subtotal">$95.00</td>
-                                                    <td data-label="Remove" class="ec-cart-pro-remove">
-                                                        <a href="#"><i class="ecicon eci-trash-o"></i></a>
-                                                    </td>
-                                                </tr> -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="ec-cart-update-bottom">
-                                                <a href="/">Continue Shopping</a>
-                                                <button  class="btn btn-primary"><a style="color:white" href="/checkout"> Check Out</a></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+               
+
+                   <!-- Button trigger modal -->
+ 
+                   
+                   <p>
+                    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                      address
+                    </a>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                        Add Address
+                      </button>
+                  </p>
+                  <div class="collapse" id="collapseExample">
+                    <%if(findAddress){%>
+                    <%for( let i=0; i <findAddress.address.length ; i++){%>
+                      
+                    <div style="border:black 1px solid" class="card card-body" id="<%=findAddress.address[i]._id%>" >
+                          <i  type="button"  data-toggle="modal" onclick="showAddress('<%=findAddress.address[i]._id%>')" data-target="#exampleModalCenter"  class="fa-solid fa-pen-to-square" style="color: blue;width: 30px;height: 30px;"></i>
+                        <i class="fa-solid fa-trash" onclick="deleteAddress('<%=findAddress.address[i]._id%>')" style="color:red" type="button" class="close" data-dismiss="modal" aria-label="Close"></i>
+                     <div class="col-lg-12 border" style="border:black 1px solid">
+                        
+                      <span>
+                      <input type="radio" style="width:15px" >
+                      </span>
+                     
+                        <h5><%=findAddress.address[i].Name%>
+                            
+                        </h5>
+                        <li><%=findAddress.address[i].address1%>
+                           
+                        </li>
+                        <li><%=findAddress.address[i].address2%>
+                          
+                        </li>
+                        <li><%=findAddress.address[i].email%>
+                         
+                        </li>
+                        <li><%=findAddress.address[i].phone%>
+                            
+                        </li>
+                      
                     </div>
+                    </div>
+
+                    <!-- modal-->
+                    <!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  
+                    <%}%>
+                    <%}%>
+                  </div>
+    
+
+  <!-- Button trigger modal -->
+ 
+  
+  
+
+ 
+
+
+                                    
+                        
                     <!--cart content End -->
                 </div>
                 <!-- Sidebar Area Start -->
@@ -283,12 +241,12 @@
                             <div class="ec-sb-title">
                                 <h3 class="ec-sidebar-title">Summary</h3>
                             </div>
-                             <div class="ec-sb-block-content">
+                            <div class="ec-sb-block-content">
                                 <h4 class="ec-ship-title">Estimate Shipping</h4>
-                                <div class="ec-cart-form">
+                                <!-- <div class="ec-cart-form">
                                     <p>Enter your destination to get a shipping estimate</p>
-                                    <!-- <form action="#" method="post"> -->
-                                        <!-- <span class="ec-cart-wrap">
+                                    <form action="#" method="post">
+                                        <span class="ec-cart-wrap">
                                             <label>Country *</label>
                                             <span class="ec-cart-select-inner">
                                                 <select name="ec_cart_country" id="ec-cart-select-country"
@@ -322,7 +280,7 @@
                                             <input type="text" name="postalcode" placeholder="Zip/Postal Code">
                                         </span>
                                     </form>
-                                </div>
+                                </div> -->
                             </div>
 
                             <div class="ec-sb-block-content">
@@ -330,33 +288,39 @@
                                     <div class="ec-cart-summary">
                                         <div>
                                             <span class="text-left">Sub-Total</span>
-                                            <span class="text-right">$80.00</span>
+                                            <span class="text-right">$<%=subamount.grandTotal%></span>
                                         </div>
                                         <div>
                                             <span class="text-left">Delivery Charges</span>
-                                            <span class="text-right">$80.00</span>
+                                            <span class="text-right">$360.00</span>
                                         </div>
                                         <div>
                                             <span class="text-left">Coupan Discount</span>
                                             <span class="text-right"><a class="ec-cart-coupan">Apply Coupan</a></span>
                                         </div>
                                         <div class="ec-cart-coupan-content">
-                                            <form class="ec-cart-coupan-form" name="ec-cart-coupan-form" method="post"
-                                                action="#">
+                                            <form  class="ec-cart-coupan-form" name="ec-cart-coupan-form" method="post"
+                                                action="/coupon">
                                                 <input class="ec-coupan" type="text" required=""
-                                                    placeholder="Enter Your Coupan Code" name="ec-coupan" value="">
+                                                    placeholder="Enter Your Coupan Code" name="eccoupan" value="">
+
                                                 <button class="ec-coupan-btn button btn-primary" type="submit"
                                                     name="subscribe" value="">Apply</button>
                                             </form>
-                                        </div>  -->
+                                        </div>
                                         <div class="ec-cart-summary-total">
                                             <span class="text-left">Total Amount</span>
-                                           <strong> <span class="text-right" id="grandTotel" style="color: black;">$<%=findProduct.grandTotal%></span></strong>
+                                            <span class="text-right">$80.00</span>
                                         </div>
-                                    </div> 
-
+                                      
+                                    </div>
+                          
                                 </div>
+                           
                             </div>
+                            <a class="btn btn-primary"  href="#" role="button" >
+                                place oder
+                              </a>
                         </div>
                         <!-- Sidebar Summary Block -->
                     </div>
@@ -661,7 +625,9 @@
         <div class="tool-title">
             <h3>Features</h3>
         </div>
-       
+        <!-- <a href="#" class="ec-tools-sidebar-toggle in-out">
+            <img alt="icon" src="assets/images/common/settings.png" />
+        </a> -->
         <div class="ec-tools-detail">
             <div class="ec-tools-sidebar-content ec-change-color ec-color-desc">
                 <h3>Color Scheme</h3>
@@ -725,7 +691,58 @@
         </div>
     </div>
     <!-- Feature tools end -->
+    
+  </div>
+  
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"  id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/address" method="post">
+        <div class="modal-body">
+            
+            <div class="col-md-6 space-t-15">
+                <label class="form-label"></label>
+                <input type="text" class="form-control" name="Name" >
+            </div>
+            <div class="col-md-12 space-t-15">
+                <label class="form-label">Address 1</label>
+                <input type="text" class="form-control" name="address1">
+            </div>
+            <div class="col-md-12 space-t-15">
+                <label class="form-label">Address 2</label>
+                <input type="text" class="form-control" name="address2">
+            </div>
+          
+            <div class="col-md-6 space-t-15">
+                <label class="form-label">Email id </label>
+                <input type="text" class="form-control" name="email">
+            </div>
+         
+            <div class="col-md-6 space-t-15">
+                <label class="form-label">Phone number </label>
+                <input type="text" class="form-control" name="phone">
+            </div>
+           
+          
+                
 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary"> ADD new Address</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
     <!-- Vendor JS -->
     <script src="assets/js/vendor/jquery-3.5.1.min.js"></script>
     <script src="assets/js/vendor/popper.min.js"></script>
@@ -742,11 +759,11 @@
     <script src="assets/js/plugins/infiniteslidev2.js"></script>
     <script src="assets/js/vendor/jquery.magnific-popup.min.js"></script>
     <script src="assets/js/plugins/jquery.sticky-sidebar.js"></script>
+    
     <!-- Google translate Js -->
     <script src="assets/js/vendor/google-translate.js"></script>
     <script>
         function googleTranslateElementInit() {
-
             new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
         }
     </script>
@@ -755,37 +772,102 @@
     <script src="assets/js/main.js"></script>
 
 </body>
+  <!-- <form id="addaddressform">
+      
+           
+             <div class="modal-body">
+                 
+                 <div class="col-md-6 space-t-15">
+                     <label class="form-label">Name</label>
+                     <input type="text" class="form-control" value="" name="Name" >
+                 </div>
+                 <div class="col-md-12 space-t-15">
+                     <label class="form-label">Address 1</label>
+                     <input type="text" class="form-control" value="" name="address1">
+                 </div>
+                 <div class="col-md-12 space-t-15">
+                     <label class="form-label">Address 2</label>
+                     <input type="text" class="form-control" value="" name="address2">
+                 </div>
+               
+                 <div class="col-md-6 space-t-15">
+                     <label class="form-label">Email id </label>
+                     <input type="text" class="form-control" value="" name="email">
+                 </div>
+              
+                 <div class="col-md-6 space-t-15">
+                     <label class="form-label">Phone number </label>
+                     <input type="text" class="form-control" value="" name="phone">
+                 </div>
+                 
+         </div>
+         
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button"class="btn btn-primary">Save changes</button>
+        </div> 
+            </form> -->
+
+
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Edite Address</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form id="buttonform">
+                        <div class="modal-body">
+                           
+                             <div class="modal-body">
+                                 
+                                 <div class="col-md-6 space-t-15">
+                                     <label class="form-label">Name</label>
+                                     <input type="text" class="form-control" id="modalname" value="" name="Name" >
+                                 </div>
+                                 <div class="col-md-12 space-t-15">
+                                     <label class="form-label">Address 1</label>
+                                     <input type="text" class="form-control" id="modaladdress1" value="" name="address1">
+                                 </div>
+                                 <div class="col-md-12 space-t-15">
+                                     <label class="form-label">Address 2</label>
+                                     <input type="text" class="form-control" id="modaladdress2" value="" name="address2">
+                                 </div>
+                               
+                                 <div class="col-md-6 space-t-15">
+                                     <label class="form-label">Email id </label>
+                                     <input type="text" class="form-control" id="modalaemail" value="" name="email">
+                                 </div>
+                              
+                                 <div class="col-md-6 space-t-15">
+                                     <label class="form-label">Phone number </label>
+                                     <input type="text" class="form-control" id="modalaphone" value="" name="phone">
+                                 </div>
+                                 <div class="col-md-6 space-t-15">
+                                    <label class="form-label"></label>
+                                    <input type="text" class="form-control" id="addressid" value="" style="display: none;" name="idaddress">
+                                </div>
+                                 
+                         </div>
+                         
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="button" onclick="editAddress()" class="btn btn-primary">Save changes</button>
+                        </div> 
+                            </form>
+                  </div>
+                </div>
+              </div>
 
 
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-html/cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:18:54 GMT -->
 </html>
-
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
 <script>
-    function changeQuantity(proid,count){
-        
-       let qty= document.getElementById(`quantity${proid}`).value
-       console.log(qty ,count,'this');
-        if(qty>1 && count=="-1"||qty>=1&&count=="1"){
-            console.log(qty,'thisaaaaaaaaaaa')
-        console.log(proid,count,'this is product id count')
-        axios.patch(`/incriment?proid=${proid}&count=${count}`)
-        .then((res)=>{
-            console.log(res.data.total);
-          if(res.data){
-            document.getElementById(`total${proid}`).innerHTML=`$${res.data.total}`
-            document.getElementById('grandTotel').innerHTML='$'+res.data.grandTotal
-       
-          }
-        })
-    }
-
-    }
-    function removeCart(proid){
-        event.preventDefault();
-        console.log(`delete here${proid}`);
+    function deleteAddress(addid){
         swal({
   title: "Are you sure?",
   text: "Once deleted, you will not be able to recover this imaginary file!",
@@ -795,13 +877,11 @@
 })
 .then((willDelete) => {
   if (willDelete) {
-    axios.delete(`/cart?proid=${proid}`).then((res)=>{
-            console.log(res.data.newGrand);
-            if(res.data){
-                document.getElementById('grandTotel').innerHTML=`$${res.data.newGrand}`
-                document.getElementById(proid).style.display='none'
-
-            }
+    console.log(addid,'this add id');
+        axios.delete(`address?addid=${addid}`).then((res)=>{
+         if(res.data.delete){
+             document.getElementById(addid).style.display='none'
+         }
         })
     swal("Poof! Your imaginary file has been deleted!", {
       icon: "success",
@@ -810,7 +890,41 @@
     swal("Your imaginary file is safe!");
   }
 });
+       
+    }
+    function editAddress(){
+        event.preventDefault()
+        console.log('this is edite addre');
+        const addid=document.getElementById('addressid').value
+        console.log(addid,'this  address');
+        const form=document.getElementById('buttonform')
+        const formData = new FormData(form)
+        let data = Object.fromEntries(formData)
+		
+        axios.patch(`address?addid=${addid}`,data)
         
+        .then((res)=>{
+            console.log('this is edited true');
+             location.href='/checkout'
+        })
+        
+    }
+
+    function showAddress(as){
+        console.log('this good error');
+        axios.get(`address?proid=${as}`).then((res)=>{
+                console.log(res.data.address[0],'jjjjjjjjjjjjjjjjjjjjjjjjj');
+        document.getElementById('modalname').value=res.data.address[0].Name
+        document.getElementById('modaladdress1').value=res.data.address[0].address1
+        document.getElementById('modaladdress2').value=res.data.address[0].address2
+        document.getElementById('modalaemail').value=res.data.address[0].email
+        document.getElementById('modalaphone').value=res.data.address[0].phone
+        document.getElementById('addressid').value=res.data.address[0]._id
+    
+             
+            
+        })
+
     }
    
 </script>

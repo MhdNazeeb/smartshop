@@ -18,7 +18,19 @@ const {
   addToCart,
   getCart,
   changeQty,
-  removeCart
+  removeCart,
+  wishListget,
+  addTOWishList,
+  wishListFind,
+  removeFromWish,
+  checkout,
+  addAddress,
+  deleteAddress,
+  editeAddress,
+  showddress,
+  aaplyCoupon
+
+
 } = require("../controller/user");
 /* GET users listing. */
 
@@ -37,5 +49,16 @@ router.get("/cart", axiosSession, addToCart);
 router.get("/cartList", session, getCart);
 router.patch('/incriment',axiosSession,changeQty)
 router.delete('/cart',removeCart)
+router.get('/wishList',session,wishListget)
+router.delete('/wishPro',removeFromWish)
+router.post('/wishList',axiosSession,addTOWishList)
+router.get("/wish",session,wishListFind );
+router.get("/checkout",session,checkout );
+router.post("/address",session,addAddress );
+router.delete('/address',deleteAddress)
+router.patch('/address',editeAddress)
+router.get("/address",showddress );
+router.post("/coupon",session,aaplyCoupon);
+
 
 module.exports = router;

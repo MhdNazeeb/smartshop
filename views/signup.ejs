@@ -150,12 +150,13 @@
                         <!-- <div class="error-message" style="margin-bottom: 20px;padding: 4px;height: 80px;width: 40px; background: #fe8b8e ;text-align: center;font-size: 14px;"></div> -->
                         
                         <div class="ec-register-form">
-                            <form action='/signup' method="post">
+                            <form onsubmit=" return validation()" action='/signup' method="post">
                                 <span class="ec-register-wrap ec-register-half">
                         
-                                    <label>First Name*</label>
-                                    <input id="name" type="text" name="firstname" placeholder="Enter your name" required />
-                                    <span id="name-error" style="color:red;display: none;">please enter valid name</span>
+                                    <label> Name*</label>
+                                    <input id="name" type="text" name="firstname" placeholder="Enter your name"  />
+                                    <div  id="err-name" style="color: red;margin-bottom: 13px;display: none;">Please enter name</div>
+                                   
                                 </span>
                                 <!-- <span class="ec-register-wrap ec-register-half">
                                     <label>Last Name*</label>
@@ -163,15 +164,18 @@
                                 </span> -->
                                 <span class="ec-register-wrap ec-register-half">
                                     <label>Email*</label>
-                                    <input id="email" type="email" name="email" placeholder="Enter your email add..." required/>
+                                    <input id="email" type="text" name="email" placeholder="Enter your email add..." />
+                                    <div id="email-error"style="color: red;margin-bottom: 13px;display: none">Please enter email</div>
                                 </span>
                                 <span class="ec-register-wrap ec-register-half">
                                     <label>password</label>
-                                    <input id="password" type="password" name="password1" placeholder="password" required/>
+                                    <input id="password" type="password" name="password1" placeholder="password" />
+                                    <div id="password-error"style="color: red;margin-bottom: 13px;display: none">Please enter password</div>
                                 </span>
                                 <span class="ec-register-wrap ec-register-half">
                                     <label>confirm_password</label>
-                                    <input id="Confirmpassword" type="password" name="password" placeholder="confirmpassword" required />
+                                    <input id="Confirmpassword" type="password" name="password" placeholder="confirmpassword"/>
+                                    <div id="confirm-error"style="color: red;margin-bottom: 13px;display: none">please confirm_password</div>
                                 </span>
                                 <!-- <span class="ec-register-wrap ec-register-half">
                                     <label>Phone Number*</label>
@@ -520,5 +524,54 @@
 
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-html/register.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:18:32 GMT -->
 </html>
+<script>
+ function validation(){
+   const userName= document.getElementById('name').value
+   const email = document.getElementById('email').value
+   const password= document.getElementById('password').value
+   const Confirmpassword = document.getElementById('Confirmpassword').value
+   if(userName==''||userName==null){
+    console.log('email error');
+     document.getElementById('err-name').style.display='block'
+     setTimeout(()=>{
+        document.getElementById('err-name').style.display='none'
+     },3000)
+     return false
+   }else if(email==''||email==null){
+    document.getElementById('email-error').style.display='block'
+    setTimeout(()=>{
+        document.getElementById('email-error').style.display='none'
+     },3000)
+     return false
+   }else if(Confirmpassword==''||Confirmpassword==null){
+    document.getElementById('confirm-error').style.display='block'
+
+    setTimeout(()=>{
+        document.getElementById('confirm-error').style.display='none'
+     },3000)
+     return false
+   }else if(password!=Confirmpassword){
+   document.getElementById('confirm-error').style.display='block'
+   document.getElementById('confirm-error').innerHTML='please enter correct password'
+
+    setTimeout(()=>{
+        document.getElementById('confirm-error').style.display='none'
+     },3000)
+     return false
+
+    setTimeout(()=>{
+        document.getElementById('confirm-error').style.display='none'
+     },3000)
+     return false
+   
+   }else{
+    return true
+   }
+   
+   
+
+      
+  }
+</script>
 
 

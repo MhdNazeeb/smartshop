@@ -439,11 +439,7 @@
 
     <!-- Vendor JS -->
     
-    <% if(locals.message){ %>
-        <div class="alert alert-success" role="alert">
-            <strong>Well done!</strong> <%=message.success%>
-        </div>
-    <% } %>
+   
         
     <script src="assets/js/vendor/jquery-3.5.1.min.js"></script>
     <script src="assets/js/vendor/popper.min.js"></script>
@@ -472,8 +468,14 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="assets/js/vendor/index.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 </body>
 
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-html/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:18:35 GMT -->
 </html>
+<script>
+    if('<%=message%>'){
+        swal("oops!", "otp incorrect", "error");
+    }
+</script>

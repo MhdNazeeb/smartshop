@@ -53,7 +53,7 @@
 			<div class="ec-content-wrapper">
 				<div class="content">
 					<div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
-							<h1>Main Category</h1>
+							<h1>coupon</h1>
 							<p class="breadcrumbs"><span><a href="index.html">Home</a></span>
 								<span><i class="mdi mdi-chevron-right"></i></span>Main Category</p>
 					</div>
@@ -63,22 +63,58 @@
 								<div class="card-body">
 									
 									<div class="ec-cat-form">
-										<h4>Add New Category</h4>
+										<h4>Add New Coupon</h4>
 
-										<form action="/admin/category" method="post">
+										<form action="/admin/coupon" method="post" >
 										
-											<div class="alert alert-danger" role="alert" style="display: none;" id="error">
-												This is a danger alert—check it out!
-											  </div>
+											
 											 
 
 											<div class="form-group row">
-												<label for="text" class="col-12 col-form-label">Name</label> 
+												<label for="text" class="col-12 col-form-label">code</label> 
 												<div class="col-12">
-													<input id="text" name="name" class="form-control here slug-title" type="text">
+													<input id="text" name="code" class="form-control here slug-title" type="text" required>
 												</div>
 											</div>
-
+											<div class="form-group row">
+												<label for="text" class="col-12 col-form-label">available</label> 
+												<div class="col-12">
+													<input id="text" name="available" class="form-control here slug-title" type="text"required>
+												</div>
+											</div>
+											
+											<div class="form-group row">
+												<label for="text" class="col-12 col-form-label">amount</label> 
+												<div class="col-12">
+													<input id="text" name="amount" class="form-control here slug-title" type="text" required>
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="text" class="col-12 col-form-label">expiredAfter</label> 
+												<div class="col-12">
+													<input id="text" name="expdate" class="form-control here slug-title" type="date" required>
+												</div>
+											</div>
+											
+											<div class="form-group row">
+												<label for="text" class="col-12 col-form-label">usageLimit</label> 
+												<div class="col-12">
+													<input id="text" name="usegelimit" class="form-control here slug-title" type="text" required>
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="text" class="col-12 col-form-label">mincartAmout</label> 
+												<div class="col-12">
+													<input id="text" name="mincart"form-control here slug-title" type="text" required>
+												</div>
+											</div>
+											<!-- <div class="form-group row">
+												<label for="text" class="col-12 col-form-label">maxdiscountAmount</label> 
+												<div class="col-12">
+													<input id="text" name="discount" class="form-control here slug-title" type="text"required>
+												</div>
+											</div> -->
+											
 											<!-- <div class="form-group row">
 												<label for="slug" class="col-12 col-form-label">Slug</label> 
 												<div class="col-12">
@@ -87,12 +123,7 @@
 												</div>
 											</div> -->
 
-											<div class="form-group row">
-												<label class="col-12 col-form-label"> Description</label> 
-												<div class="col-12">
-													<textarea id="sortdescription" name="description" cols="40" rows="2" class="form-control"></textarea>
-												</div>
-											</div> 
+											
 
 											<!-- <div class="form-group row">
 												<label class="col-12 col-form-label">Full Description</label> 
@@ -122,28 +153,7 @@
 							</div>
 						</div>
                         <div>
-                            <table class="table" style="border: 1px solid black">
-                                <thead style="background-color: rgb(146, 90, 90);">
-                                  <tr>
-                                    <th style="color: black;" scope="col">Categoryname</th>
-                                    <th style="color: black;" scope="col">description</th>
-                                    <th style="color: black;"scope="col">action</th>
-                                    
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                    <%for(let i=0; i <findCategory.length ;i++){%>
-                                  <tr id="<%=findCategory[i]._id%>" >
-                                    <th style="color: black;" scope="row"><%=findCategory[i].name%></th>
-                                    <td style="color: black;"><%=findCategory[i].description%></td>
-                                    <td ><i class="fa-solid fa-trash" style="color: rgb(175, 20, 20);" onclick=" deletecat('<%=findCategory[i]._id%>')"></i></td>
-                                 
-                                    
-                                  </tr>
-                                  <%}%>
-                            
-                                </tbody>
-                              </table>
+                           
                         </div>
 						<!-- <div class="col-xl-8 col-lg-12">
 							<div class="ec-cat-list card card-default">
@@ -558,41 +568,11 @@
 </html>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
- 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    function deletecat(id){
-		swal({
-  title: "Are you sure?",
-  text: "Once deleted, you will not be able to recover this file!",
-  icon: "warning",
-  buttons: true,
-  dangerMode: true,
-})
-.then((willDelete) => {
-  if (willDelete) {
-	axios.delete(`category?id=${id}`)
-      .then((res)=>{
-
-        if(res.data.message){
-
-          document.getElementById(id).style.display='none'
-        }
-      })
-	
-    swal("Poof! Your file will be delete", {
-      icon: "success",
-    });
-  } else {
-    swal("Your  file is safe!");
-  }
-});
-     
-    } 
-	
-</script>
-<script>
-	if("<%=message%>"){
-		swal("oops!", "already existst", "error");
+	if('<%=message%>'){
+		swal("Good job!", "coupon added!", "success");
 	}
 </script>
-
+ 

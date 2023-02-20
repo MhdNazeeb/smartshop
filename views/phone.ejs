@@ -166,11 +166,13 @@
                 <div class="ec-login-wrapper">
                     <div class="ec-login-container">
                         <div class="ec-login-form">
-                            <form action="otp" method="post">
+                            <form onsubmit="return validation()" action="/otp" method="post">
                                 <span class="ec-login-wrap">
                                     <label>Phone number</label>
-                                    <input type="text" name="newusermobile" placeholder="Enter your phone number" required />
+                                    <input type="text"  name="newusermobile" id="inputform" placeholder="Enter your phone number" required />
+                                    
                                 </span>
+                                <div id="number" style="display: none;color: red;" >Enter vaild Number</div>
                                 <!-- <span class="ec-login-wrap">
                                     <label>Password*</label>
                                     <input type="password" name="password" placeholder="Enter your password" required />
@@ -179,7 +181,7 @@
                                     <label><a href="#">Forgot Password?</a></label>
                                 </span> -->
                                 <span class="ec-login-wrap ec-login-btn">
-                                   <button class="btn btn-primary" type="submit">submit</button>
+                                   <button class="btn btn-primary"  type="submit">submit</button>
                                     <!-- <a href="/signup" class="btn btn-secondary">Create an account</a> -->
                                 </span>
                             </form>
@@ -468,3 +470,26 @@
 
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-html/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:18:35 GMT -->
 </html>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    
+   function validation(){
+   
+    console.log('hhhhhhhhhhhhhhhhhhhhhhhhhh');
+    const inputid=document.getElementById('inputform').value
+    if(!inputid.length=='10'||inputid==''||isNaN(inputid)){
+
+       document.getElementById('number').style.display='block'
+        setTimeout(()=>{
+           document.getElementById('number').style.display='none'
+        },3000)
+        return false
+    }else{
+        return true
+    }
+    
+   }
+   if('<%=message%>'){
+    swal("oops!", "Mobile number already exists", "error");
+   }
+</script>

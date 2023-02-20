@@ -7,10 +7,12 @@ const category = require("../models/category");
 const cart = require("../models/cart");
 const { ObjectId } = require("mongodb");
 const { findOne } = require("../models/singnup");
-
+const wishList = require("../models/wishlist");
+const address = require("../models/address");
 const accountSid = process.env.account_id;
 const authToken = process.env.authToken;
 const client = require("twilio")(accountSid, authToken);
+const coupon = require("../models/coupon");
 const home = async (req, res) => {
   const findProduct = await product.find({});
   const findCategory = await category.find({});
@@ -21,7 +23,7 @@ const getsignup = (req, res) => {
 };
 const getLogin = (req, res) => {
   try {
-    res.render("login");
+    res.render("login", { message: req.flash("message") });
   } catch (error) {
     res.render("user404");
   }
@@ -84,6 +86,8 @@ const postLogin = async (req, res) => {
     if (find && find.status == true) {
       bcrypt.compare(password, find.password, async (err, data) => {
         if (err) {
+          req.flash("message", "A");
+          res.redirect("/login");
           console.log(err);
         } else if (data) {
           const id = await signup.findOne({ email: email }, { _id: 1 });
@@ -91,11 +95,13 @@ const postLogin = async (req, res) => {
           req.session.loginuser = true;
           res.redirect("/");
         } else {
+          req.flash("message", "aA");
           console.log("here is login error");
           res.redirect("/login");
         }
       });
     } else {
+      req.flash("message", "A");
       console.log("here is login not found");
       res.redirect("/login");
     }
@@ -106,34 +112,45 @@ const postLogin = async (req, res) => {
 const getPhone = (req, res) => {
   try {
     console.log("here is phone");
-    res.render("phone");
+    res.render("phone",{message:req.flash('message')});
   } catch (error) {
     res.render("user404");
   }
 };
 const getOtp = (req, res) => {
   try {
-    res.render("otp");
+    res.render("otp", { message: req.flash("message") });
+
   } catch (error) {
     res.render("user404");
   }
 };
 const postNumber = async (req, res) => {
   console.log("hhhhhhhhhhhh");
+  const { userlogin } = req.session;
   try {
     const { newusermobile } = req.body;
-    console.log(newusermobile);
-    req.session.newusermobile = newusermobile;
+    console.log('here is find user');
+    const findUser = await signup.findOne({ phone: newusermobile });
+    if (!findUser) {
+      console.log(findUser, "this is findUser");
+      console.log(newusermobile);
+      req.session.newusermobile = newusermobile;
 
-    await client.verify.v2
-      .services(serviceid)
-      .verifications.create({
-        to: `+91${newusermobile}`,
-        channel: "sms",
-      })
-      .then((verification) => {
-        res.redirect("/otp");
-      });
+      await client.verify.v2
+        .services(serviceid)
+        .verifications.create({
+          to: `+91${newusermobile}`,
+          channel: "sms",
+        })
+        .then((verification) => {
+          res.redirect("/otp");
+        });
+    }else{
+      console.log('here is all ready exisits');
+      req.flash('message','m')
+      res.redirect('/phone')
+    }
   } catch (error) {
     console.log(error.message);
 
@@ -159,6 +176,7 @@ const verifyOtp = async (req, res) => {
         if (verification_check.status == "approved") {
           res.redirect("/signup");
         } else {
+          req.flash("message", "a");
           res.redirect("/otp");
         }
       });
@@ -247,7 +265,7 @@ const addToCart = async (req, res) => {
                 total: quantity * price,
               },
             },
-            $inc: { cartquantity: 1, grandTotal: price },
+            $inc: { cartquantity: 1, grandTotal: quantity * price },
           }
         );
         res.json({ push: true });
@@ -301,7 +319,7 @@ const changeQty = async (req, res) => {
     let newcart = await cart.findOne({ user: userlogin });
     console.log(newcart, "this user");
     let total = newcart.items[index].total;
-    console.log(total,'total price');
+    console.log(total, "total price");
     let grandTotal = newcart.grandTotal;
     console.log(total, "this is totals");
 
@@ -328,28 +346,206 @@ const changeQty = async (req, res) => {
   }
 };
 const removeCart = async (req, res) => {
-  console.log('delete reach');
+  console.log("delete reach");
   const { proid } = req.query;
-  const {userlogin}=req.session
-  const products=await product.findOne({_id:proid})
-  const cartFind=await cart.findOne({user:userlogin})
-  const index= cartFind.items.findIndex((val)=>val.product==proid)
-  const grandTotalremove=cartFind.items[index].total
-  console.log(grandTotalremove,'this is grand total');
+  const { userlogin } = req.session;
+  const products = await product.findOne({ _id: proid });
+  const cartFind = await cart.findOne({ user: userlogin });
+  const index = cartFind.items.findIndex((val) => val.product == proid);
+  const grandTotalremove = cartFind.items[index].total;
+  console.log(grandTotalremove, "this is grand total");
 
-  console.log(index,'this is for remove from cart');
-  console.log(proid,'this product id');
+  console.log(index, "this is for remove from cart");
+  console.log(proid, "this product id");
   console.log("product delete here");
   const deleteProduct = await cart.updateOne(
     { user: userlogin, "items.product": proid },
 
-    {$pull:{items:{product:proid}},$inc:{grandTotal:-grandTotalremove}}
+    {
+      $pull: { items: { product: proid } },
+      $inc: { grandTotal: -grandTotalremove },
+    }
   );
-   const findCartdb=await cart.findOne({user:userlogin})
-   console.log(findCartdb,'this new cart');
-   const newGrand=findCartdb.grandTotal
-    res.json({newGrand})
-  
+  const findCartdb = await cart.findOne({ user: userlogin });
+  console.log(findCartdb, "this new cart");
+  const newGrand = findCartdb.grandTotal;
+  res.json({ newGrand });
+};
+const wishListget = async (req, res) => {
+  res.render("wishlist");
+};
+const addTOWishList = async (req, res) => {
+  console.log("addwishlist here");
+  const { proid } = req.query;
+  console.log(proid, "this product  id");
+  const { userlogin } = req.session;
+  console.log(userlogin, "this is user login");
+  const findWishlist = await wishList.findOne({ user: userlogin });
+  if (!findWishlist) {
+    const WishCreate = await wishList.create({
+      user: userlogin,
+      items: [
+        {
+          product: proid,
+        },
+      ],
+    });
+    res.json({ created: true });
+  } else {
+    const findProduct = await wishList.findOne({
+      user: userlogin,
+      "items.product": proid,
+    });
+    console.log(findProduct, "this findProblem");
+    if (findProduct) {
+      res.json({ findPro: true });
+    } else {
+      const updateProduct = await wishList.updateOne(
+        { user: userlogin },
+        { $push: { items: { product: proid } } }
+      );
+      console.log(updateProduct, "this is updateProduct");
+      res.json({ push: true });
+    }
+  }
+};
+const wishListFind = async (req, res) => {
+  const { userlogin } = req.session;
+  console.log(userlogin);
+  console.log("this is wish list");
+  const findwish = await wishList
+    .find({ user: userlogin })
+    .populate("items.product");
+  console.log(findwish, "this find wish list");
+  res.render("wishlist", { findwish });
+};
+const removeFromWish = async (req, res) => {
+  console.log("here rech");
+  const { userlogin } = req.session;
+  console.log("this is not log");
+  console.log(userlogin, "this user log rom wish list");
+  const { proid } = req.query;
+  console.log(proid, "this  is  proid");
+  const remove = await wishList.updateOne(
+    { "items.product": proid, user: userlogin },
+    { $pull: { items: { product: proid } } }
+  );
+  console.log(remove, "this  is  remove");
+  res.json({ status: true });
+};
+const checkout = async (req, res) => {
+  const { userlogin } = req.session;
+
+  console.log("this is check out page");
+  let findAddress = await address.findOne({ user: userlogin });
+  const subamount = await cart.findOne({ user: userlogin });
+  console.log(subamount, "this is subamount");
+
+  console.log(findAddress, "this find address");
+
+  res.render("checkout", { findAddress, subamount });
+};
+const addAddress = async (req, res) => {
+  console.log("this address page");
+  const { userlogin } = req.session;
+  const { Name, address1, phone, address2, email } = req.body;
+  console.log(Name, address1, phone, address2, email, "this file");
+  const findAddress = await address.findOne({ user: userlogin });
+  if (!findAddress) {
+    const createAdress = await address.create({
+      user: userlogin,
+      address: [
+        {
+          Name: Name,
+          address1: address1,
+          phone: phone,
+          address2: address2,
+          email: email,
+        },
+      ],
+    });
+    res.redirect("/checkout");
+  } else {
+    const Upadates = await address.updateOne(
+      { user: userlogin },
+      { $push: { address: [req.body] } }
+    );
+    res.redirect("/checkout");
+  }
+};
+const deleteAddress = async (req, res) => {
+  const { addid } = req.query;
+  const { userlogin } = req.session;
+  console.log(addid, "this id for deleting address");
+  const deleteAddress = await address.updateOne(
+    { user: userlogin },
+    { $pull: { address: { _id: addid } } }
+  );
+  res.json({ delete: true });
+};
+const editeAddress = async (req, res) => {
+  console.log("hhhhhhhhhhhhhhhhhhhhhhh");
+  const { userlogin } = req.session;
+  const { addid } = req.query;
+  const { Name, address1, address2, email, phone } = req.body;
+  console.log(
+    Name,
+    address1,
+    address2,
+    email,
+    phone,
+    "this from adddress page"
+  );
+  const editeAddress1 = await address
+    .updateOne(
+      { user: userlogin, "address._id": addid },
+      {
+        $set: {
+          "address.$.Name": Name,
+          "address.$.address1": address1,
+          "address.$.phone": phone,
+          "address.$.address2": address2,
+          "address.$.email": email,
+        },
+      }
+    )
+    .then(() => {
+      res.json({ addressUp: true });
+    });
+
+  console.log(editeAddress1, "tyyy");
+};
+const showddress = async (req, res) => {
+  const { proid } = req.query;
+  const showAddress = await address.findOne(
+    { "address._id": proid },
+    { "address.$": 1 }
+  );
+  console.log(showAddress, "this adresss");
+  res.json(showAddress);
+};
+const aaplyCoupon = async (req, res) => {
+  const { eccoupan } = req.body;
+  const { userlogin } = req.session;
+  console.log(eccoupan, "this coupon code");
+  const findCoupon = await coupon.findOne({ code: eccoupan });
+  const minamount = findCoupon.mincartAmout;
+  const discount = findCoupon.mincartAmout;
+
+  console.log(minamount, "this cart amount");
+  console.log(findCoupon, "this frereound coupon");
+  const cartFind = await cart.findOne({ user: userlogin });
+  const cartTotal = cartFind.grandTotal;
+
+  if (findCoupon) {
+    if (minamount >= cartTotal) {
+      
+    } else {
+      console.log("you should be purchers atleast 700$");
+    }
+  } else {
+    console.log("coupon wrong");
+  }
 };
 
 module.exports = {
@@ -368,4 +564,14 @@ module.exports = {
   getCart,
   changeQty,
   removeCart,
+  wishListget,
+  addTOWishList,
+  wishListFind,
+  removeFromWish,
+  checkout,
+  addAddress,
+  deleteAddress,
+  editeAddress,
+  showddress,
+  aaplyCoupon,
 };

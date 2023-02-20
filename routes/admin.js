@@ -3,7 +3,7 @@ const multter=require('../middleware/multter')
 var router = express.Router();
 const {session} = require('../middleware/adminChecking')
 const {login,postLogin,getProduct,getCategory,addCategory,dleteCategory,addProduct,getUserList,userBlock,deleteUser,
-  deleteProduct,getProductList,getEditProduct,editeProduct
+  deleteProduct,getProductList,getEditProduct,editeProduct,crateCoupon,getCoupon
 
 } = require('../controller/admin')
 
@@ -22,6 +22,8 @@ router.get('/productList',session,getProductList)
 router.delete('/product',session,deleteProduct)
 router.get('/Products',session,getEditProduct)
 router.put('/product',session,multter.array("files",5),editeProduct)
+router.get('/coupon',session,getCoupon)
+router.post('/coupon',session,crateCoupon)
 
 
 

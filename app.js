@@ -4,17 +4,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session')
-var flash = require('connect-flash');
 const db = require('./config/server')
 const nocache = require('nocache')
 var adminRouter = require('./routes/admin');
 var usersRouter = require('./routes/users');
+var flash = require('connect-flash');
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(session({secret:"key",resave:false,saveUninitialized:true,cookie:{maxAge:1200000}}));
+app.use(session({secret:"key",resave:true,saveUninitialized:true,cookie:{maxAge:1200000}}));
 app.use(flash());
 app.use(nocache());
 app.use(logger('dev'));

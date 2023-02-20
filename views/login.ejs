@@ -54,6 +54,7 @@
 
     <!-- ekka Cart Start -->
     <div class="ec-side-cart-overlay"></div>
+    
     <!-- <div id="ec-side-cart" class="ec-side-cart">
         <div class="ec-cart-inner">
             <div class="ec-cart-top">
@@ -163,25 +164,31 @@
                         <p class="sub-title mb-3">Best place to buy and sell digital products</p>
                     </div>
                 </div>
+                
                 <div class="ec-login-wrapper">
+                    <div class="alert alert-danger" style="background-color: rgb(245, 51, 51);text-align: center;color: aliceblue;height: 60px;display: none;"id='alertid' role="alert">
+                        incorrect email or password
+                      </div>
                     <div class="ec-login-container">
                         <div class="ec-login-form">
-                            <form action="/login" method="post">
+                            <form onsubmit=" return validation()" action="/login" method="post">
                                 <span class="ec-login-wrap">
                                     <label>Email Address*</label>
-                                    <input type="text" name="email" id="email" placeholder="Enter your email add..." required />
-                                    <span id="email-error""></span>
+                                    <input type="text" name="email" id="email" placeholder="Enter your email add..." />
+                                    <div id="err-name" style="color: red;margin-bottom: 13px;display: none;">email required</div>
+                                    
                                 </span>
                                 <span class="ec-login-wrap">
                                     <label>Password*</label>
-                                    <input type="password" id="password" name="password" placeholder="Enter your password" required />
-                                    <span id="password-error"></span>
+                                    <input type="password" id="password" name="password" placeholder="Enter your password" />
+                                    <div id="err-pass" style="color: red;margin-bottom: 13px;display: none;">email required</div>
+                                    
                                 </span>
                                 <span class="ec-login-wrap ec-login-fp">
                                     <label><a href="#">Forgot Password?</a></label>
                                 </span>
                                 <span class="ec-login-wrap ec-login-btn">
-                                    <button class="btn btn-primary" type="submit" onclick="verifyPassword()">Login</button>
+                                    <button class="btn btn-primary" type="submit" >Login</button>
                                     <a href="/phone" class="btn btn-secondary">Create an account</a>
                                 </span>
                             </form>
@@ -471,9 +478,35 @@
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-html/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:18:35 GMT -->
 </html>
 <script>
-    function verifyPassword() { 
-        
-    }
+    let x ='<%=message%>'
+   if(x){
+  
+    document.getElementById('alertid').style.display='block'
+    setTimeout(()=>{
+        document.getElementById('alertid').style.display='none'
+    },3000)
+   }
+   function validation(){
+   const email = document.getElementById('email').value
+   const password= document.getElementById('password').value
+   if(email==''||email==null){
+    console.log('email error');
+     document.getElementById('err-name').style.display='block'
+     setTimeout(()=>{
+        document.getElementById('err-name').style.display='none'
+     },3000)
+     return false
+   }else if(password==''||password==null){
+    document.getElementById('err-pass').style.display='block'
+    setTimeout(()=>{
+        document.getElementById('err-pass').style.display='none'
+     },3000)
+     return false
+	}else{
+		return true
+	 }
+	}
+
 </script>
 
     

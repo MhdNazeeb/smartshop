@@ -845,8 +845,8 @@
                         <div class="ec-pro-image-outer">
                             <div class="ec-pro-image">
                                 <a href="" class="image">
-                                    <img class="main-image"
-                                        src="/images/uploads/<%=findProduct[i].image[0]%>" alt="Product" />
+                                    <img class="main-image" 
+                                        src="/images/uploads/<%=findProduct[i].image[0]%>"  alt="Product" />
                                     <img class="hover-image"
                                         src="/images/uploads/<%=findProduct[i].image[1]%>" alt="Product" />
                                 </a>
@@ -863,14 +863,14 @@
                                             <button  title="Add To Cart" class=" add-to-cart"><img
                                             src="assets/images/icons/cart.svg" class="svg_img pro_svg" 
                                             alt="" /> Add To Cart</button>
-                                    <a class="ec-btn-group wishlist" title="Wishlist"><img
+                                    <a class="ec-btn-group wishlist" onclick="wishlist('<%=findProduct[i]._id%>')" title="Wishlist"><img
                                             src="assets/images/icons/wishlist.svg"
-                                            class="svg_img pro_svg" alt="" /></a>
+                                            class="svg_img pro_svg"  alt="" /></a>
                                 </div>
                             </div>
                         </div>
                         <div class="ec-pro-content">
-                            <h5 class="ec-pro-title"><a href="/"><%=findProduct[i].name%></a></h5>
+                            <h5 class="ec-pro-title"><a href="/productDetails?id=<%=findProduct[i]._id%>"><%=findProduct[i].name%></a></h5>
                             <div class="ec-pro-rating">
                                 <i class="ecicon eci-star fill"></i>
                                 <i class="ecicon eci-star fill"></i>
@@ -1622,5 +1622,20 @@
         }
 
      })
+    }
+    function wishlist(proid){
+        axios.post(`wishList?proid=${proid}`)
+        .then((res)=>{
+            if(res.data.findPro){
+                swal("oops!", " already exisits!", "error");
+            }else if(res.data.push){
+                swal("Good job!", "add sucess!", "success");
+               
+            }else if(res.data.session){
+                location.href='/login'
+            }else if(res.data.created){
+                swal("Good job!", "add sucess!", "success");
+            }
+        })
     }
 </script>

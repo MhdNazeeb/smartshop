@@ -76,7 +76,7 @@
 													<div class="avatar-upload">
 														<div class="avatar-edit">
 															<input type='file' id="imageUpload" class="ec-image-upload"
-																accept=".png, .jpg, .jpeg" name="files" />
+																accept=".png, .jpg, .jpeg" name="files"  />
 															<label for="imageUpload"><img
 																	src="/color/img/icons/edit.svg"
 																	class="svg_img header_svg" alt="edit" /></label>
@@ -200,14 +200,14 @@
 											<div class="ec-vendor-upload-detail">
 													<div class="col-md-6">
 														<label for="inputEmail4" class="form-label">Product name</label>
-														<input type="text" class="form-control slug-title" id="inputEmail4"  name="name">
+														<input type="text" class="form-control slug-title" id="inputEmail4"  name="name" required>
 													</div>
 													<div class="col-md-6">
 														<label class="form-label">Select Categories</label>
-														<select name="categories" id="Categories" class="form-select" name="category">
+														<select name="categories" id="Categories" class="form-select" name="category" required>
 															<optgroup label="Fashion">
 																<% for(let i=0; i <findCategory.length ;i++){%>
-																<option  value=<%=findCategory[i]._id%>><%=findCategory[i].name%></option>
+																<option id="addpro" value="<%=findCategory[i]._id%>"><%=findCategory[i].name%></option>
 																<%}%>
 																<!-- <option value="dress">Dress</option>
 															</optgroup>
@@ -229,15 +229,15 @@
 													</div> -->
 													<div class="col-md-12">
 														<label class="form-label" > Description</label>
-														<textarea class="form-control"name="Description" rows="2"></textarea>
+														<textarea class="form-control"name="Description" rows="2" required></textarea>
 													</div>
 													<div class="col-md-12">
 														<label class="form-label" > Size</label>
-														<textarea class="form-control" name="size" rows="2"></textarea>
+														<textarea class="form-control" name="size" rows="2" required></textarea>
 													</div>
 													<div class="col-md-12">
 														<label class="form-label" > Color</label>
-														<textarea class="form-control" name="color" rows="2"></textarea>
+														<textarea class="form-control" name="color" rows="2" required></textarea>
 													</div>
 													<!-- <div class="col-md-4 mb-25">
 														<label class="form-label">Colors</label>
@@ -282,11 +282,11 @@
 													<div class="col-md-6">
 														<label class="form-label" >Price <span>( In USD
 																)</span></label>
-														<input type="number" name="Price" class="form-control" id="price1">
+														<input type="number" name="Price" class="form-control" id="price1" required>
 													</div>
 													<div class="col-md-6">
 														<label class="form-label" >Quantity</label>
-														<input type="number" name="Stock" class="form-control" id="quantity1">
+														<input type="number" name="Stock" class="form-control" id="quantity1" required>
 													</div>
 													<!-- <div class="col-md-12">
 														<label class="form-label">Ful Detail</label>
