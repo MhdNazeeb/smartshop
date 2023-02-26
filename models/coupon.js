@@ -24,9 +24,9 @@ const couponSchema = new mongoose.Schema({
         type:String,
         default:"active"
     },
-    usageLimit:{
-        type:Number
-    },
+    // usageLimit:{
+    //     type:Number
+    // },
     mincartAmout:{
         type: Number
     },

@@ -1,6 +1,6 @@
-var express = require("express");
+const express = require("express");
 const multer = require("../middleware/multter");
-var router = express.Router();
+const router = express.Router();
 const { axiosSession } = require("../middleware/axiosSessionUser");
 const { session } = require("../middleware/userChecking");
 const {
@@ -28,7 +28,14 @@ const {
   deleteAddress,
   editeAddress,
   showddress,
-  aaplyCoupon
+  aaplyCoupon,
+  placeOrder,
+  creatOder,
+  getProfile,
+getOrderHistory,
+orderDetails,
+orderCancel
+
 
 
 } = require("../controller/user");
@@ -59,6 +66,11 @@ router.delete('/address',deleteAddress)
 router.patch('/address',editeAddress)
 router.get("/address",showddress );
 router.post("/coupon",session,aaplyCoupon);
-
+router.get('/order',placeOrder)
+router.post('/order',session,creatOder)
+router.get('/profile',session,getProfile)
+router.get('/orderHistory',session,getOrderHistory)
+router.get('/orderdetails',session,orderDetails)
+router.put('/cancelorder',orderCancel)
 
 module.exports = router;

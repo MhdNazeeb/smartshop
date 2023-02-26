@@ -56,16 +56,16 @@
 								<span><i class="mdi mdi-chevron-right"></i></span>User
 							</p>
 						</div>
-						<div>
+						<!-- <div>
 							<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 								data-bs-target="#addUser"> Add User
 							</button>
-						</div>
+						</div> -->
 					</div>
 					<div class="row">
 						<div class="col-12">
 							<div class="ec-vendor-list card card-default">
-								<div class="card-body">
+								<div class="card-body" >
 									<div class="table-responsive">
 										<table id="responsive-data-table" class="table">
 											<thead>
@@ -78,7 +78,7 @@
 													<!-- <th>Total Buy</th> -->
 													<th>Status</th>
 													<!-- <th>Join On</th> -->
-													<th>Action</th>
+													<!-- <th>Action</th> -->
 												</tr>
                                                 
 											</thead>
@@ -92,17 +92,17 @@
 													<td><%=findUser[i].phone%></td>
 													<!-- <td>2161</td> -->
                                                     <%if(findUser[i].status){%>
-													<td  class="btn-btn-danger" ><a href='/admin/block/?id=<%=findUser[i]._id%>'>Block</a></td>
+													<td  class="btn-btn-danger" ><a href='/admin/block/?id=<%=findUser[i]._id%>' style="color: red;">Block</a></td>
                                                     <%}else {%>
-                                                        <td class="btn-btn-sucess"><a href='/admin/block/?unbid=<%=findUser[i]._id%>'>ACTIVE</a></td>
+                                                        <td class="btn-btn-sucess"><a href='/admin/block/?unbid=<%=findUser[i]._id%>' style="color:green;">ACTIVE</a></td>
                                                     <%}%>
                                                     
 													<!-- <td>2021-10-30</td> -->
-													<td>
+													<!-- <td>
 														<div class="btn-group mb-1">
 															<button type="button"
 																class="btn btn-outline-danger" onclick="deleteUser('<%=findUser[i]._id%>')">delete</button>
-															<!-- <button type="button"
+														 <button type="button"
 																class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
 																data-bs-toggle="dropdown" aria-haspopup="true"
 																aria-expanded="false" data-display="static">
@@ -113,8 +113,8 @@
 																<a class="dropdown-item" href="#">Edit</a>
 																 <a class="dropdown-item" href="#">Delete</a> 
 															</div> -->
-														</div>
-													</td>
+														<!-- </div> -->
+													<!-- </td>  -->
 												</tr>
                                                 <%}%>
 												<!-- <tr>
@@ -2390,7 +2390,7 @@
 					<!-- Add User Modal  -->
 					<div class="modal fade modal-add-contact" id="addUser" tabindex="-1" role="dialog"
 						aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-						<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+						<!-- <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 							<div class="modal-content">
 								<form>
 									<div class="modal-header px-4">
@@ -2470,7 +2470,7 @@
 									</div>
 								</form>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div> <!-- End Content -->
 			</div> <!-- End Content Wrapper -->

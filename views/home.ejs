@@ -493,25 +493,25 @@
                                          <div class="ec-pro-image-outer">
                                              <div class="ec-pro-image">
                                                  <a href="" class="image">
-                                                     <img class="main-image"
+                                                     <img  class="main-image" 
                                                          src="/images/uploads/<%=findProduct[i].image[0]%>" alt="Product" />
                                                      <img class="hover-image"
                                                          src="/images/uploads/<%=findProduct[i].image[1]%>" alt="Product" />
                                                  </a>
                                                  <!-- <span class="percentage">20%</span> -->
-                                                 <a href="#" class="quickview" data-link-action="quickview"
+                                                 <!-- <a href="#" class="quickview" data-link-action="quickview"
                                                      title="Quick view" data-bs-toggle="modal"
                                                      data-bs-target="#ec_quickview_modal"><img
                                                          src="/assets/images/icons/quickview.svg" class="svg_img pro_svg"
-                                                         alt="" /></a>
+                                                         alt="" /></a> -->
                                                  <div class="ec-pro-actions">
-                                                     <a href="compare.html" class="ec-btn-group compare"
+                                                     <!-- <a href="compare.html" class="ec-btn-group compare"
                                                          title="Compare"><img src="/assets/images/icons/compare.svg"
-                                                             class="svg_img pro_svg" alt="" /></a>
-                                                     <button title="Add To Cart" class="add-to-cart"><img
+                                                             class="svg_img pro_svg" alt="" /></a> -->
+                                                     <a href=""><button  onclick="addCart('<%=findProduct[i]._id%>')"  title="Add To Cart" class="add-to-cart"><img
                                                              src="/assets/images/icons/cart.svg" class="svg_img pro_svg"
-                                                             alt="" /> Add To Cart</button>
-                                                     <a class="ec-btn-group wishlist" title="Wishlist"><img
+                                                              alt="" /> Add To Cart</button></a>
+                                                     <a href="" class="ec-btn-group wishlist" onclick="wishlist('<%=findProduct[i]._id%>')" title="Wishlist"><img
                                                              src="/assets/images/icons/wishlist.svg"
                                                              class="svg_img pro_svg" alt="" /></a>
                                                  </div>
@@ -3481,9 +3481,62 @@
      <script src="/assets/js/vendor/index.js"></script>
      <script src="/assets/js/main.js"></script>
  </body>
+ <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
  
  <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-html/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:18:12 GMT -->
  </html>
+ <script>
+    function addCart(proid){
+        event.preventDefault()
+        console.log(proid)
+     axios.get(`/cart?proid=${proid}&quantity=${1}`)
+     .then((res)=>{
+        console.log(res.data,"res data mssge")
+        if(res.data.cartCreated){
+           
+            console.log('cart made');
+            location.href='/cartList'
+        }else if(res.data.incriment){
+            console.log('incriment sucess ')
+            swal("Good job!", "You clicked the button!", "success");
+            window.location.replace='/productDetails'
+              
+        }else if(res.data.push){
+            console.log('cart updated')
+            swal("Good job!", "You clicked the button!", "success");
+            window.location.replace='/productDetails'
+
+        }else if(res.data.outofstock){
+            console.log('incriment sucess ')
+            swal("oops!", "out of stock", "error");
+            window.location.replace='/productDetails'
+        }else if(res.data.session){
+            swal("Hello world!");
+            location.href='/login'
+          
+
+        }
+
+     })
+    }
+    function wishlist(proid){
+        event.preventDefault()
+        axios.post(`wishList?proid=${proid}`)
+        .then((res)=>{
+            if(res.data.findPro){
+                swal("oops!", " already exisits!", "error");
+            }else if(res.data.push){
+                swal("Good job!", "add sucess!", "success");
+               
+            }else if(res.data.session){
+                location.href='/login'
+            }else if(res.data.created){
+                swal("Good job!", "add sucess!", "success");
+            }
+        })
+    }
+ </script>
 
 
 

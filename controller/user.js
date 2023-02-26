@@ -13,6 +13,8 @@ const accountSid = process.env.account_id;
 const authToken = process.env.authToken;
 const client = require("twilio")(accountSid, authToken);
 const coupon = require("../models/coupon");
+const order = require("../models/order");
+const moment = require('moment');
 const home = async (req, res) => {
   const findProduct = await product.find({});
   const findCategory = await category.find({});
@@ -69,7 +71,6 @@ const postSignup = async (req, res) => {
         })
         .catch((err) => {
           console.log(err.message, "signup");
-          console.log("this is not sucess");
           res.redirect("/signup");
         });
     }
@@ -112,7 +113,7 @@ const postLogin = async (req, res) => {
 const getPhone = (req, res) => {
   try {
     console.log("here is phone");
-    res.render("phone",{message:req.flash('message')});
+    res.render("phone", { message: req.flash("message") });
   } catch (error) {
     res.render("user404");
   }
@@ -120,7 +121,6 @@ const getPhone = (req, res) => {
 const getOtp = (req, res) => {
   try {
     res.render("otp", { message: req.flash("message") });
-
   } catch (error) {
     res.render("user404");
   }
@@ -130,7 +130,7 @@ const postNumber = async (req, res) => {
   const { userlogin } = req.session;
   try {
     const { newusermobile } = req.body;
-    console.log('here is find user');
+    console.log("here is find user");
     const findUser = await signup.findOne({ phone: newusermobile });
     if (!findUser) {
       console.log(findUser, "this is findUser");
@@ -146,10 +146,10 @@ const postNumber = async (req, res) => {
         .then((verification) => {
           res.redirect("/otp");
         });
-    }else{
-      console.log('here is all ready exisits');
-      req.flash('message','m')
-      res.redirect('/phone')
+    } else {
+      console.log("here is all ready exisits");
+      req.flash("message", "m");
+      res.redirect("/phone");
     }
   } catch (error) {
     console.log(error.message);
@@ -198,6 +198,7 @@ const productDetails = async (req, res) => {
   }
 };
 const addToCart = async (req, res) => {
+  console.log("cart check");
   try {
     const { proid, quantity } = req.query;
     const { userlogin } = req.session;
@@ -213,7 +214,7 @@ const addToCart = async (req, res) => {
     console.log(price, "this is price");
     console.log(typeof trimmed_id);
     const cartFind = await cart.findOne({ user: userlogin });
-    if (stock > 1) {
+    if (stock >= 1) {
       if (!cartFind) {
         const cartCreate = await cart.create({
           user: userlogin,
@@ -287,7 +288,7 @@ const getCart = async (req, res) => {
       .findOne({ user: userlogin })
       .populate("items.product");
     console.log(findProduct, "this cart product");
-    res.render("usercartlist", { findProduct });
+    res.render("usercartlist",{ findProduct });
   } else {
     console.log("empty cart ");
     res.render("emptycart");
@@ -438,7 +439,17 @@ const checkout = async (req, res) => {
 
   console.log("this is check out page");
   let findAddress = await address.findOne({ user: userlogin });
-  const subamount = await cart.findOne({ user: userlogin });
+  const subamount = await cart
+    .findOne({ user: userlogin })
+    .populate("items.product", "quantity");
+  console.log(subamount, "this populate");
+  // const Productid=subamount.items.product
+  // const index = subamount.items.findIndex((obj) => obj.product == proid);
+  // const cartquantity=subamount.items.forEach((val)=>{
+  //   val.quantity
+  // })
+
+  const stock = await product.find({ user: userlogin });
   console.log(subamount, "this is subamount");
 
   console.log(findAddress, "this find address");
@@ -525,28 +536,173 @@ const showddress = async (req, res) => {
   res.json(showAddress);
 };
 const aaplyCoupon = async (req, res) => {
-  const { eccoupan } = req.body;
+  const { eccoupan } = req.query;
   const { userlogin } = req.session;
+  console.log(userlogin, "THIS USER ID");
   console.log(eccoupan, "this coupon code");
   const findCoupon = await coupon.findOne({ code: eccoupan });
-  const minamount = findCoupon.mincartAmout;
-  const discount = findCoupon.mincartAmout;
-
-  console.log(minamount, "this cart amount");
-  console.log(findCoupon, "this frereound coupon");
-  const cartFind = await cart.findOne({ user: userlogin });
-  const cartTotal = cartFind.grandTotal;
-
+  console.log(findCoupon, "this is findCoupon");
   if (findCoupon) {
-    if (minamount >= cartTotal) {
-      
+    const minamount = findCoupon.mincartAmout;
+    const discount = findCoupon.amount;
+    req.session.Discount = discount;
+    const available = findCoupon.available;
+    console.log(minamount, "this cart amount");
+    console.log(findCoupon, "this frereound coupon");
+    const cartFind = await cart.findOne({ user: userlogin });
+    const cartTotal = cartFind.grandTotal;
+    const cuurDate = new Date();
+    const endDate = findCoupon.expiredAfter;
+
+    console.log("this first if ");
+    if (cartTotal >= minamount) {
+      if (available !== 0) {
+        console.log("this second if ");
+        if (cuurDate <= endDate) {
+          console.log("this third if");
+          const { _id } = findCoupon;
+          console.log(_id, "this find coupon id");
+          const couponCheck = await coupon.findOne({
+            _id: _id,
+            "userUsed.userId": userlogin,
+          });
+          if (couponCheck) {
+            console.log(couponCheck, "this find coupon and checking");
+            res.json({ already: true });
+          } else {
+            const UpadateCoupon = await coupon.updateOne(
+              { _id: _id },
+              {
+                $push: { userUsed: { userId: userlogin } },
+                $inc: { available: -1 },
+              }
+            );
+            console.log(cartTotal, discount, "this cart total");
+            cartgrand = cartTotal - discount + 30;
+            req.session.subtotal = cartgrand;
+            console.log(cartgrand, "after opration");
+            console.log(UpadateCoupon, "this is true");
+            res.json({ total: cartgrand, discount: discount });
+          }
+        } else {
+          res.json({ expireDate: true });
+          console.log("expire date is over");
+        }
+      } else {
+        res.json({ couponNoytvalible: true });
+        console.log("coupon not avalible");
+      }
     } else {
-      console.log("you should be purchers atleast 700$");
+      console.log(minamount);
+      console.log("you should be purcharse atleast 700$");
+      res.json({ purcharse: minamount });
     }
   } else {
     console.log("coupon wrong");
+    res.json({ wrongcp: true });
   }
 };
+const placeOrder = async (req, res) => {
+  const { orderId } = req.session;
+  const orderFind=await order.findOne({_id:orderId}).populate('items.product' )
+  console.log(orderFind,'this is order find');
+  const {deleveryaddress}= req.session
+  console.log(deleveryaddress,'this is session address');
+    res.render("success",{orderFind,deleveryaddress});
+
+};
+const creatOder = async (req, res) => {
+  console.log("this place order");
+  const { paymode, addressid } = req.body;
+  console.log(addressid, "address id");
+  if (paymode == "cod") {
+    console.log(paymode, addressid, "this whati want");
+    const { userlogin } = req.session;
+    const cartItems = await cart.findOne({ user: userlogin });
+    const address1 = await address.findOne({ user: userlogin });
+    console.log(address1, "address");
+    const { Discount } = req.session;
+    console.log(Discount, "this discount in order ");
+    const deleveryAddress = address1.address.filter((val) => {
+      return val._id == addressid;
+    });
+    req.session.deleveryaddress=deleveryAddress
+    console.log("this address if case", deleveryAddress);
+    console.log("this cod");
+    const totalPrice=await cart.findOne({user:userlogin}) 
+    const cuurDate = new Date();
+   
+    if(Discount){
+     grandPrice =totalPrice.grandTotal-Discount+30
+    }else {
+      grandPrice =totalPrice.grandTotal-0+30
+    }
+    const makeOrder = await order
+      .create({
+        userId: userlogin,
+        date: cuurDate,
+        items: cartItems.items,
+        subtotal: cartItems.grandTotal,
+        address: deleveryAddress,
+        paymentmethod: paymode,
+        discount: Discount,
+        total:grandPrice
+      })
+      .then((result) => {
+        req.session.orderId = result._id;
+        const orderdProducts = result.items;
+        console.log(orderdProducts, "this is ");
+        orderdProducts.forEach(async (val) => {
+          let remove = await product.findByIdAndUpdate(
+            { _id: val.product },
+            { $inc: { quantity: -val.quantity } }
+          );
+          console.log(remove, "this remove");
+        });
+        cartItems.items = [];
+        cartItems.cartItems = 0;
+        cartItems.grandTotal = 0;
+        cartItems.cartquantity = 0;
+        cartItems.save();
+        res.json({ order: true });
+      });
+  }
+};
+const getProfile=(req,res)=>{
+  res.render('userprofile')
+}
+const getOrderHistory=async(req,res)=>{
+  const {userlogin} = req.session
+  const orderFind=await order.find({userId:userlogin}).populate('items.product').sort({date:-1})
+  console.log(orderFind,'this order find');
+  res.render('orderhistory',{orderFind})
+}
+const orderDetails=async(req,res)=>{
+  const {oderid}=req.query
+  console.log(oderid,'this order id');
+  const userorder = await order.findOne({ _id: oderid }).populate(
+    "items.product"
+  );
+  console.log(userorder,'this order roduct');
+  const OrderedAddress = userorder.address;
+  console.log(OrderedAddress);
+  res.render('orderdetails',{userorder,OrderedAddress})
+}
+const orderCancel=async(req,res)=>{
+  
+ const {orderid} = req.query
+ const orderUpdate = await order.findByIdAndUpdate(orderid, {
+  orderstatus: "Cancelled",
+});
+ const products=orderUpdate.items
+ products.forEach(async (element) => {
+  let update = await product.findByIdAndUpdate(element.product, {
+    $inc: { quantity: element.quantity },
+  });
+  console.log(update,'this is update');
+});
+res.json({cancel:true})
+}
 
 module.exports = {
   home,
@@ -574,4 +730,12 @@ module.exports = {
   editeAddress,
   showddress,
   aaplyCoupon,
+  placeOrder,
+  creatOder,
+  getProfile,
+ getOrderHistory,
+ orderDetails,
+ orderCancel
+
+
 };

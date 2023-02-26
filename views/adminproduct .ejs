@@ -52,10 +52,10 @@
 							<p class="breadcrumbs"><span><a href="index.html">Home</a></span>
 								<span><i class="mdi mdi-chevron-right"></i></span>Product</p>
 						</div>
-						<div>
+						<!-- <div>
 							<a href="product-list.html" class="btn btn-primary"> View All
 							</a>
-						</div>
+						</div> -->
 					</div>
 					<div class="row">
 						<div class="col-12">
@@ -337,3 +337,9 @@
 
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-admin/product-add.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:28:43 GMT -->
 </html>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+	if('<%=message%>'){
+		swal("Good job!", "product added!", "success");
+	}
+</script>

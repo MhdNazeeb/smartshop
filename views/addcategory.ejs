@@ -59,8 +59,8 @@
 					</div>
 					<div class="row">
 						<div class="col-xl-4 col-lg-12">
-							<div class="ec-cat-list card card-default mb-24px">
-								<div class="card-body">
+							<div class="ec-cat-list card card-default mb-24px" style="width: 937px;">
+								<div class="card-body" style="width: 925px; ">
 									
 									<div class="ec-cat-form">
 										<h4>Add New Category</h4>
@@ -75,7 +75,7 @@
 											<div class="form-group row">
 												<label for="text" class="col-12 col-form-label">Name</label> 
 												<div class="col-12">
-													<input id="text" name="name" class="form-control here slug-title" type="text">
+													<input id="text" name="name" class="form-control here slug-title" type="text" required>
 												</div>
 											</div>
 
@@ -90,7 +90,7 @@
 											<div class="form-group row">
 												<label class="col-12 col-form-label"> Description</label> 
 												<div class="col-12">
-													<textarea id="sortdescription" name="description" cols="40" rows="2" class="form-control"></textarea>
+													<textarea id="sortdescription" name="description" cols="40" rows="2" class="form-control" required></textarea>
 												</div>
 											</div> 
 
@@ -593,6 +593,8 @@
 <script>
 	if("<%=message%>"){
 		swal("oops!", "already existst", "error");
+	}else if('<%=status%>'){
+		swal("good!", "category added", "success");
 	}
 </script>
 

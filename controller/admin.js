@@ -7,7 +7,8 @@ const category = require("../models/category");
 const product = require("../models/product");
 const signup = require("../models/singnup");
 const { ObjectId } = require("mongodb");
-const coupon=require('../models/coupon')
+const coupon=require('../models/coupon');
+const order = require("../models/order");
 
 const login = (req, res) => {
   if (req.session.login) {
@@ -41,7 +42,7 @@ const getProduct = async (req, res) => {
 
     const findCategory = await category.find();
 
-    res.render("adminproduct ", { findCategory });
+    res.render("adminproduct ", { findCategory,message:req.flash('message') });
   } catch (error) {
     res.render("404");
   }
@@ -51,7 +52,7 @@ const getCategory = async (req, res) => {
   try {
     const findCategory = await category.find({});
 
-    res.render("addcategory", { findCategory, message: req.flash("message") });
+    res.render("addcategory", { findCategory, message: req.flash("message"),status:req.flash('status') });
     // req.session.dub=false
     // req.session.Category = false;
 
@@ -70,7 +71,7 @@ const addCategory = async (req, res) => {
     })
     .then(() => {
       req.session.Category = true;
-
+       req.flash('status','aa')
       res.redirect("/admin/category");
     })
     .catch(() => {
@@ -114,11 +115,12 @@ const addProduct = async (req, res) => {
       color: color,
     })
     .then(() => {
-      console.log("here is upload sucess");
+      req.flash('message','product')
+      console.log("here is upload success");
       res.redirect("/admin/product");
     })
     .catch(() => {
-      console.log("here is upload unsucess");
+      console.log("here is upload unsuccess");
       res.redirect("/admin/product");
     });
 };
@@ -236,14 +238,61 @@ const crateCoupon=async(req,res)=>{
     usageLimit:usegelimit,
     mincartAmout:mincart,
   }).then(()=>{
-    console.log('this is sucess');
+    
     req.flash('message','a')
     res.redirect('/admin/coupon')
   }).catch((e)=>{
-    console.log('this is unsucess');
+   
     res.redirect('/admin/coupon')
   })
 
+}
+const orderHistory=async(req,res)=>{
+  console.log('reach order history in admin');
+  const orderdetails=await order.find({}).populate('items.product').sort({date:-1})
+  console.log(orderdetails,'this order history');
+  res.render('adminorderhistory',{orderdetails})
+}
+const orderDetails=async(req,res)=>{
+  const {oderid}=req.query
+  console.log(oderid,'this order id');
+  const userorder = await order.findOne({ _id: oderid }).populate(
+    "items.product"
+  );
+  console.log(userorder,'this order roduct');
+  const OrderedAddress = userorder.address;
+  console.log(OrderedAddress);
+  res.render('adminorderdetails',{OrderedAddress,userorder})
+}
+const status=async(req,res)=>{
+  console.log('reach status page');
+ const {status}=req.body
+ const {orderid}=req.query
+ console.log(orderid);
+ if(status=='Cancelled'){
+  const {orderid}=req.query
+ const orderUpdate = await order.findByIdAndUpdate(orderid, {
+  orderstatus:status,
+});
+ const products=orderUpdate.items
+ products.forEach(async (element) => {
+  let update = await product.findByIdAndUpdate(element.product, {
+    $inc: { quantity: element.quantity },
+  });
+  console.log(update,'this is update');
+});
+res.json({cancel:true})
+ }else if(status=='delivered'){
+  const {orderid}=req.query
+ const orderUpdate = await order.findByIdAndUpdate(orderid, {
+  orderstatus: status,
+});
+ }else if(status=='pending'){
+  const {orderid}=req.query
+  const orderUpdate = await order.findByIdAndUpdate(orderid, {
+   orderstatus: status,
+ });
+ }
 }
 
 module.exports = {
@@ -262,5 +311,9 @@ module.exports = {
   getEditProduct,
   editeProduct,
   getCoupon,
-  crateCoupon
+  crateCoupon,
+  orderHistory,
+  orderDetails,
+  status
+  
 };

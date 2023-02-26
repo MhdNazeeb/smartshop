@@ -950,8 +950,9 @@
 												<tr>
 													<th>Product</th>
 													<th>Name</th>
+													<th>Categories</th>
 													<th>Price</th>
-													<!-- <th>Offer</th> -->
+													
 													<!-- <th>Purchased</th> -->
 													
 													<th>Stock</th>
@@ -968,6 +969,8 @@
 												<tr id="<%=findProduct[i]._id%>">
 													<td><img class="tbl-thumb" src="/images/uploads/<%=findProduct[i].image[0]%>" alt="Product Image" /></td>
 													<td><%=findProduct[i].name%></td>
+													<td><%=findProduct[i].category%></td>
+
 													<td>$<%=findProduct[i].price%></td>
 													<!-- <td>25% OFF</td>
 													<td>61</td> -->

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+
+<!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-admin/invoice.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:28:52 GMT -->
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Ekka - Admin Dashboard HTML Template.">
+
+	<title>Ekka - Admin Dashboard HTML Template.</title>
+
+	<!-- GOOGLE FONTS -->
+	<link rel="preconnect" href="https://fonts.googleapis.com/">
+	<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800&amp;family=Poppins:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+
+	<link href="../../../../cdn.jsdelivr.net/npm/%40mdi/font%404.4.95/css/materialdesignicons.min.css" rel="stylesheet" />
+
+	<!-- PLUGINS CSS STYLE -->
+	<link href="/color/plugins/simplebar/simplebar.css" rel="stylesheet" />
+
+	<!-- Ekka CSS -->
+	<link id="ekka-css" href="/color/css/ekka.css" rel="stylesheet" />
+
+	<!-- FAVICON -->
+	<link href="/color/img/favicon.png" rel="shortcut icon" />
+</head>
+
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+
+	<!-- WRAPPER -->
+	<div class="wrapper">
+
+		<!-- LEFT MAIN SIDEBAR -->
+		<%-include('./partials/adminSidebar.ejs')%>
+
+		<!-- PAGE WRAPPER -->
+		<div class="ec-page-wrapper">
+
+			<!-- Header -->
+            <%-include('./partials/adminHeader.ejs')%>
+
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper breadcrumb-wrapper-2">
+						<h1>Invoice</h1>
+						<p class="breadcrumbs"><span><a href="index.html">Home</a></span>
+							<span><i class="mdi mdi-chevron-right"></i></span>Invoice
+						</p>
+					</div>
+					<div class="card invoice-wrapper border-radius border bg-white p-4">
+						<div class="d-flex justify-content-between">
+							<h3 class="text-dark font-weight-medium">Invoice #125</h3>
+
+							<div class="btn-group">
+								<button class="btn btn-sm btn-primary">
+									<i class="mdi mdi-content-save"></i> Save
+								</button>
+
+								<button class="btn btn-sm btn-primary">
+									<i class="mdi mdi-printer"></i> Print
+								</button>
+							</div>
+						</div>
+
+						<div class="row pt-5">
+							<div class="col-xl-3 col-lg-4 col-sm-6">
+								<p class="text-dark mb-2">From</p>
+
+								<address>
+									<span>Ekka</span>
+									<br> 
+									<br> <span>Email:</span> nsb@gmail.com
+									<br> <span>Phone:</span> 7012274832
+								</address>
+							</div>
+							<div class="col-xl-3 col-lg-4 col-sm-6">
+								<p class="text-dark mb-2">To</p>
+
+								<address>
+									<span><%=OrderedAddress[0].Name%></span>
+									<br> <%=OrderedAddress[0].address1%>
+									<br> <span>Email</span>:<%=OrderedAddress[0].email%>
+									<br> <span>Phone:</span> <%=OrderedAddress[0].phone%>
+								</address>
+							</div>
+							<div class="col-xl-4 disp-none"></div>
+							<div class="col-xl-2 col-lg-4 col-sm-6">
+								<p class="text-dark mb-2">Details</p>
+
+								<address>
+									<span>Invoice ID:</span>
+									<span class="text-dark"><%=userorder._id%></span>
+									<br><span>Date :</span> <%=userorder.date.toLocaleDateString()%>
+									<!-- <br> <span>VAT:</span> PL6541215450 -->
+								</address>
+							</div>
+						</div>
+
+						<div class="table-responsive">
+							<table class="table mt-3 table-striped table-responsive table-responsive-large inv-tbl"
+								style="width:100%">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Image</th>
+										<th>Item</th>
+										<th>Description</th>
+										<th>Quantity</th>
+										<th>Unit_Cost</th>
+										<th>Total</th>
+                                        <th>action</th>
+									</tr>
+								</thead>
+
+								<tbody>
+                                    <%for(let i=0;i<userorder.items.length ;i++){%>
+									<tr>
+										<td><%=i+1%></td>
+										<td><img class="invoice-item-img" src="/images/uploads/<%=userorder.items[i].product.image[0]%>" alt="product-image" /></td>
+										<td><%=userorder.items[i].product.name%></td>
+										<td><%=userorder.items[i].product.description%></td>
+										<td><%=userorder.items[i].quantity%></td>
+										<td>$<%=userorder.items[i].product.price%></td>
+										<td>$<%=userorder.total%></td>
+                                        <td>
+                                           <div class="btn-group mb-1">
+															<button type="button"
+																class="btn btn-outline-success">Info</button>
+															<button type="button"
+																class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
+																data-bs-toggle="dropdown" aria-haspopup="true"
+																aria-expanded="false" data-display="static">
+																<span class="sr-only">Info</span>
+															</button>
+
+															<div class="dropdown-menu">
+																<a class="dropdown-item" onclick="status('<%=userorder._id%>','pending')" href="">pending</a>
+																<a class="dropdown-item" onclick="status('<%=userorder._id%>','delivered')"  href="#">delivered</a>
+
+                                                                
+																<a class="dropdown-item" onclick="status('<%=userorder._id%>','Cancelled')"  href="#">Cancel</a>
+                                                                
+															</div>
+														</div> 
+                                        </td>
+									</tr>
+                                    <%}%>
+									
+								</tbody>
+							</table>
+						</div>
+
+						<div class="row justify-content-end inc-total">
+							<div class="col-lg-3 col-xl-3 col-xl-3 ml-sm-auto">
+								<ul class="list-unstyled mt-3">
+									<li class="mid pb-3 text-dark"> Subtotal
+										<span class="d-inline-block float-right text-default">$<%=userorder.subtotal%></span>
+									</li>
+
+									<!-- <li class="mid pb-3 text-dark">Vat(10%)
+										<span class="d-inline-block float-right text-default">$100.00</span>
+									</li> -->
+
+									<li class="pb-3 text-dark">Total
+										<span class="d-inline-block float-right">$<%=userorder.total%></span>
+									</li>
+								</ul>
+
+								<!-- <a href="javascript:void(0)" class="btn btn-block mt-2 btn-primary btn-pill"> Procced to
+									Payment</a> -->
+							</div>
+						</div>
+					</div>
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+
+			<!-- Footer -->
+            <%-include('./partials/adminFooter.ejs')%>
+
+		</div> <!-- End Page Wrapper -->
+	</div> <!-- End Wrapper -->
+
+	<!-- Common Javascript -->
+	<script src="/color/plugins/jquery/jquery-3.5.1.min.js"></script>
+	<script src="/color/js/bootstrap.bundle.min.js"></script>
+	<script src="/color/plugins/simplebar/simplebar.min.js"></script>
+	<script src="/color/plugins/jquery-zoom/jquery.zoom.min.js"></script>
+	<script src="/color/plugins/slick/slick.min.js"></script>
+
+	<!-- Option Switcher -->
+	<script src="/color/plugins/options-sidebar/optionswitcher.js"></script>
+
+	<!-- Ekka Custom -->
+	<script src="/color/js/ekka.js"></script>
+
+</body>
+
+
+<!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-admin/invoice.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:28:52 GMT -->
+</html>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    function status(orderid,status){
+        event.preventDefault()
+        console.log(status,'jjjjjjjjjjjjjjjjj');
+    axios.put(`status?orderid=${orderid}`,{status})
+    }
+</script>

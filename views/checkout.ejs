@@ -178,22 +178,22 @@
                         Add Address
                       </button>
                   </p>
-                  <div class="collapse" id="collapseExample">
+                  <div class="collapse show" id="collapseExample">
                     <%if(findAddress){%>
                     <%for( let i=0; i <findAddress.address.length ; i++){%>
                       
-                    <div style="border:black 1px solid" class="card card-body" id="<%=findAddress.address[i]._id%>" >
+                    <div style="border:black 1px solid;background-color: rgb(39, 39, 31);" class="card card-body" id="<%=findAddress.address[i]._id%>" >
                           <i  type="button"  data-toggle="modal" onclick="showAddress('<%=findAddress.address[i]._id%>')" data-target="#exampleModalCenter"  class="fa-solid fa-pen-to-square" style="color: blue;width: 30px;height: 30px;"></i>
                         <i class="fa-solid fa-trash" onclick="deleteAddress('<%=findAddress.address[i]._id%>')" style="color:red" type="button" class="close" data-dismiss="modal" aria-label="Close"></i>
-                     <div class="col-lg-12 border" style="border:black 1px solid">
+                     <div class="col-lg-12 border-pt-4" style="border:black 1px solid;background-color: rgb(245, 244, 241);" >
                         
                       <span>
-                      <input type="radio" style="width:15px" >
+                      <input type="radio" style="width:15px" name="address" value="<%=findAddress.address[i]._id%>" checked>
                       </span>
                      
-                        <h5><%=findAddress.address[i].Name%>
+                        <b><h5 style="color: black;"><%=findAddress.address[i].Name%>
                             
-                        </h5>
+                        </h5></b>
                         <li><%=findAddress.address[i].address1%>
                            
                         </li>
@@ -292,25 +292,30 @@
                                         </div>
                                         <div>
                                             <span class="text-left">Delivery Charges</span>
-                                            <span class="text-right">$360.00</span>
+                                            <span class="text-right">$30.00</span>
                                         </div>
                                         <div>
                                             <span class="text-left">Coupan Discount</span>
-                                            <span class="text-right"><a class="ec-cart-coupan">Apply Coupan</a></span>
+                                            <span class="text-right"><a class="ec-cart-" id="appled"></a></span>
+                                        </div>
+                                        <div>
+                                            <span class="text-left">Coupan Discount</span>
+                                            <span class="text-right"><a class="ec-cart-coupan" id="discount">Apply Coupan</a></span>
                                         </div>
                                         <div class="ec-cart-coupan-content">
-                                            <form  class="ec-cart-coupan-form" name="ec-cart-coupan-form" method="post"
-                                                action="/coupon">
+                                            
+                                            <form  class="ec-cart-coupan-form" name="ec-cart-coupan-form" 
+                                                >
                                                 <input class="ec-coupan" type="text" required=""
-                                                    placeholder="Enter Your Coupan Code" name="eccoupan" value="">
+                                                    placeholder="Enter Your Coupan Code" id="couponcode" name="eccoupan" value="">
 
                                                 <button class="ec-coupan-btn button btn-primary" type="submit"
-                                                    name="subscribe" value="">Apply</button>
+                                                    name="subscribe" value="" onclick="couponApply()">Apply</button>
                                             </form>
                                         </div>
                                         <div class="ec-cart-summary-total">
                                             <span class="text-left">Total Amount</span>
-                                            <span class="text-right">$80.00</span>
+                                            <span class="text-right" id="totalamount">$<%=subamount.grandTotal+30%></span>
                                         </div>
                                       
                                     </div>
@@ -318,15 +323,46 @@
                                 </div>
                            
                             </div>
-                            <a class="btn btn-primary"  href="#" role="button" >
-                                place oder
-                              </a>
+                            
                         </div>
+                       <div class="ec-sidebar-block pt-4" >
+                        <div class="ec-sb-title">
+                            <h3 class="ec-sidebar-title">Payment Method</h3>
+                        </div>
+                        <div class="ec-sb-block-content">
+                            <div class="ec-checkout-pay">
+                                <div class="ec-pay-desc">Please select the preferred payment method to use on this
+                                    order.</div>
+                                <form action="/order" method="post">
+                                    <span class="ec-pay-option">
+                                        <span>
+                                            <input type="radio" id="pay1" name="radiogroup" value="cod" style="width: 15px;color: black;" checked>
+                                            <label for="pay1">Cash On Delivery</label>
+                                        </span>
+                                    </span>
+                                    <!-- <span class="ec-pay-commemt">
+                                        <span class="ec-pay-opt-head">Add Comments About Your Order</span>
+                                        <textarea name="your-commemt" placeholder="Comments"></textarea>
+                                    </span> -->
+                                    <!-- <span class="ec-pay-agree"><input type="checkbox" style="width: 13px;" value=""><a href="#">I have
+                                            read and agree to the <span>Terms & Conditions</span></a><span
+                                            class="checked"></span></span> -->
+                                        
+                                </form>
+                                
+                                <a class="btn btn-primary -pt-5" onclick="order()" href="" role="button"  >
+                                    place oder
+                                  </a>
+
+                            </div>
+                        </div>
+                    </div>
                         <!-- Sidebar Summary Block -->
                     </div>
                 </div>
             </div>
         </div>
+        
     </section>
     <!-- New Product Start -->
     
@@ -436,9 +472,62 @@
                                 </div>
                             </div>
                         </div>
+                         class="ec-sidebar-block">
+                            <div class="ec-sb-title">
+                                <h3 class="ec-sidebar-title">Payment Method</h3>
+                            </div>
+                            <div class="ec-sb-block-content">
+                                <div class="ec-checkout-pay">
+                                    <div class="ec-pay-desc">Please select the preferred payment method to use on this
+                                        order.</div>
+                                    <form action="#">
+                                        <span class="ec-pay-option">
+                                            <span>
+                                                <input type="radio" id="pay1" name="radio-group" checked>
+                                                <label for="pay1">Cash On Delivery</label>
+                                            </span>
+                                        </span>
+                                        <span class="ec-pay-commemt">
+                                            <span class="ec-pay-opt-head">Add Comments About Your Order</span>
+                                            <textarea name="your-commemt" placeholder="Comments"></textarea>
+                                        </span>
+                                        <span class="ec-pay-agree"><input type="checkbox" value=""><a href="#">I have
+                                                read and agree to the <span>Terms & Conditions</span></a><span
+                                                class="checked"></span></span>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
-            </div>
+                 class="ec-sidebar-block">
+                            <div class="ec-sb-title">
+                                <h3 class="ec-sidebar-title">Payment Method</h3>
+                            </div>
+                            <div class="ec-sb-block-content">
+                                <div class="ec-checkout-pay">
+                                    <div class="ec-pay-desc">Please select the preferred payment method to use on this
+                                        order.</div>
+                                    <form action="#">
+                                        <span class="ec-pay-option">
+                                            <span>
+                                                <input type="radio" id="pay1" name="radio-group" checked>
+                                                <label for="pay1">Cash On Delivery</label>
+                                            </span>
+                                        </span>
+                                        <span class="ec-pay-commemt">
+                                            <span class="ec-pay-opt-head">Add Comments About Your Order</span>
+                                            <textarea name="your-commemt" placeholder="Comments"></textarea>
+                                        </span>
+                                        <span class="ec-pay-agree"><input type="checkbox" value=""><a href="#">I have
+                                                read and agree to the <span>Terms & Conditions</span></a><span
+                                                class="checked"></span></span>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+    </div>
         </div>
     </div>
     <!-- Modal end -->
@@ -926,5 +1015,53 @@
         })
 
     }
+    function couponApply(){
+        event.preventDefault();
+         const eccoupan= document.getElementById('couponcode').value
+         console.log(eccoupan);
+        console.log('hhhhhhhhhhhhhhhhh');
+        axios.post(`coupon?eccoupan=${eccoupan}`).then((res)=>{
+            console.log('i am waiting');
+            console.log(res.data.total,'cartgrand');
+          if(res.data.total){
+            console.log(res.data.total,'cartgrand');
+          document.getElementById('totalamount').innerHTML=`$${res.data.total}`
+          document.getElementById('appled').innerHTML='coupon Applied'
+          document.getElementById('appled').style.color='green'
+          document.getElementById('discount').innerHTML=`$${res.data.discount}`
+
+          }else if(res.data.expireDate){
+            document.getElementById('appled').innerHTML='out of date'
+            document.getElementById('appled').style.color='red'
+          }else if(res.data.couponNoytvalible){
+            document.getElementById('appled').innerHTML='coupon not available '
+            document.getElementById('appled').style.color='red'
+          }else if(res.data.purcharse){
+            document.getElementById('appled').innerHTML=`you should  purcharse$${res.data.purcharse}`
+            document.getElementById('appled').style.color='red'
+       
+          }else if(res.data.wrongcp){
+            document.getElementById('appled').innerHTML='wrong coupon'
+            document.getElementById('appled').style.color='red'
+          }else if(res.data.already){
+            document.getElementById('appled').innerHTML='already used '
+            document.getElementById('appled').style.color='red'
+          }
+        })
+    }
+
+    function order(){
+        event.preventDefault()
+        
+   const addressid = $('input[type="radio"][name="address"]:checked').val();
+   const paymode = $('input[type="radio"][name="radiogroup"]:checked').val();
+   axios.post('/order',{
+    addressid,paymode}).then((res)=>{
+        if(res.data.order){
+            location.href='/order'
+        }
+    })
+    }
+    
    
 </script>
