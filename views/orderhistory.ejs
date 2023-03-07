@@ -213,10 +213,15 @@
                                             <td><span class="tbl-btn"><a class="btn btn-lg btn-primary"
                                                         href="/orderdetails?oderid=<%=orderFind[i]._id%>">View</a></span></td>
                                                     <%if(orderFind[i].orderstatus=='pending'){%>
-                                                        <td><span class="tbl-btn"><a class="btn btn-lg btn-primary" id="<%=orderFind[i]._id%>" onclick="cancelOrder('<%=orderFind[i]._id%>')"
+                                                        <td><span class="tbl-btn"><a class="btn btn-lg btn-primary" id="<%=orderFind[i]._id%>" onclick="cancelOrder('<%=orderFind[i]._id%>','cancel')"
                                                             href="">cancel</a></span></td>
-                                                            <%}%>
-                                        </tr>        
+                                                            <%}else if(orderFind[i].orderstatus=='delivered'){%>
+                                                                <td><span class="tbl-btn"><a class="btn btn-lg btn-primary" id="<%=orderFind[i]._id%>" onclick=" cancelOrder('<%=orderFind[i]._id%>','return')"
+                                                                    >return</a></span></td>
+                                                                <%}%>
+
+                                                                 </tr> 
+
                                         <!-- <tr>
                                             <th scope="row"><span>548</span></th>
                                             <td><img class="prod-img" src="assets/images/product-image/2.jpg"
@@ -585,7 +590,8 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-  function cancelOrder(orderid){
+  function cancelOrder(orderid,status){
+    if(status=='cancel'){
     event.preventDefault()
     swal({
   title: "Are you sure?",
@@ -596,7 +602,7 @@
 })
 .then((willDelete) => {
   if (willDelete) {
-    axios.put(`cancelorder?orderid=${orderid}`)
+    axios.put(`cancelorder?orderid=${orderid}`,{status})
     .then((res)=>{
         if(res.data.cancel){
         document.getElementById(orderid).style.display='none'
@@ -610,6 +616,16 @@
     swal("Your order is safe!");
   }
 });
+
+    }else{
+        axios.put(`cancelorder?orderid=${orderid}`,{status})
+    .then((res)=>{
+        if(res.data.return){
+        document.getElementById(orderid).style.display='none'
+        document.getElementById(`status${orderid}`).innerHTML='returned'
+        }
+    })
+    }
   
     
     }

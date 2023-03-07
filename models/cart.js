@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const CartSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'user_details'
+    ref: 'signup'
   },
   items: [
     {

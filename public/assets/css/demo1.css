@@ -19565,7 +19565,7 @@ body.ec-open:before {
 
 .ec-slide-1 {
   width: 100%;
-  background-image: url("../images/main-slider-banner/1.jpg");
+ 
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -19573,14 +19573,14 @@ body.ec-open:before {
 }
 
 .ec-slide-2 {
-  background-image: url("../images/main-slider-banner/2.jpg");
+  
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
 
 .ec-slide-3 {
-  background-image: url("../images/main-slider-banner/3.html");
+ 
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

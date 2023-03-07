@@ -948,16 +948,14 @@
 											style="width:100%">
 											<thead>
 												<tr>
-													<th>Product</th>
-													<th>Name</th>
-													<th>Categories</th>
-													<th>Price</th>
+													<th>Banner</th>
+													<th>title</th>
+													<th>subtitle</th>
 													
 													<!-- <th>Purchased</th> -->
 													
-													<th>Stock</th>
 													<th >Edite</th>
-													<th>Action</th>
+													
 													<!-- <th>Date</th> -->
 													<!-- <th>Action</th> -->
 													
@@ -965,28 +963,18 @@
 											</thead>
 
 											<tbody>
-                                                <% for(let i=0; i<findProduct.length ;i++){%>
+                                               <%for(i=0; i<Findbanner.length ;i++){%>
 												<tr >
-													<td><img class="tbl-thumb" src="/images/uploads/<%=findProduct[i].image[0]%>" alt="Product Image" /></td>
-													<td><%=findProduct[i].name%></td>
-													<td><%=findProduct[i].category%></td>
+													<td><img class="tbl-thumb" src="/images/uploads/<%=Findbanner[i].image[0]%>" alt="Product Image" /></td>
+													<td><%=Findbanner[i].title%></td>
+													<td><%=Findbanner[i].subtitle%></td>
 
-													<td>$<%=findProduct[i].price%></td>
-													<!-- <td>25% OFF</td>
-													<td>61</td> -->
-													<td><%=findProduct[i].quantity%></td>
-													
-													<td><a href="/admin/Products?id=<%=findProduct[i]._id%>"><i class="fa-sharp fa-solid fa-pen" ></a></i></td>
 													
 													
-													<td id="blockbt<%=findProduct[i]._id%>">
-													<%if(findProduct[i].status=='false'){%>
-														<button  style="width: 60px;background-color: rgb(203, 36, 50);height: 35px;color: white;" onclick="softDeleteProduct('<%=findProduct[i]._id%>','block')">block</button>
-													<%}else{%>
+													<td><a href="/admin/banneres?bannerid=<%=Findbanner[i]._id%>" ><i class="fa-sharp fa-solid fa-pen"  ></a></i></td>
 													
-													<button  style="width: 60px;background-color: rgb(35, 132, 24);height: 35px;color: white;" onclick="softDeleteProduct('<%=findProduct[i]._id%>','unblock')">active</button>
-													<%}%>
-												</td>
+													
+													
 													<!-- <td>2021-10-30</td> -->
 													<!-- <td>
 														<div class="btn-group mb-1">
@@ -1007,6 +995,7 @@
 													</td> -->
 												</tr>
                                                 <%}%>
+                                               
 
 												<!-- <tr>
 													<td><img class="tbl-thumb" src="/color/img/products/p2.jpg" alt="Product Image" /></td>
@@ -2626,23 +2615,4 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-<script>
-    function softDeleteProduct(id,status){
-		console.log('hhhhhhhhhh',status);
 
-		axios.patch(`product?id=${id}`,{status})
-      .then((res)=>{
-
-        if(res.data.block){
-			console.log('hrere is  block good');
-			document.getElementById(`blockbt${id}`).innerHTML=`<button  style="width: 60px;background-color: rgb(35, 132, 24);height: 35px;color: white;" onclick="softDeleteProduct('${id}','unblock')">active</button>`
-
-          
-        }else if(res.data.unblock){
-			
-			document.getElementById(`blockbt${id}`).innerHTML=`<button  style="width: 60px;background-color: rgb(203, 36, 50);height: 35px;color: white;" onclick="softDeleteProduct('${id}','block')">block</button>`
-		}
-      })
-	
-} 
-</script>

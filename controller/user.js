@@ -1,5 +1,6 @@
 const signup = require("../models/singnup");
 const bcrypt = require("bcrypt");
+require("dotenv/config");
 const serviceid = "VAcf1cfaed8e25165ce09c1e15646d478a";
 const { login } = require("./admin");
 const product = require("../models/product");
@@ -9,16 +10,30 @@ const { ObjectId } = require("mongodb");
 const { findOne } = require("../models/singnup");
 const wishList = require("../models/wishlist");
 const address = require("../models/address");
+const banner=require('../models/banner')
 const accountSid = process.env.account_id;
 const authToken = process.env.authToken;
 const client = require("twilio")(accountSid, authToken);
+const paypal = require("@paypal/checkout-server-sdk");
+const envirolment =
+  process.env.NODE_ENV === "production"
+    ? paypal.core.LiveEnvironment
+    : paypal.core.SandboxEnvironment;
+
+const paypalCliend = new paypal.core.PayPalHttpClient(
+  new envirolment(process.env.clientId, process.env.secret)
+);
 const coupon = require("../models/coupon");
 const order = require("../models/order");
-const moment = require('moment');
+const moment = require("moment");
 const home = async (req, res) => {
+
   const findProduct = await product.find({});
   const findCategory = await category.find({});
-  res.render("home", { findProduct, findCategory });
+  console.log(findProduct,'this find product');
+  const findBanner=await banner.find({})
+  console.log(findBanner,'this find banner');
+  res.render("home", { findProduct, findCategory,findBanner });
 };
 const getsignup = (req, res) => {
   res.render("signup");
@@ -31,10 +46,11 @@ const getLogin = (req, res) => {
   }
 };
 const getShop = async (req, res) => {
+ 
   try {
+   
     let findProduct;
     let findCategory;
-
     const { id } = req.query;
     if (id) {
       findProduct = await product.find({ category: id });
@@ -50,7 +66,7 @@ const getShop = async (req, res) => {
   }
 };
 const postSignup = async (req, res) => {
-  console.log("sdfghjkl");
+  
   try {
     const { firstname, password, password1, email } = req.body;
     const { newusermobile } = req.session;
@@ -288,7 +304,7 @@ const getCart = async (req, res) => {
       .findOne({ user: userlogin })
       .populate("items.product");
     console.log(findProduct, "this cart product");
-    res.render("usercartlist",{ findProduct });
+    res.render("usercartlist", { findProduct });
   } else {
     console.log("empty cart ");
     res.render("emptycart");
@@ -436,25 +452,30 @@ const removeFromWish = async (req, res) => {
 };
 const checkout = async (req, res) => {
   const { userlogin } = req.session;
-
+  req.session.Discount=0;
+  const cartItems = await cart.findOne({ user: userlogin });
+   if(!cartItems.items[0]==''){
   console.log("this is check out page");
   let findAddress = await address.findOne({ user: userlogin });
   const subamount = await cart
     .findOne({ user: userlogin })
     .populate("items.product", "quantity");
-  console.log(subamount, "this populate");
-  // const Productid=subamount.items.product
-  // const index = subamount.items.findIndex((obj) => obj.product == proid);
-  // const cartquantity=subamount.items.forEach((val)=>{
-  //   val.quantity
-  // })
+
+ 
 
   const stock = await product.find({ user: userlogin });
   console.log(subamount, "this is subamount");
 
   console.log(findAddress, "this find address");
 
-  res.render("checkout", { findAddress, subamount });
+  res.render("checkout", {
+    findAddress,
+    subamount,
+    clientId: process.env.clientId,
+  });
+}else{
+ res.redirect('/')
+}
 };
 const addAddress = async (req, res) => {
   console.log("this address page");
@@ -604,39 +625,42 @@ const aaplyCoupon = async (req, res) => {
 };
 const placeOrder = async (req, res) => {
   const { orderId } = req.session;
-  const orderFind=await order.findOne({_id:orderId}).populate('items.product' )
-  console.log(orderFind,'this is order find');
-  const {deleveryaddress}= req.session
-  console.log(deleveryaddress,'this is session address');
-    res.render("success",{orderFind,deleveryaddress});
-
+  const orderFind = await order
+    .findOne({ _id: orderId })
+    .populate("items.product");
+  console.log(orderFind, "this is order find");
+  const { deleveryaddress } = req.session;
+  console.log(deleveryaddress, "this is session address");
+  res.render("success", { orderFind, deleveryaddress });
 };
 const creatOder = async (req, res) => {
   console.log("this place order");
   const { paymode, addressid } = req.body;
+  req.session.addressid = addressid;
   console.log(addressid, "address id");
+  const { userlogin, Discount } = req.session;
+  const cartItems = await cart.findOne({ user: userlogin });
+  const address1 = await address.findOne({ user: userlogin });
+  let grandPrice;
+  if (Discount) {
+    grandPrice = cartItems.grandTotal - Discount + 30;
+  } else {
+    grandPrice = cartItems.grandTotal - 0 + 30;
+  }
+
+  const deleveryAddress = address1.address.filter((val) => {
+    return val._id == addressid;
+  });
+  req.session.deleveryaddress = deleveryAddress;
+
   if (paymode == "cod") {
     console.log(paymode, addressid, "this whati want");
-    const { userlogin } = req.session;
-    const cartItems = await cart.findOne({ user: userlogin });
-    const address1 = await address.findOne({ user: userlogin });
-    console.log(address1, "address");
-    const { Discount } = req.session;
-    console.log(Discount, "this discount in order ");
-    const deleveryAddress = address1.address.filter((val) => {
-      return val._id == addressid;
-    });
-    req.session.deleveryaddress=deleveryAddress
+
     console.log("this address if case", deleveryAddress);
     console.log("this cod");
-    const totalPrice=await cart.findOne({user:userlogin}) 
+
     const cuurDate = new Date();
-   
-    if(Discount){
-     grandPrice =totalPrice.grandTotal-Discount+30
-    }else {
-      grandPrice =totalPrice.grandTotal-0+30
-    }
+
     const makeOrder = await order
       .create({
         userId: userlogin,
@@ -646,7 +670,7 @@ const creatOder = async (req, res) => {
         address: deleveryAddress,
         paymentmethod: paymode,
         discount: Discount,
-        total:grandPrice
+        total: grandPrice,
       })
       .then((result) => {
         req.session.orderId = result._id;
@@ -666,43 +690,142 @@ const creatOder = async (req, res) => {
         cartItems.save();
         res.json({ order: true });
       });
+  } else {
+    req.session.addressId = addressid;
+    const request = new paypal.orders.OrdersCreateRequest();
+
+    request.prefer("return=representation");
+    request.requestBody({
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "USD",
+            value: grandPrice,
+          },
+        },
+      ],
+    });
+
+    const order = await paypalCliend.execute(request);
+    res.send({ id: order.result.id, paypal: true });
   }
 };
-const getProfile=(req,res)=>{
-  res.render('userprofile')
-}
-const getOrderHistory=async(req,res)=>{
-  const {userlogin} = req.session
-  const orderFind=await order.find({userId:userlogin}).populate('items.product').sort({date:-1})
-  console.log(orderFind,'this order find');
-  res.render('orderhistory',{orderFind})
-}
-const orderDetails=async(req,res)=>{
-  const {oderid}=req.query
-  console.log(oderid,'this order id');
-  const userorder = await order.findOne({ _id: oderid }).populate(
-    "items.product"
-  );
-  console.log(userorder,'this order roduct');
+const verifyPayment = async function (req, res, next) {
+  try {
+    const { addressid } = req.session;
+
+    const { userlogin, Discount } = req.session;
+    const cartItems = await cart.findOne({ user: userlogin });
+    const address1 = await address.findOne({ user: userlogin });
+    let grandPrice;
+    if (Discount) {
+      grandPrice = cartItems.grandTotal - Discount + 30;
+    } else {
+      grandPrice = cartItems.grandTotal - 0 + 30;
+    }
+
+    const deleveryAddress = address1.address.filter((val) => {
+      return val._id == addressid;
+    });
+    req.session.deleveryaddress = deleveryAddress;
+
+    const cuurDate = new Date();
+
+    const makeOrder = await order
+      .create({
+        userId: userlogin,
+        date: cuurDate,
+        items: cartItems.items,
+        subtotal: cartItems.grandTotal,
+        address: deleveryAddress,
+        paymentmethod: "paypal",
+        discount: Discount,
+        total: grandPrice,
+      })
+      .then((result) => {
+        req.session.orderId = result._id;
+        const orderdProducts = result.items;
+        console.log(orderdProducts, "this is ");
+        orderdProducts.forEach(async (val) => {
+          let remove = await product.findByIdAndUpdate(
+            { _id: val.product },
+            { $inc: { quantity: -val.quantity } }
+          );
+          console.log(remove, "this remove");
+        });
+        cartItems.items = [];
+        cartItems.cartItems = 0;
+        cartItems.grandTotal = 0;
+        cartItems.cartquantity = 0;
+        cartItems.save();
+        res.json({ order: true });
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
+const getProfile =async (req, res) => {
+  const {userlogin}=req.session
+  const findAddress=await address.findOne({user:userlogin})
+  console.log(findAddress,'this is address');
+  res.render("userprofile",{findAddress});
+};
+const getOrderHistory = async (req, res) => {
+  const { userlogin } = req.session;
+  const orderFind = await order
+    .find({ userId: userlogin })
+    .populate("items.product")
+    .sort({ date: -1 });
+  console.log(orderFind, "this order find");
+  res.render("orderhistory", { orderFind });
+};
+const orderDetails = async (req, res) => {
+  const { oderid } = req.query;
+  console.log(oderid, "this order id");
+  const userorder = await order
+    .findOne({ _id: oderid })
+    .populate("items.product");
+  console.log(userorder, "this order roduct");
   const OrderedAddress = userorder.address;
   console.log(OrderedAddress);
-  res.render('orderdetails',{userorder,OrderedAddress})
-}
-const orderCancel=async(req,res)=>{
-  
- const {orderid} = req.query
- const orderUpdate = await order.findByIdAndUpdate(orderid, {
-  orderstatus: "Cancelled",
-});
- const products=orderUpdate.items
- products.forEach(async (element) => {
-  let update = await product.findByIdAndUpdate(element.product, {
-    $inc: { quantity: element.quantity },
+  res.render("orderdetails", { userorder, OrderedAddress });
+};
+const orderCancel = async (req, res) => {
+  const{status}=req.body
+  if(status=='cancel'){
+  const { orderid } = req.query;
+  const orderUpdate = await order.findByIdAndUpdate(orderid, {
+    orderstatus: "Cancelled",
   });
-  console.log(update,'this is update');
-});
-res.json({cancel:true})
+  const products = orderUpdate.items;
+  products.forEach(async (element) => {
+    let update = await product.findByIdAndUpdate(element.product, {
+      $inc: { quantity: element.quantity },
+    });
+    console.log(update, "this is update");
+  });
+  res.json({ cancel: true });
+}else{
+  console.log('reach return order');
+  const { orderid } = req.query;
+  const orderUpdate = await order.findByIdAndUpdate(orderid, {
+    orderstatus: "returned",
+  });
+  const products = orderUpdate.items;
+  products.forEach(async (element) => {
+    let update = await product.findByIdAndUpdate(element.product, {
+      $inc: { quantity: element.quantity },
+    });
+    console.log(update, "this is update");
+  });
+  res.json({ return: true });
+
 }
+};
+
+
+
 
 module.exports = {
   home,
@@ -725,6 +848,7 @@ module.exports = {
   wishListFind,
   removeFromWish,
   checkout,
+  verifyPayment,
   addAddress,
   deleteAddress,
   editeAddress,
@@ -733,9 +857,9 @@ module.exports = {
   placeOrder,
   creatOder,
   getProfile,
- getOrderHistory,
- orderDetails,
- orderCancel
+  getOrderHistory,
+  orderDetails,
+  orderCancel,
 
-
+  
 };

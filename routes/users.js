@@ -24,6 +24,7 @@ const {
   wishListFind,
   removeFromWish,
   checkout,
+  verifyPayment,
   addAddress,
   deleteAddress,
   editeAddress,
@@ -32,12 +33,9 @@ const {
   placeOrder,
   creatOder,
   getProfile,
-getOrderHistory,
-orderDetails,
-orderCancel
-
-
-
+  getOrderHistory,
+  orderDetails,
+  orderCancel,
 } = require("../controller/user");
 /* GET users listing. */
 
@@ -54,23 +52,24 @@ router.post("/verifyotp", verifyOtp);
 router.get("/productDetails", productDetails);
 router.get("/cart", axiosSession, addToCart);
 router.get("/cartList", session, getCart);
-router.patch('/incriment',axiosSession,changeQty)
-router.delete('/cart',removeCart)
-router.get('/wishList',session,wishListget)
-router.delete('/wishPro',removeFromWish)
-router.post('/wishList',axiosSession,addTOWishList)
-router.get("/wish",session,wishListFind );
-router.get("/checkout",session,checkout );
-router.post("/address",session,addAddress );
-router.delete('/address',deleteAddress)
-router.patch('/address',editeAddress)
-router.get("/address",showddress );
-router.post("/coupon",session,aaplyCoupon);
-router.get('/order',placeOrder)
-router.post('/order',session,creatOder)
-router.get('/profile',session,getProfile)
-router.get('/orderHistory',session,getOrderHistory)
-router.get('/orderdetails',session,orderDetails)
-router.put('/cancelorder',orderCancel)
+router.patch("/incriment", axiosSession, changeQty);
+router.delete("/cart", removeCart);
+router.get("/wishList", session, wishListget);
+router.delete("/wishPro", removeFromWish);
+router.post("/wishList", axiosSession, addTOWishList);
+router.get("/wish", session, wishListFind);
+router.get("/checkout", session, checkout);
+router.post("/address", session, addAddress);
+router.delete("/address", deleteAddress);
+router.patch("/address", editeAddress);
+router.get("/address", showddress);
+router.post("/coupon", session, aaplyCoupon);
+router.get("/order", placeOrder);
+router.post("/order", session, creatOder);
+router.get("/profile", session, getProfile);
+router.post("/verifyPayment", axiosSession, verifyPayment);
+router.get("/orderHistory", session, getOrderHistory);
+router.get("/orderdetails", session, orderDetails);
+router.put("/cancelorder", orderCancel);
 
 module.exports = router;

@@ -48,24 +48,23 @@
 				<div class="content">
 					<div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
 						<div>
-							<h1>Edite Product</h1>
+							<h1>Add Product</h1>
 							<p class="breadcrumbs"><span><a href="index.html">Home</a></span>
 								<span><i class="mdi mdi-chevron-right"></i></span>Product</p>
 						</div>
-						<div>
+						<!-- <div>
 							<a href="product-list.html" class="btn btn-primary"> View All
 							</a>
-						</div>
+						</div> -->
 					</div>
 					<div class="row">
 						<div class="col-12">
 							<div class="card card-default">
 								<div class="card-header card-header-border-bottom">
-									<h2>Edite Product</h2>
+									<h2>EDIT banner</h2>
 								</div>
 
-
-								<form id="buttonform" enctype="multipart/form-data">
+								<form class="row g-3"  id="banneredit" action="/admin" method="" enctype="multipart/form-data">
 
 								<div class="card-body">
 									<div class="row ec-vendor-uploads">
@@ -84,15 +83,16 @@
 														<div class="avatar-preview ec-preview">
 															<div class="imagePreview ec-div-preview">
 																<img class="ec-image-preview"
-																	src="/images/uploads/<%=findProduct.image[0]%>"
-																	alt="edit"/>
+																	src="/images/uploads/<%=findMatchedBanner.image[0]%>"
+																	alt="edit" />
+                                                                    
 															</div>
 														</div>
 													</div>
 													<div class="thumb-upload-set colo-md-12">
-														<div class="thumb-upload">
+														<!-- <div class="thumb-upload">
 															<div class="thumb-edit">
-																<input type='file' id="1"
+																<input type='file' id="thumbUpload01"
 																	class="ec-image-upload"
 																	accept=".png, .jpg, .jpeg"  name="files" />
 																<label for="imageUpload"><img
@@ -102,14 +102,14 @@
 															<div class="thumb-preview ec-preview">
 																<div class="image-thumb-preview">
 																	<img class="image-thumb-preview ec-image-preview"
-																		src="/images/uploads/<%=findProduct.image[1]%>"
+																		src="/color/img/products/vender-upload-thumb-preview.jpg"
 																		alt="edit" />
 																</div>
 															</div>
-														</div>
-														<div class="thumb-upload">
+														</div> -->
+														<!-- <div class="thumb-upload">
 															<div class="thumb-edit">
-																<input type='file' id="2"
+																<input type='file' id="thumbUpload02"
 																	class="ec-image-upload"
 																	accept=".png, .jpg, .jpeg" name="files"  />
 																<label for="imageUpload"><img
@@ -119,14 +119,14 @@
 															<div class="thumb-preview ec-preview">
 																<div class="image-thumb-preview">
 																	<img class="image-thumb-preview ec-image-preview"
-																		src="/images/uploads/<%=findProduct.image[2]%>"
+																		src="/color/img/products/vender-upload-thumb-preview.jpg"
 																		alt="edit" />
 																</div>
 															</div>
 														</div>
 														<div class="thumb-upload">
 															<div class="thumb-edit">
-																<input type='file' id="3"
+																<input type='file' id="thumbUpload03"
 																	class="ec-image-upload"
 																	accept=".png, .jpg, .jpeg"  name="files"/>
 																<label for="imageUpload"><img
@@ -136,14 +136,14 @@
 															<div class="thumb-preview ec-preview">
 																<div class="image-thumb-preview">
 																	<img class="image-thumb-preview ec-image-preview"
-																		src="/images/uploads/<%=findProduct.image[3]%>"
+																		src="/color/img/products/vender-upload-thumb-preview.jpg"
 																		alt="edit" />
 																</div>
 															</div>
 														</div>
 														<div class="thumb-upload">
 															<div class="thumb-edit">
-																<input type='file' id="4"
+																<input type='file' id="thumbUpload04"
 																	class="ec-image-upload"
 																	accept=".png, .jpg, .jpeg" name="files" />
 																<label for="imageUpload"><img
@@ -153,12 +153,12 @@
 															<div class="thumb-preview ec-preview">
 																<div class="image-thumb-preview">
 																	<img class="image-thumb-preview ec-image-preview"
-																		src="/images/uploads/<%=findProduct.image[4]%>"
+																		src="/color/img/products/vender-upload-thumb-preview.jpg"
 																		alt="edit" />
 																</div>
 															</div>
 														</div>
-														<!-- <div class="thumb-upload">
+														<div class="thumb-upload">
 															<div class="thumb-edit">
 																<input type='file' id="thumbUpload05"
 																	class="ec-image-upload"
@@ -174,8 +174,8 @@
 																		alt="edit" />
 																</div>
 															</div>
-														</div> -->
-														<!-- <div class="thumb-upload">
+														</div>
+														<div class="thumb-upload">
 															<div class="thumb-edit">
 																<input type='file' id="thumbUpload06"
 																	class="ec-image-upload"
@@ -197,22 +197,25 @@
 											</div>
 										</div>
 										<div class="col-lg-8">
-											<div class="ec-vendor-upload-detail" id="buttondiv">
+											<div class="ec-vendor-upload-detail">
+													
 												
 													<div class="col-md-6">
-														<label for="inputEmail4" class="form-label">Product name</label>
-														<input type="text" class="form-control slug-title" id="inputEmail4" value="<%=findProduct.name%>" name="name">
+														<label for="inputEmail4" class="form-label">title</label>
+														<input type="text" class="form-control slug-title" id="inputEmail4"  value="<%=findMatchedBanner.title%>"  name="title" required>
 													</div>
 													<div class="col-md-6">
+														<label for="inputEmail4" class="form-label">sub title</label>
+														<input type="text" class="form-control slug-title" id="inputEmail4" value="<%=findMatchedBanner.subtitle%>"  name="subtitle" required>
+													</div>
+													<!-- <div class="col-md-6">
 														<label class="form-label">Select Categories</label>
-                                                        
-														<select name="categories" id="Categories" class="form-select" >
-                                                            
+														<select name="categories" id="Categories" class="form-select" name="category" required>
 															<optgroup label="Fashion">
-                                                                <%for(i=0;i <findCategory.length ; i++){%>
-																<option id="catid" value="<%=findCategory[i]._id%>"><%=findCategory[i].name%></option>
-                                                                <%}%>
-																<!-- <option value="dress">Dress</option>
+																
+																<option id="addpro" value=""></option>
+															
+																<option value="dress">Dress</option>
 															</optgroup>
 															<optgroup label="Furniture">
 																<option value="table">Table</option>
@@ -220,33 +223,22 @@
 															</optgroup>
 															<optgroup label="Electronic">
 																<option value="phone">I Phone</option>
-																<option value="laptop">Laptop</option> -->
+																<option value="laptop">Laptop</option>
 															</optgroup>
-                                                            
 														</select>
-                                                      
-													</div>
+													</div> -->
 													<!-- <div class="col-md-12">
 														<label for="slug" class="col-12 col-form-label">Slug</label> 
 														<div class="col-12">
 															<input id="slug" name="slug" class="form-control here set-slug" type="text">
 														</div>
 													</div> -->
-													<div class="col-md-12">
-														<label class="form-label" > Description</label>
-														<textarea class="form-control"name="Description"  rows="2" ><%=findProduct.
-                                                            description
-                                                            %></textarea>
-													</div>
-													<div class="col-md-12">
-														<label class="form-label" > Size</label>
-														<textarea class="form-control" name="size" rows="2"><%=findProduct.size%></textarea>
-													</div>
+													<!-- ?
 													<div class="col-md-12">
 														<label class="form-label" > Color</label>
-														<textarea class="form-control" name="color" rows="2"><%=findProduct.color%></textarea>
+														<textarea class="form-control" name="color" rows="2" required></textarea>
 													</div>
-													<!-- <div class="col-md-4 mb-25">
+													<div class="col-md-4 mb-25">
 														<label class="form-label">Colors</label>
 														<input type="color" class="form-control form-control-color"
 															id="exampleColorInput1" value="#ff6191"
@@ -286,17 +278,15 @@
 															</div>
 														</div>
 													</div> -->
-													<div class="col-md-6">
+													<!-- <div class="col-md-6">
 														<label class="form-label" >Price <span>( In USD
 																)</span></label>
-														<input type="number" name="Price" class="form-control" id="price1" value="<%=findProduct.price%>">
+														<input type="number" name="Price" class="form-control" id="price1" required>
 													</div>
 													<div class="col-md-6">
 														<label class="form-label" >Quantity</label>
-														<input type="number" name="Stock" class="form-control" id="quantity1" value="<%=findProduct.
-                                                        quantity
-                                                        %>">
-													</div>
+														<input type="number" name="Stock" class="form-control" id="quantity1" required>
+													</div> -->
 													<!-- <div class="col-md-12">
 														<label class="form-label">Ful Detail</label>
 														<textarea class="form-control" rows="4"></textarea>
@@ -309,7 +299,7 @@
 															data-role="tagsinput" />
 													</div> -->
 													<div class="col-md-12">
-														<button type="submit" class="btn btn-primary mt-3" onclick="editeProduct('<%=findProduct._id%>')">Submit</button>
+														<button type="submit" class="btn btn-primary mt-3" onclick="EditBanner('<%=findMatchedBanner._id%>')">Submit</button>
 													</div>
 												</form>
 											</div>
@@ -346,42 +336,33 @@
 
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-admin/product-add.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:28:43 GMT -->
 </html>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-   
-   
-    function editeProduct(id){
-		console.log('this edite  product');
-        const form = document.getElementById('buttonform');
-        form.addEventListener('submit',(e)=>{
-        e.preventDefault()
-        const formData = new FormData(form)
-		let position=[];
-		for(i=0;i<5;i++){
-			if(document.getElementById(i).value)
-			position.push(i)
-		}
-		formData.append("position", JSON.stringify(position))
-		
-      
-        console.log(id,'update id')
-		const catid=document.getElementById("catid").value
-		console.log(catid,'this cat id');
-	axios.put(`/admin/product?id=${id}`,formData,{
+    const EditBanner=(id)=>{
+        console.log('thiscorrect');
+        event.preventDefault()
+        let bannerData=document.getElementById('banneredit')
+        console.log(bannerData,'this is banner data');
+        const formData = new FormData(bannerData);
+        console.log(formData,'this fordata');
+        position=[]
+        for(i=0;i<1;i++){
+            if(document.getElementById(i).value)
+            position.push(i)
+        }
+        formData.append("position", JSON.stringify(position))
+        
+        axios.put(`banner?bannerid=${id}`,formData,{
      headers:{"Content-Type": "multipart/form-data"}
     
-    }
-    ).then((res)=>
-	{if(res.data.message){
-		swal("Good job!", "update", "success");
-	}
-		
-	})
+    }).then((res)=>{
+        if(res.data.updated){
+            swal("Good job!", "update", "success");
+        }
     })
-       
-  
-} 
+    }
+    
+   
 </script>

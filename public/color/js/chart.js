@@ -31,82 +31,47 @@
 
 ====== End ======*/
 
-$(document).ready(function() {
+$(document).ready(function () {
   "use strict";
+  axios.get("/admin/piechart").then((res) => {
+    console.log("reaach here", res.data.count);
+    const { count } = res.data;
+    console.log(count, "after data");
   
   /*======== 1. DUAL LINE CHART ========*/
-  var dual = document.getElementById("dual-line");
-  if (dual !== null) {
-    var urChart = new Chart(dual, {
-      type: "line",
+  var doughnut = document.getElementById("doChart");
+  if (doughnut !== null) {
+    var myDoughnutChart = new Chart(doughnut, {
+      type: "doughnut",
       data: {
-        labels: ["Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu"],
+        labels: ["Delivered", "Cancelled", "pending", "returned"],
         datasets: [
           {
-            label: "Old",
-            pointRadius: 4,
-            pointBackgroundColor: "rgba(255,255,255,1)",
-            pointBorderWidth: 2,
-            fill: false,
-            backgroundColor: "transparent",
-            borderWidth: 2,
-            borderColor: "#fdc506",
-            data: [0, 4, 3, 5.5, 3, 4.7, 0]
+            labels: ["Delivered", "Cancelled", "pending", "returned"],
+            data: count,
+            backgroundColor: ["#29cc97", "#ec4a58", "#fec400", "#88aaf3"],
+            borderWidth: 1,
+            //borderColor: ['#88aaf3','#29cc97','#8061ef','#fec402']
+            // hoverBorderColor: ['#88aaf3', '#29cc97', '#8061ef', '#fec402']
           },
-          {
-            label: "New",
-            fill: false,
-            pointRadius: 4,
-            pointBackgroundColor: "rgba(255,255,255,1)",
-            pointBorderWidth: 2,
-            backgroundColor: "transparent",
-            borderWidth: 2,
-            borderColor: "#88aaf3",
-            data: [0, 2, 4.3, 3.8, 5.2, 1.8, 2.2]
-          }
-        ]
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        layout: {
-          padding: {
-            right: 10
-          }
-        },
-
         legend: {
-          display: false
+          display: false,
         },
-        scales: {
-          xAxes: [
-            {
-              gridLines: {
-                drawBorder: false,
-                display: false
-              },
-              ticks: {
-                display: false, // hide main x-axis line
-                beginAtZero: true
-              },
-              barPercentage: 1.8,
-              categoryPercentage: 0.2
-            }
-          ],
-          yAxes: [
-            {
-              gridLines: {
-                drawBorder: false, // hide main y-axis line
-                display: false
-              },
-              ticks: {
-                display: false,
-                beginAtZero: true
-              }
-            }
-          ]
-        },
+        cutoutPercentage: 75,
         tooltips: {
+          callbacks: {
+            title: function (tooltipItem, data) {
+              return "Order : " + data["labels"][tooltipItem[0]["index"]];
+            },
+            label: function (tooltipItem, data) {
+              return data["datasets"][0]["data"][tooltipItem["index"]];
+            },
+          },
           titleFontColor: "#888",
           bodyFontColor: "#555",
           titleFontSize: 12,
@@ -114,12 +79,13 @@ $(document).ready(function() {
           backgroundColor: "rgba(256,256,256,0.95)",
           displayColors: true,
           borderColor: "rgba(220, 220, 220, 0.9)",
-          borderWidth: 2
-        }
-      }
+          borderWidth: 2,
+        },
+      },
     });
   }
-  
+});
+
   /*======== 1. DUAL LINE CHART2 ========*/
   var dual3 = document.getElementById("dual-line3");
   if (dual3 !== null) {
@@ -137,7 +103,7 @@ $(document).ready(function() {
             backgroundColor: "transparent",
             borderWidth: 2,
             borderColor: "#fcdf80",
-            data: [0, 4, 3, 5.5, 3, 4.7, 0]
+            data: [0, 4, 3, 5.5, 3, 4.7, 0],
           },
           {
             label: "New",
@@ -148,53 +114,53 @@ $(document).ready(function() {
             backgroundColor: "transparent",
             borderWidth: 2,
             borderColor: "#ffffff",
-            data: [0, 2, 4.3, 3.8, 5.2, 1.8, 2.2]
-          }
-        ]
+            data: [0, 2, 4.3, 3.8, 5.2, 1.8, 2.2],
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         layout: {
           padding: {
-            right: 10
-          }
+            right: 10,
+          },
         },
         scales: {
           xAxes: [
             {
               gridLines: {
                 drawBorder: false,
-                display: false
+                display: false,
               },
               ticks: {
                 display: false, // hide main x-axis line
-                beginAtZero: true
+                beginAtZero: true,
               },
               barPercentage: 1.8,
-              categoryPercentage: 0.2
-            }
+              categoryPercentage: 0.2,
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 drawBorder: false, // hide main y-axis line
-                display: false
+                display: false,
               },
               ticks: {
                 display: false,
-                beginAtZero: true
-              }
-            }
-          ]
+                beginAtZero: true,
+              },
+            },
+          ],
         },
         tooltips: {
-          enabled: true
-        }
-      }
+          enabled: true,
+        },
+      },
     });
   }
 
@@ -219,7 +185,7 @@ $(document).ready(function() {
           "Sep",
           "Oct",
           "Nov",
-          "Dec"
+          "Dec",
         ],
         datasets: [
           {
@@ -227,18 +193,8 @@ $(document).ready(function() {
             backgroundColor: "transparent",
             borderColor: "rgb(82, 136, 255)",
             data: [
-              100,
-              11000,
-              10000,
-              14000,
-              11000,
-              17000,
-              14500,
-              18000,
-              5000,
-              23000,
-              14000,
-              19000
+              100, 11000, 10000, 14000, 11000, 17000, 14500, 18000, 5000, 23000,
+              14000, 19000,
             ],
             lineTension: 0.3,
             pointRadius: 5,
@@ -246,9 +202,9 @@ $(document).ready(function() {
             pointHoverBackgroundColor: "rgba(255,255,255,1)",
             pointBorderWidth: 2,
             pointHoverRadius: 8,
-            pointHoverBorderWidth: 1
-          }
-        ]
+            pointHoverBorderWidth: 1,
+          },
+        ],
       },
 
       // Configuration options go here
@@ -256,20 +212,20 @@ $(document).ready(function() {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         layout: {
           padding: {
-            right: 10
-          }
+            right: 10,
+          },
         },
         scales: {
           xAxes: [
             {
               gridLines: {
-                display: false
-              }
-            }
+                display: false,
+              },
+            },
           ],
           yAxes: [
             {
@@ -279,10 +235,10 @@ $(document).ready(function() {
                 zeroLineColor: "#eee",
               },
               ticks: {
-                callback: function(value) {
+                callback: function (value) {
                   var ranges = [
                     { divider: 1e6, suffix: "M" },
-                    { divider: 1e4, suffix: "k" }
+                    { divider: 1e4, suffix: "k" },
                   ];
                   function formatNumber(n) {
                     for (var i = 0; i < ranges.length; i++) {
@@ -295,19 +251,19 @@ $(document).ready(function() {
                     return n;
                   }
                   return formatNumber(value);
-                }
-              }
-            }
-          ]
+                },
+              },
+            },
+          ],
         },
         tooltips: {
           callbacks: {
-            title: function(tooltipItem, data) {
+            title: function (tooltipItem, data) {
               return data["labels"][tooltipItem[0]["index"]];
             },
-            label: function(tooltipItem, data) {
+            label: function (tooltipItem, data) {
               return "$" + data["datasets"][0]["data"][tooltipItem["index"]];
-            }
+            },
           },
           responsive: true,
           intersect: false,
@@ -323,9 +279,9 @@ $(document).ready(function() {
           borderColor: "rgba(220, 220, 220, 0.9)",
           borderWidth: 2,
           caretSize: 10,
-          caretPadding: 15
-        }
-      }
+          caretPadding: 15,
+        },
+      },
     });
   }
 
@@ -346,7 +302,7 @@ $(document).ready(function() {
             backgroundColor: "transparent",
             borderWidth: 2,
             borderColor: "#fcdf80",
-            data: [0, 5, 2.5, 9.5, 3.3, 8, 0]
+            data: [0, 5, 2.5, 9.5, 3.3, 8, 0],
           },
           {
             label: "New",
@@ -357,48 +313,48 @@ $(document).ready(function() {
             backgroundColor: "transparent",
             borderWidth: 2,
             borderColor: "#88aaf3",
-            data: [0, 2, 6, 5, 8.5, 3, 3.8]
-          }
-        ]
+            data: [0, 2, 6, 5, 8.5, 3, 3.8],
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
             {
               gridLines: {
                 drawBorder: false,
-                display: false
+                display: false,
               },
               ticks: {
                 display: false, // hide main x-axis line
-                beginAtZero: true
+                beginAtZero: true,
               },
               barPercentage: 1.8,
-              categoryPercentage: 0.2
-            }
+              categoryPercentage: 0.2,
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 drawBorder: false, // hide main y-axis line
-                display: false
+                display: false,
               },
               ticks: {
                 display: false,
-                beginAtZero: true
-              }
-            }
-          ]
+                beginAtZero: true,
+              },
+            },
+          ],
         },
         tooltips: {
-          enabled: false
-        }
-      }
+          enabled: false,
+        },
+      },
     });
   }
 
@@ -419,7 +375,7 @@ $(document).ready(function() {
             backgroundColor: "transparent",
             borderWidth: 2,
             borderColor: "#fcdf80",
-            data: [0, 5, 2.5, 9.5, 3.3, 8, 0]
+            data: [0, 5, 2.5, 9.5, 3.3, 8, 0],
           },
           {
             label: "New",
@@ -430,48 +386,48 @@ $(document).ready(function() {
             backgroundColor: "transparent",
             borderWidth: 2,
             borderColor: "#ffffff",
-            data: [0, 2, 6, 5, 8.5, 3, 3.8]
-          }
-        ]
+            data: [0, 2, 6, 5, 8.5, 3, 3.8],
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
             {
               gridLines: {
                 drawBorder: false,
-                display: false
+                display: false,
               },
               ticks: {
                 display: false, // hide main x-axis line
-                beginAtZero: true
+                beginAtZero: true,
               },
               barPercentage: 1.8,
-              categoryPercentage: 0.2
-            }
+              categoryPercentage: 0.2,
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 drawBorder: false, // hide main y-axis line
-                display: false
+                display: false,
               },
               ticks: {
                 display: false,
-                beginAtZero: true
-              }
-            }
-          ]
+                beginAtZero: true,
+              },
+            },
+          ],
         },
         tooltips: {
-          enabled: false
-        }
-      }
+          enabled: false,
+        },
+      },
     });
   }
 
@@ -490,7 +446,7 @@ $(document).ready(function() {
             fill: true,
             backgroundColor: "rgba(76, 132, 255, 0.9)",
             borderColor: "rgba(76, 132, 255, 0.9)",
-            data: [0, 4, 2, 6.5, 3, 4.7, 0]
+            data: [0, 4, 2, 6.5, 3, 4.7, 0],
           },
           {
             label: "Old",
@@ -499,48 +455,48 @@ $(document).ready(function() {
             fill: true,
             backgroundColor: "rgba(253, 197, 6, 0.9)",
             borderColor: "rgba(253, 197, 6, 1)",
-            data: [0, 2, 4.3, 3.8, 5.2, 1.8, 2.2]
-          }
-        ]
+            data: [0, 2, 4.3, 3.8, 5.2, 1.8, 2.2],
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         layout: {
           padding: {
-            right: 10
-          }
+            right: 10,
+          },
         },
         scales: {
           xAxes: [
             {
               gridLines: {
                 drawBorder: false,
-                display: false
+                display: false,
               },
               ticks: {
                 display: false, // hide main x-axis line
-                beginAtZero: true
+                beginAtZero: true,
               },
               barPercentage: 1.8,
-              categoryPercentage: 0.2
-            }
+              categoryPercentage: 0.2,
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 drawBorder: false, // hide main y-axis line
-                display: false
+                display: false,
               },
               ticks: {
                 display: false,
-                beginAtZero: true
-              }
-            }
-          ]
+                beginAtZero: true,
+              },
+            },
+          ],
         },
         tooltips: {
           titleFontColor: "#888",
@@ -550,9 +506,9 @@ $(document).ready(function() {
           backgroundColor: "rgba(256,256,256,0.95)",
           displayColors: true,
           borderColor: "rgba(220, 220, 220, 0.9)",
-          borderWidth: 2
-        }
-      }
+          borderWidth: 2,
+        },
+      },
     });
   }
 
@@ -571,7 +527,7 @@ $(document).ready(function() {
             lineTension: 0.3,
             backgroundColor: "rgba(76, 132, 255, 0.9)",
             borderColor: "rgba(76, 132, 255, 0.9)",
-            data: [0, 5, 2.5, 9, 3.5, 6.5, 0]
+            data: [0, 5, 2.5, 9, 3.5, 6.5, 0],
           },
           {
             label: "Old",
@@ -580,48 +536,48 @@ $(document).ready(function() {
             lineTension: 0.3,
             backgroundColor: "rgba(253, 197, 6, 0.9)",
             borderColor: "rgba(253, 197, 6, 1)",
-            data: [0, 2, 5.5, 2.6, 5.7, 4, 2.8]
-          }
-        ]
+            data: [0, 2, 5.5, 2.6, 5.7, 4, 2.8],
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
             {
               gridLines: {
                 drawBorder: false,
-                display: false
+                display: false,
               },
               ticks: {
                 display: false, // hide main x-axis line
-                beginAtZero: true
+                beginAtZero: true,
               },
               barPercentage: 1.8,
-              categoryPercentage: 0.2
-            }
+              categoryPercentage: 0.2,
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 drawBorder: false, // hide main y-axis line
-                display: false
+                display: false,
               },
               ticks: {
                 display: false,
-                beginAtZero: true
-              }
-            }
-          ]
+                beginAtZero: true,
+              },
+            },
+          ],
         },
         tooltips: {
-          enabled: false
-        }
-      }
+          enabled: false,
+        },
+      },
     });
   }
 
@@ -640,7 +596,7 @@ $(document).ready(function() {
             lineTension: 0.6,
             backgroundColor: "rgba(255, 255, 255, 0.4)",
             borderColor: "rgba(255, 255, 255,0)",
-            data: [0, 5, 2.5, 9, 3.5, 6.5, 0]
+            data: [0, 5, 2.5, 9, 3.5, 6.5, 0],
           },
           {
             label: "Old",
@@ -649,48 +605,48 @@ $(document).ready(function() {
             lineTension: 0.6,
             backgroundColor: "rgba(255, 255, 255, 0.8)",
             borderColor: "rgba(255, 255, 255, 0)",
-            data: [0, 2, 5.5, 2.6, 5.7, 4, 2.8]
-          }
-        ]
+            data: [0, 2, 5.5, 2.6, 5.7, 4, 2.8],
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
             {
               gridLines: {
                 drawBorder: false,
-                display: false
+                display: false,
               },
               ticks: {
                 display: false, // hide main x-axis line
-                beginAtZero: true
+                beginAtZero: true,
               },
               barPercentage: 1.8,
-              categoryPercentage: 0.2
-            }
+              categoryPercentage: 0.2,
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 drawBorder: false, // hide main y-axis line
-                display: false
+                display: false,
               },
               ticks: {
                 display: false,
-                beginAtZero: true
-              }
-            }
-          ]
+                beginAtZero: true,
+              },
+            },
+          ],
         },
         tooltips: {
-          enabled: false
-        }
-      }
+          enabled: false,
+        },
+      },
     });
   }
 
@@ -709,7 +665,7 @@ $(document).ready(function() {
             fill: true,
             backgroundColor: "rgba(255, 255, 255, 0.4)",
             borderColor: "rgba(255, 255, 255,0)",
-            data: [0, 4, 2, 6.5, 3, 4.7, 0]
+            data: [0, 4, 2, 6.5, 3, 4.7, 0],
           },
           {
             label: "Old",
@@ -718,53 +674,53 @@ $(document).ready(function() {
             fill: true,
             backgroundColor: "rgba(255, 255, 255, 0.8)",
             borderColor: "rgba(255, 255, 255, 0)",
-            data: [0, 2, 4.3, 3.8, 5.2, 1.8, 2.2]
-          }
-        ]
+            data: [0, 2, 4.3, 3.8, 5.2, 1.8, 2.2],
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         layout: {
           padding: {
-            right: 10
-          }
+            right: 10,
+          },
         },
         scales: {
           xAxes: [
             {
               gridLines: {
                 drawBorder: false,
-                display: false
+                display: false,
               },
               ticks: {
                 display: false, // hide main x-axis line
-                beginAtZero: true
+                beginAtZero: true,
               },
               barPercentage: 1.8,
-              categoryPercentage: 0.2
-            }
+              categoryPercentage: 0.2,
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 drawBorder: false, // hide main y-axis line
-                display: false
+                display: false,
               },
               ticks: {
                 display: false,
-                beginAtZero: true
-              }
-            }
-          ]
+                beginAtZero: true,
+              },
+            },
+          ],
         },
         tooltips: {
-          enabled: true
-        }
-      }
+          enabled: true,
+        },
+      },
     });
   }
 
@@ -791,48 +747,48 @@ $(document).ready(function() {
             backgroundColor: gradientFill,
             borderColor: "#29cc97",
             borderWidth: 2,
-            data: [0, 4, 3, 5.5, 3, 4.7, 1]
-          }
-        ]
+            data: [0, 4, 3, 5.5, 3, 4.7, 1],
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         layout: {
           padding: {
-            right: 10
-          }
+            right: 10,
+          },
         },
         scales: {
           xAxes: [
             {
               gridLines: {
                 drawBorder: false,
-                display: false
+                display: false,
               },
               ticks: {
                 display: false, // hide main x-axis line
-                beginAtZero: true
+                beginAtZero: true,
               },
               barPercentage: 1.8,
-              categoryPercentage: 0.2
-            }
+              categoryPercentage: 0.2,
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 drawBorder: false, // hide main y-axis line
-                display: false
+                display: false,
               },
               ticks: {
                 display: false,
-                beginAtZero: true
-              }
-            }
-          ]
+                beginAtZero: true,
+              },
+            },
+          ],
         },
         tooltips: {
           titleFontColor: "#888",
@@ -842,9 +798,9 @@ $(document).ready(function() {
           backgroundColor: "rgba(256,256,256,0.95)",
           displayColors: true,
           borderColor: "rgba(220, 220, 220, 0.9)",
-          borderWidth: 2
-        }
-      }
+          borderWidth: 2,
+        },
+      },
     });
   }
 
@@ -854,33 +810,54 @@ $(document).ready(function() {
     var myDoughnutChart = new Chart(doughnut, {
       type: "doughnut",
       data: {
-        labels: ["completed", "unpaid", "pending", "canceled", "returned", "Broken"],
+        labels: [
+          "completed",
+          "unpaid",
+          "pending",
+          "canceled",
+          "returned",
+          "Broken",
+        ],
         datasets: [
           {
-            label: ["completed", "unpaid", "pending", "canceled", "returned", "Broken"],
+            label: [
+              "completed",
+              "unpaid",
+              "pending",
+              "canceled",
+              "returned",
+              "Broken",
+            ],
             data: [4100, 2500, 1800, 2300, 400, 150],
-            backgroundColor: ["#88aaf3", "#50d7ab", "#9586cd", "#f3d676", "#ed9090", "#a4d9e5"],
-            borderWidth: 1
+            backgroundColor: [
+              "#88aaf3",
+              "#50d7ab",
+              "#9586cd",
+              "#f3d676",
+              "#ed9090",
+              "#a4d9e5",
+            ],
+            borderWidth: 1,
             // borderColor: ['#88aaf3','#29cc97','#8061ef','#fec402']
             // hoverBorderColor: ['#88aaf3', '#29cc97', '#8061ef', '#fec402']
-          }
-        ]
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         cutoutPercentage: 75,
         tooltips: {
           callbacks: {
-            title: function(tooltipItem, data) {
+            title: function (tooltipItem, data) {
               return "Order : " + data["labels"][tooltipItem[0]["index"]];
             },
-            label: function(tooltipItem, data) {
+            label: function (tooltipItem, data) {
               return data["datasets"][0]["data"][tooltipItem["index"]];
-            }
+            },
           },
           titleFontColor: "#888",
           bodyFontColor: "#555",
@@ -889,9 +866,9 @@ $(document).ready(function() {
           backgroundColor: "rgba(256,256,256,0.95)",
           displayColors: true,
           borderColor: "rgba(220, 220, 220, 0.9)",
-          borderWidth: 2
-        }
-      }
+          borderWidth: 2,
+        },
+      },
     });
   }
 
@@ -908,31 +885,31 @@ $(document).ready(function() {
               "rgba(254,88,101,0.5)",
               "rgba(128,97,239,0.5)",
               "rgba(254,196,0,0.5)",
-              "rgba(76,132,255,0.5)"
+              "rgba(76,132,255,0.5)",
             ],
-            label: "" // for legend
-          }
+            label: "", // for legend
+          },
         ],
-        labels: ["Total Sales", "Rejected", "Completed", "Pending", "Reserve"]
+        labels: ["Total Sales", "Rejected", "Completed", "Pending", "Reserve"],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
           position: "right",
-          display: false
+          display: false,
         },
         layout: {
           padding: {
             top: 10,
             bottom: 10,
             right: 10,
-            left: 10
-          }
+            left: 10,
+          },
         },
         title: {
           display: false,
-          text: "Chart.js Polar Area Chart"
+          text: "Chart.js Polar Area Chart",
         },
         scale: {
           ticks: {
@@ -940,13 +917,13 @@ $(document).ready(function() {
             fontColor: "#1b223c",
             fontSize: 12,
             stepSize: 10,
-            max: 60
+            max: 60,
           },
-          reverse: false
+          reverse: false,
         },
         animation: {
           animateRotate: false,
-          animateScale: true
+          animateScale: true,
         },
         tooltips: {
           titleFontColor: "#888",
@@ -956,9 +933,9 @@ $(document).ready(function() {
           backgroundColor: "rgba(256,256,256,0.95)",
           displayColors: true,
           borderColor: "rgba(220, 220, 220, 0.9)",
-          borderWidth: 2
-        }
-      }
+          borderWidth: 2,
+        },
+      },
     };
     window.myPolarArea = Chart.PolarArea(polar, configPolar);
   }
@@ -981,7 +958,7 @@ $(document).ready(function() {
           "September",
           "October",
           "November",
-          "December"
+          "December",
         ],
         datasets: [
           {
@@ -992,7 +969,7 @@ $(document).ready(function() {
             pointRadius: 4,
             pointBorderColor: "rgba(76,132,255,1)",
             pointBackgroundColor: "#ffffff",
-            data: [25, 31, 43, 48, 21, 36, 23, 12, 33, 36, 28, 55]
+            data: [25, 31, 43, 48, 21, 36, 23, 12, 33, 36, 28, 55],
           },
           {
             label: "Previous Year",
@@ -1002,27 +979,27 @@ $(document).ready(function() {
             pointRadius: 4,
             pointBorderColor: "#29cc97",
             pointBackgroundColor: "#ffffff",
-            data: [45, 77, 22, 12, 56, 43, 71, 23, 54, 19, 32, 55]
-          }
-        ]
+            data: [45, 77, 22, 12, 56, 43, 71, 23, 54, 19, 32, 55],
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         title: {
           display: false,
-          text: "Chart.js Radar Chart"
+          text: "Chart.js Radar Chart",
         },
         layout: {
           padding: {
             top: 10,
             bottom: 10,
             right: 10,
-            left: 10
-          }
+            left: 10,
+          },
         },
         scale: {
           ticks: {
@@ -1030,8 +1007,8 @@ $(document).ready(function() {
             fontColor: "#1b223c",
             fontSize: 12,
             stepSize: 10,
-            max: 60
-          }
+            max: 60,
+          },
         },
         tooltips: {
           titleFontColor: "#888",
@@ -1041,9 +1018,9 @@ $(document).ready(function() {
           backgroundColor: "rgba(256,256,256,0.95)",
           displayColors: true,
           borderColor: "rgba(220, 220, 220, 0.9)",
-          borderWidth: 2
-        }
-      }
+          borderWidth: 2,
+        },
+      },
     });
   }
   /*======== 14. CURRENT USER BAR CHART ========*/
@@ -1063,22 +1040,22 @@ $(document).ready(function() {
           "25 m",
           "20 m",
           "5 m",
-          "10 m"
+          "10 m",
         ],
         datasets: [
           {
             label: "signup",
             data: [15, 30, 27, 43, 39, 18, 42, 25, 13, 18, 59],
             // data: [2, 3.2, 1.8, 2.1, 1.5, 3.5, 4, 2.3, 2.9, 4.5, 1.8, 3.4, 2.8],
-            backgroundColor: "#88aaf3"
-          }
-        ]
+            backgroundColor: "#88aaf3",
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
@@ -1092,13 +1069,13 @@ $(document).ready(function() {
                 fontFamily: "Roboto, sans-serif",
                 display: false, // hide main x-axis line
                 beginAtZero: true,
-                callback: function(tick, index, array) {
+                callback: function (tick, index, array) {
                   return index % 2 ? "" : tick;
-                }
+                },
               },
               barPercentage: 1.8,
-              categoryPercentage: 0.2
-            }
+              categoryPercentage: 0.2,
+            },
           ],
           yAxes: [
             {
@@ -1106,16 +1083,16 @@ $(document).ready(function() {
                 drawBorder: true,
                 display: true,
                 color: "#eee",
-                zeroLineColor: "#eee"
+                zeroLineColor: "#eee",
               },
               ticks: {
                 fontColor: "#8a909d",
                 fontFamily: "Roboto, sans-serif",
                 display: true,
-                beginAtZero: true
-              }
-            }
-          ]
+                beginAtZero: true,
+              },
+            },
+          ],
         },
 
         tooltips: {
@@ -1131,9 +1108,9 @@ $(document).ready(function() {
           borderColor: "rgba(220, 220, 220, 0.9)",
           borderWidth: 2,
           caretSize: 6,
-          caretPadding: 5
-        }
-      }
+          caretPadding: 5,
+        },
+      },
     });
   }
   /*======== 15. ANALYTICS - USER ACQUISITION ========*/
@@ -1143,18 +1120,18 @@ $(document).ready(function() {
       {
         first: [100, 180, 44, 75, 150, 66, 70],
         second: [144, 44, 177, 76, 23, 189, 12],
-        third: [44, 167, 102, 123, 183, 88, 134]
+        third: [44, 167, 102, 123, 183, 88, 134],
       },
       {
         first: [144, 44, 110, 5, 123, 89, 12],
         second: [22, 123, 45, 130, 112, 54, 181],
-        third: [55, 44, 144, 75, 155, 166, 70]
+        third: [55, 44, 144, 75, 155, 166, 70],
       },
       {
         first: [134, 80, 123, 65, 171, 33, 22],
         second: [44, 144, 77, 76, 123, 89, 112],
-        third: [156, 23, 165, 88, 112, 54, 181]
-      }
+        third: [156, 23, 165, 88, 112, 54, 181],
+      },
     ];
 
     var configAcq = {
@@ -1170,7 +1147,7 @@ $(document).ready(function() {
           "7 Jan",
           "8 Jan",
           "9 Jan",
-          "10 Jan"
+          "10 Jan",
         ],
         datasets: [
           {
@@ -1184,7 +1161,7 @@ $(document).ready(function() {
             pointHoverRadius: 3,
             pointHitRadius: 30,
             pointBorderWidth: 2,
-            pointStyle: "rectRounded"
+            pointStyle: "rectRounded",
           },
           {
             label: "Direct",
@@ -1197,7 +1174,7 @@ $(document).ready(function() {
             pointHoverRadius: 3,
             pointHitRadius: 30,
             pointBorderWidth: 2,
-            pointStyle: "rectRounded"
+            pointStyle: "rectRounded",
           },
           {
             label: "Via Social",
@@ -1210,9 +1187,9 @@ $(document).ready(function() {
             pointHoverRadius: 3,
             pointHitRadius: 30,
             pointBorderWidth: 2,
-            pointStyle: "rectRounded"
-          }
-        ]
+            pointStyle: "rectRounded",
+          },
+        ],
       },
 
       // Configuration options go here
@@ -1220,30 +1197,30 @@ $(document).ready(function() {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
             {
               gridLines: {
-                display: false
-              }
-            }
+                display: false,
+              },
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 display: true,
                 color: "#eee",
-                zeroLineColor: "#eee"
+                zeroLineColor: "#eee",
               },
               ticks: {
                 beginAtZero: true,
                 stepSize: 50,
-                max: 200
-              }
-            }
-          ]
+                max: 200,
+              },
+            },
+          ],
         },
         tooltips: {
           mode: "index",
@@ -1258,9 +1235,9 @@ $(document).ready(function() {
           borderColor: "rgba(220, 220, 220, 0.9)",
           borderWidth: 2,
           caretSize: 10,
-          caretPadding: 15
-        }
-      }
+          caretPadding: 15,
+        },
+      },
     };
 
     var ctx = document.getElementById("acquisition").getContext("2d");
@@ -1271,7 +1248,7 @@ $(document).ready(function() {
       "#user-acquisition .nav-tabs .nav-item"
     );
     items.forEach(function (item, index) {
-      item.addEventListener("click", function() {
+      item.addEventListener("click", function () {
         configAcq.data.datasets[0].data = acqData[index].first;
         configAcq.data.datasets[1].data = acqData[index].second;
         configAcq.data.datasets[2].data = acqData[index].third;
@@ -1286,20 +1263,20 @@ $(document).ready(function() {
     var activityData = [
       {
         first: [0, 65, 52, 115, 98, 165, 125],
-        second: [45, 38, 100, 87, 152, 187, 85]
+        second: [45, 38, 100, 87, 152, 187, 85],
       },
       {
         first: [0, 65, 77, 33, 49, 100, 100],
-        second: [88, 33, 20, 44, 111, 140, 77]
+        second: [88, 33, 20, 44, 111, 140, 77],
       },
       {
         first: [0, 40, 77, 55, 33, 116, 50],
-        second: [55, 32, 20, 55, 111, 134, 66]
+        second: [55, 32, 20, 55, 111, 134, 66],
       },
       {
         first: [0, 44, 22, 77, 33, 151, 99],
-        second: [60, 32, 120, 55, 19, 134, 88]
-      }
+        second: [60, 32, 120, 55, 19, 134, 88],
+      },
     ];
 
     var config = {
@@ -1314,7 +1291,7 @@ $(document).ready(function() {
           "7 Jan",
           "8 Jan",
           "9 Jan",
-          "10 Jan"
+          "10 Jan",
         ],
         datasets: [
           {
@@ -1328,7 +1305,7 @@ $(document).ready(function() {
             pointHoverBackgroundColor: "rgba(255,255,255,1)",
             pointBorderWidth: 2,
             pointHoverRadius: 7,
-            pointHoverBorderWidth: 1
+            pointHoverBorderWidth: 1,
           },
           {
             label: "Inactive",
@@ -1343,16 +1320,16 @@ $(document).ready(function() {
             pointHoverBackgroundColor: "rgba(255,255,255,1)",
             pointBorderWidth: 2,
             pointHoverRadius: 7,
-            pointHoverBorderWidth: 1
-          }
-        ]
+            pointHoverBorderWidth: 1,
+          },
+        ],
       },
       // Configuration options go here
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
@@ -1363,7 +1340,7 @@ $(document).ready(function() {
               ticks: {
                 fontColor: "#8a909d", // this here
               },
-            }
+            },
           ],
           yAxes: [
             {
@@ -1372,7 +1349,7 @@ $(document).ready(function() {
                 fontFamily: "Roboto, sans-serif",
                 display: true,
                 color: "#eee",
-                zeroLineColor: "#eee"
+                zeroLineColor: "#eee",
               },
               ticks: {
                 // callback: function(tick, index, array) {
@@ -1380,10 +1357,10 @@ $(document).ready(function() {
                 // }
                 stepSize: 50,
                 fontColor: "#8a909d",
-                fontFamily: "Roboto, sans-serif"
-              }
-            }
-          ]
+                fontFamily: "Roboto, sans-serif",
+              },
+            },
+          ],
         },
         tooltips: {
           mode: "index",
@@ -1399,17 +1376,17 @@ $(document).ready(function() {
           borderColor: "rgba(220, 220, 220, 0.9)",
           borderWidth: 2,
           caretSize: 6,
-          caretPadding: 5
-        }
-      }
+          caretPadding: 5,
+        },
+      },
     };
 
     var ctx = document.getElementById("activity").getContext("2d");
     var myLine = new Chart(ctx, config);
 
     var items = document.querySelectorAll("#user-activity .nav-tabs .nav-item");
-    items.forEach(function(item, index){
-      item.addEventListener("click", function() {
+    items.forEach(function (item, index) {
+      item.addEventListener("click", function () {
         config.data.datasets[0].data = activityData[index].first;
         config.data.datasets[1].data = activityData[index].second;
         myLine.update();
@@ -1428,15 +1405,15 @@ $(document).ready(function() {
           {
             label: "signup",
             data: [18, 13, 9.5],
-            backgroundColor: "#88aaf3"
-          }
-        ]
+            backgroundColor: "#88aaf3",
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
@@ -1446,36 +1423,36 @@ $(document).ready(function() {
                 display: true,
                 color: "#eee",
                 zeroLineColor: "#eee",
-                tickMarkLength: 3
+                tickMarkLength: 3,
               },
               ticks: {
                 display: true, // false will hide main x-axis line
                 beginAtZero: true,
                 fontFamily: "Roboto, sans-serif",
                 fontColor: "#8a909d",
-                callback: function(value) {
+                callback: function (value) {
                   return value + " %";
-                }
-              }
-            }
+                },
+              },
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 drawBorder: false, // hide main y-axis line
-                display: false
+                display: false,
               },
               ticks: {
                 display: true,
                 beginAtZero: false,
                 fontFamily: "Roboto, sans-serif",
                 fontColor: "#8a909d",
-                fontSize: 14
+                fontSize: 14,
               },
               barPercentage: 1.6,
-              categoryPercentage: 0.2
-            }
-          ]
+              categoryPercentage: 0.2,
+            },
+          ],
         },
         tooltips: {
           mode: "index",
@@ -1490,12 +1467,12 @@ $(document).ready(function() {
           borderColor: "rgba(220, 220, 220, 0.9)",
           borderWidth: 2,
           caretSize: 6,
-          caretPadding: 5
-        }
-      }
+          caretPadding: 5,
+        },
+      },
     });
   }
-  
+
   /*======== 18. HORIZONTAL BAR CHART2 ========*/
   var hbar2 = document.getElementById("hbar2");
   if (hbar2 !== null) {
@@ -1507,15 +1484,15 @@ $(document).ready(function() {
           {
             label: "signup",
             data: [7.5, 4.6, 4],
-            backgroundColor: "#88aaf3"
-          }
-        ]
+            backgroundColor: "#88aaf3",
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         scales: {
           xAxes: [
@@ -1525,7 +1502,7 @@ $(document).ready(function() {
                 display: true,
                 color: "#eee",
                 zeroLineColor: "#eee",
-                tickMarkLength: 3
+                tickMarkLength: 3,
               },
               ticks: {
                 display: true, // false will hide main x-axis line
@@ -1533,29 +1510,29 @@ $(document).ready(function() {
                 fontFamily: "Roboto, sans-serif",
                 fontColor: "#8a909d",
                 max: 20,
-                callback: function(value) {
+                callback: function (value) {
                   return value + "%";
-                }
-              }
-            }
+                },
+              },
+            },
           ],
           yAxes: [
             {
               gridLines: {
                 drawBorder: false, // hide main y-axis line
-                display: false
+                display: false,
               },
               ticks: {
                 display: true,
                 beginAtZero: false,
                 fontFamily: "Roboto, sans-serif",
                 fontColor: "#8a909d",
-                fontSize: 14
+                fontSize: 14,
               },
               barPercentage: 1.6,
-              categoryPercentage: 0.2
-            }
-          ]
+              categoryPercentage: 0.2,
+            },
+          ],
         },
         tooltips: {
           mode: "index",
@@ -1570,9 +1547,9 @@ $(document).ready(function() {
           borderColor: "rgba(220, 220, 220, 0.9)",
           borderWidth: 2,
           caretSize: 6,
-          caretPadding: 5
-        }
-      }
+          caretPadding: 5,
+        },
+      },
     });
   }
 
@@ -1592,27 +1569,27 @@ $(document).ready(function() {
               "rgba(76, 132, 255, 0.85)",
               "rgba(76, 132, 255, 0.70)",
             ],
-            borderWidth: 1
-          }
-        ]
+            borderWidth: 1,
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          display: false
+          display: false,
         },
         cutoutPercentage: 75,
         tooltips: {
           callbacks: {
-            title: function(tooltipItem, data) {
+            title: function (tooltipItem, data) {
               return data["labels"][tooltipItem[0]["index"]];
             },
-            label: function(tooltipItem, data) {
+            label: function (tooltipItem, data) {
               return (
                 data["datasets"][0]["data"][tooltipItem["index"]] + " Sessions"
               );
-            }
+            },
           },
 
           titleFontColor: "#888",
@@ -1626,9 +1603,9 @@ $(document).ready(function() {
           borderColor: "rgba(220, 220, 220, 0.9)",
           borderWidth: 2,
           caretSize: 6,
-          caretPadding: 5
-        }
-      }
+          caretPadding: 5,
+        },
+      },
     });
   }
 });
@@ -1651,50 +1628,50 @@ if (barX !== null) {
         "Sep",
         "Oct",
         "Nov",
-        "Dec"
+        "Dec",
       ],
       datasets: [
         {
           label: "signup",
           data: [5, 6, 4.5, 5.5, 3, 6, 4.5, 6, 8, 3, 5.5, 4],
           // data: [2, 3.2, 1.8, 2.1, 1.5, 3.5, 4, 2.3, 2.9, 4.5, 1.8, 3.4, 2.8],
-          backgroundColor: "#88aaf3"
-        }
-      ]
+          backgroundColor: "#88aaf3",
+        },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
           {
             gridLines: {
               drawBorder: false,
-              display: false
+              display: false,
             },
             ticks: {
               display: false, // hide main x-axis line
-              beginAtZero: true
+              beginAtZero: true,
             },
             barPercentage: 1.8,
-            categoryPercentage: 0.2
-          }
+            categoryPercentage: 0.2,
+          },
         ],
         yAxes: [
           {
             gridLines: {
               drawBorder: false, // hide main y-axis line
-              display: false
+              display: false,
             },
             ticks: {
               display: false,
-              beginAtZero: true
-            }
-          }
-        ]
+              beginAtZero: true,
+            },
+          },
+        ],
       },
       tooltips: {
         titleFontColor: "#888",
@@ -1704,9 +1681,9 @@ if (barX !== null) {
         backgroundColor: "rgba(256,256,256,0.95)",
         displayColors: false,
         borderColor: "rgba(220, 220, 220, 0.9)",
-        borderWidth: 2
-      }
-    }
+        borderWidth: 2,
+      },
+    },
   });
 }
 
@@ -1722,48 +1699,48 @@ if (bar1 !== null) {
           label: "signup",
           data: [5, 7.5, 5.5, 6.5, 4, 9],
           // data: [2, 3.2, 1.8, 2.1, 1.5, 3.5, 4, 2.3, 2.9, 4.5, 1.8, 3.4, 2.8],
-          backgroundColor: "#88aaf3"
-        }
-      ]
+          backgroundColor: "#88aaf3",
+        },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
           {
             gridLines: {
               drawBorder: false,
-              display: false
+              display: false,
             },
             ticks: {
               display: false, // hide main x-axis line
-              beginAtZero: true
+              beginAtZero: true,
             },
             barPercentage: 1.8,
-            categoryPercentage: 0.2
-          }
+            categoryPercentage: 0.2,
+          },
         ],
         yAxes: [
           {
             gridLines: {
               drawBorder: false, // hide main y-axis line
-              display: false
+              display: false,
             },
             ticks: {
               display: false,
-              beginAtZero: true
-            }
-          }
-        ]
+              beginAtZero: true,
+            },
+          },
+        ],
       },
       tooltips: {
-        enabled: false
-      }
-    }
+        enabled: false,
+      },
+    },
   });
 }
 
@@ -1779,48 +1756,48 @@ if (bar2 !== null) {
           label: "signup",
           data: [5, 7.5, 5.5, 6.5, 4, 9],
           // data: [2, 3.2, 1.8, 2.1, 1.5, 3.5, 4, 2.3, 2.9, 4.5, 1.8, 3.4, 2.8],
-          backgroundColor: "#ffffff"
-        }
-      ]
+          backgroundColor: "#ffffff",
+        },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
           {
             gridLines: {
               drawBorder: false,
-              display: false
+              display: false,
             },
             ticks: {
               display: false, // hide main x-axis line
-              beginAtZero: true
+              beginAtZero: true,
             },
             barPercentage: 1.8,
-            categoryPercentage: 0.2
-          }
+            categoryPercentage: 0.2,
+          },
         ],
         yAxes: [
           {
             gridLines: {
               drawBorder: false, // hide main y-axis line
-              display: false
+              display: false,
             },
             ticks: {
               display: false,
-              beginAtZero: true
-            }
-          }
-        ]
+              beginAtZero: true,
+            },
+          },
+        ],
       },
       tooltips: {
-        enabled: false
-      }
-    }
+        enabled: false,
+      },
+    },
   });
 }
 
@@ -1842,55 +1819,55 @@ if (bar3 !== null) {
         "Sep",
         "Oct",
         "Nov",
-        "Dec"
+        "Dec",
       ],
       datasets: [
         {
           label: "signup",
           data: [5, 6, 4.5, 5.5, 3, 6, 4.5, 6, 8, 3, 5.5, 4],
           // data: [2, 3.2, 1.8, 2.1, 1.5, 3.5, 4, 2.3, 2.9, 4.5, 1.8, 3.4, 2.8],
-          backgroundColor: "#ffffff"
-        }
-      ]
+          backgroundColor: "#ffffff",
+        },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
           {
             gridLines: {
               drawBorder: false,
-              display: false
+              display: false,
             },
             ticks: {
               display: false, // hide main x-axis line
-              beginAtZero: true
+              beginAtZero: true,
             },
             barPercentage: 1.8,
-            categoryPercentage: 0.2
-          }
+            categoryPercentage: 0.2,
+          },
         ],
         yAxes: [
           {
             gridLines: {
               drawBorder: false, // hide main y-axis line
-              display: false
+              display: false,
             },
             ticks: {
               display: false,
-              beginAtZero: true
-            }
-          }
-        ]
+              beginAtZero: true,
+            },
+          },
+        ],
       },
       tooltips: {
-        enabled: true
-      }
-    }
+        enabled: true,
+      },
+    },
   });
 }
 
@@ -1917,48 +1894,48 @@ if (gline1 !== null) {
           backgroundColor: gradientFill,
           borderColor: "#29cc97",
           borderWidth: 2,
-          data: [0, 5.5, 4, 9, 4, 7, 4.7]
-        }
-      ]
+          data: [0, 5.5, 4, 9, 4, 7, 4.7],
+        },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
           {
             gridLines: {
               drawBorder: false,
-              display: false
+              display: false,
             },
             ticks: {
               display: false, // hide main x-axis line
-              beginAtZero: true
+              beginAtZero: true,
             },
             barPercentage: 1.8,
-            categoryPercentage: 0.2
-          }
+            categoryPercentage: 0.2,
+          },
         ],
         yAxes: [
           {
             gridLines: {
               drawBorder: false, // hide main y-axis line
-              display: false
+              display: false,
             },
             ticks: {
               display: false,
-              beginAtZero: true
-            }
-          }
-        ]
+              beginAtZero: true,
+            },
+          },
+        ],
       },
       tooltips: {
-        enabled: false
-      }
-    }
+        enabled: false,
+      },
+    },
   });
 }
 
@@ -1985,48 +1962,48 @@ if (gline2 !== null) {
           backgroundColor: gradientFill,
           borderColor: "#ffffff",
           borderWidth: 2,
-          data: [0, 5.5, 4, 9, 4, 7, 4.7]
-        }
-      ]
+          data: [0, 5.5, 4, 9, 4, 7, 4.7],
+        },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
           {
             gridLines: {
               drawBorder: false,
-              display: false
+              display: false,
             },
             ticks: {
               display: false, // hide main x-axis line
-              beginAtZero: true
+              beginAtZero: true,
             },
             barPercentage: 1.8,
-            categoryPercentage: 0.2
-          }
+            categoryPercentage: 0.2,
+          },
         ],
         yAxes: [
           {
             gridLines: {
               drawBorder: false, // hide main y-axis line
-              display: false
+              display: false,
             },
             ticks: {
               display: false,
-              beginAtZero: true
-            }
-          }
-        ]
+              beginAtZero: true,
+            },
+          },
+        ],
       },
       tooltips: {
-        enabled: false
-      }
-    }
+        enabled: false,
+      },
+    },
   });
 }
 
@@ -2053,53 +2030,53 @@ if (gline3 !== null) {
           backgroundColor: gradientFill,
           borderColor: "#ffffff",
           borderWidth: 2,
-          data: [0, 4, 3, 5.5, 3, 4.7, 1]
-        }
-      ]
+          data: [0, 4, 3, 5.5, 3, 4.7, 1],
+        },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       layout: {
         padding: {
-          right: 10
-        }
+          right: 10,
+        },
       },
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
           {
             gridLines: {
               drawBorder: false,
-              display: false
+              display: false,
             },
             ticks: {
               display: false, // hide main x-axis line
-              beginAtZero: true
+              beginAtZero: true,
             },
             barPercentage: 1.8,
-            categoryPercentage: 0.2
-          }
+            categoryPercentage: 0.2,
+          },
         ],
         yAxes: [
           {
             gridLines: {
               drawBorder: false, // hide main y-axis line
-              display: false
+              display: false,
             },
             ticks: {
               display: false,
-              beginAtZero: true
-            }
-          }
-        ]
+              beginAtZero: true,
+            },
+          },
+        ],
       },
       tooltips: {
-        enabled: true
-      }
-    }
+        enabled: true,
+      },
+    },
   });
 }
 /*==
@@ -2122,7 +2099,7 @@ if (acquisition3 !== null) {
           pointBackgroundColor: "rgba(76, 132, 255,0)",
           pointHoverBackgroundColor: "rgba(76, 132, 255,1)",
           pointHoverRadius: 3,
-          pointHitRadius: 30
+          pointHitRadius: 30,
         },
         {
           label: "Direct",
@@ -2132,7 +2109,7 @@ if (acquisition3 !== null) {
           pointBackgroundColor: "rgba(254, 196, 0,0)",
           pointHoverBackgroundColor: "rgba(254, 196, 0,1)",
           pointHoverRadius: 3,
-          pointHitRadius: 30
+          pointHitRadius: 30,
         },
         {
           label: "Social",
@@ -2142,9 +2119,9 @@ if (acquisition3 !== null) {
           pointBackgroundColor: "rgba(41, 204, 151,0)",
           pointHoverBackgroundColor: "rgba(41, 204, 151,1)",
           pointHoverRadius: 3,
-          pointHitRadius: 30
-        }
-      ]
+          pointHitRadius: 30,
+        },
+      ],
     },
 
     // Configuration options go here
@@ -2152,33 +2129,33 @@ if (acquisition3 !== null) {
       responsive: true,
       maintainAspectRatio: false,
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
           {
             gridLines: {
-              display: false
-            }
-          }
+              display: false,
+            },
+          },
         ],
         yAxes: [
           {
             gridLines: {
-              display: true
+              display: true,
             },
             ticks: {
               beginAtZero: true,
               stepSize: 50,
               fontColor: "#8a909d",
               fontFamily: "Roboto, sans-serif",
-              max: 200
-            }
-          }
-        ]
+              max: 200,
+            },
+          },
+        ],
       },
-      tooltips: {}
-    }
+      tooltips: {},
+    },
   });
   document.getElementById("customLegend").innerHTML = acChart3.generateLegend();
 }
@@ -2201,7 +2178,7 @@ if (mstat !== null) {
           backgroundColor: "rgba(66,208,163,0.2)",
           borderWidth: 2.5,
           borderColor: "#42d0a3",
-          data: [10000, 17500, 2000, 11000, 19000, 10500, 18000]
+          data: [10000, 17500, 2000, 11000, 19000, 10500, 18000],
         },
         {
           label: "New",
@@ -2213,41 +2190,41 @@ if (mstat !== null) {
           backgroundColor: "rgba(76,132,255,0.2)",
           borderWidth: 2.5,
           borderColor: "#88aaf3",
-          data: [2000, 11500, 10000, 14000, 11000, 16800, 14500]
-        }
-      ]
+          data: [2000, 11500, 10000, 14000, 11000, 16800, 14500],
+        },
+      ],
     },
     options: {
       maintainAspectRatio: false,
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
           {
             gridLines: {
               drawBorder: true,
-              display: false
+              display: false,
             },
             ticks: {
               display: true, // hide main x-axis line
               beginAtZero: true,
               fontFamily: "Roboto, sans-serif",
-              fontColor: "#8a909d"
-            }
-          }
+              fontColor: "#8a909d",
+            },
+          },
         ],
         yAxes: [
           {
             gridLines: {
               drawBorder: true, // hide main y-axis line
-              display: true
+              display: true,
             },
             ticks: {
-              callback: function(value) {
+              callback: function (value) {
                 var ranges = [
                   { divider: 1e6, suffix: "M" },
-                  { divider: 1e3, suffix: "k" }
+                  { divider: 1e3, suffix: "k" },
                 ];
                 function formatNumber(n) {
                   for (var i = 0; i < ranges.length; i++) {
@@ -2264,28 +2241,27 @@ if (mstat !== null) {
               stepSize: 5000,
               fontColor: "#8a909d",
               fontFamily: "Roboto, sans-serif",
-              beginAtZero: true
-            }
-          }
-        ]
+              beginAtZero: true,
+            },
+          },
+        ],
       },
       tooltips: {
-        enabled: true
-      }
-    }
+        enabled: true,
+      },
+    },
   });
 }
 
 /*======== 29. Line Gredient ========*/
-var elem = document.getElementById('myChart');
+var elem = document.getElementById("myChart");
 
-if(typeof elem !== 'undefined' && elem !== null) {
-
+if (typeof elem !== "undefined" && elem !== null) {
   var ctx = elem.getContext("2d");
 
   var barStroke = ctx.createLinearGradient(700, 0, 120, 0);
-  barStroke.addColorStop(0, 'rgba(0, 255, 188, 0.6)');
-  barStroke.addColorStop(1, 'rgba(0, 205, 194, 0.6)');
+  barStroke.addColorStop(0, "rgba(0, 255, 188, 0.6)");
+  barStroke.addColorStop(1, "rgba(0, 205, 194, 0.6)");
 
   var barFill = ctx.createLinearGradient(700, 0, 120, 0);
   barFill.addColorStop(0, "rgba(0, 255, 188, 0.6)");
@@ -2296,60 +2272,72 @@ if(typeof elem !== 'undefined' && elem !== null) {
   barFillHover.addColorStop(1, "rgba(0, 205, 194, 0.6)");
 
   var myChart = new Chart(ctx, {
-      type: 'horizontalBar',
-      data: {
-          labels: ["Data Set 1", "Data Set 2", "Data Set 3", "Data Set 4", "Data Set 5"],
-          datasets: [{
-              label: "Data",
-              borderColor: barStroke,
-        borderWidth: 1,
-              fill: true,
-              backgroundColor: barFill,
-        hoverBackgroundColor: barFillHover,
-              data: [100, 50, 60, 80, 70]
-          }]
+    type: "horizontalBar",
+    data: {
+      labels: [
+        "Data Set 1",
+        "Data Set 2",
+        "Data Set 3",
+        "Data Set 4",
+        "Data Set 5",
+      ],
+      datasets: [
+        {
+          label: "Data",
+          borderColor: barStroke,
+          borderWidth: 1,
+          fill: true,
+          backgroundColor: barFill,
+          hoverBackgroundColor: barFillHover,
+          data: [100, 50, 60, 80, 70],
+        },
+      ],
+    },
+    options: {
+      animation: {
+        easing: "easeOutQuart",
       },
-      options: {
-          animation: {
-              easing: "easeOutQuart"
+      legend: {
+        position: "bottom",
+        display: false,
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              fontColor: "#fafafa",
+              fontStyle: "bold",
+              beginAtZero: true,
+              padding: 15,
+              //display: false - remove this and commenting to display: false
+            },
+            gridLines: {
+              drawTicks: false,
+              display: false,
+              color: "transparent",
+              zeroLineColor: "transparent",
+            },
           },
-          legend: {
-              position: "bottom",
-        display: false
+        ],
+        xAxes: [
+          {
+            gridLines: {
+              display: false,
+              color: "transparent",
+              zeroLineColor: "transparent",
+            },
+            ticks: {
+              padding: 15,
+              beginAtZero: true,
+              fontColor: "#fafafa",
+              fontStyle: "bold",
+              maxTicksLimit: 20,
+              //display: false - remove this and commenting to display: false
+            },
           },
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      fontColor: "#fafafa",
-                      fontStyle: "bold",
-                      beginAtZero: true,
-                      padding: 15,
-            //display: false - remove this and commenting to display: false
-                  },
-                  gridLines: {
-                      drawTicks: false,
-                      display: false,
-            color: "transparent",
-            zeroLineColor: "transparent"
-                  }
-              }],
-              xAxes: [{
-                  gridLines: {
-            display: false,
-            color: "transparent",
-            zeroLineColor: "transparent"
-                  },
-                  ticks: {
-                      padding: 15,
-            beginAtZero: true,
-                      fontColor: "#fafafa",
-                      fontStyle: "bold",
-            maxTicksLimit: 20,
-            //display: false - remove this and commenting to display: false
-                  }
-              }]
-          }
-      }
+        ],
+      },
+    },
   });
 }
 
@@ -2391,138 +2379,146 @@ if(typeof elem !== 'undefined' && elem !== null) {
 //   data: data
 // });
 
-
 /*======== 31. Bar Round Line ========*/
 // Chart.defaults.global.elements.rectangle.backgroundColor = '#FF0000';
 
-var elmbar_ctx = document.getElementById('bar-chart');
+var elmbar_ctx = document.getElementById("bar-chart");
 
-if(typeof elmbar_ctx !== 'undefined' && elmbar_ctx !== null) {
-  var bar_ctx = elmbar_ctx.getContext('2d');
+if (typeof elmbar_ctx !== "undefined" && elmbar_ctx !== null) {
+  var bar_ctx = elmbar_ctx.getContext("2d");
 
   var purple_orange_gradient = bar_ctx.createLinearGradient(0, 0, 0, 600);
-  purple_orange_gradient.addColorStop(0, 'orange');
-  purple_orange_gradient.addColorStop(1, 'purple');
+  purple_orange_gradient.addColorStop(0, "orange");
+  purple_orange_gradient.addColorStop(1, "purple");
 
   var bar_chart = new Chart(bar_ctx, {
-      type: 'bar',
-      data: {
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-          datasets: [{
-              label: '# of Votes',
-              data: [12, 19, 3, 8, 14, 5],
-              backgroundColor: purple_orange_gradient,
-              hoverBackgroundColor: purple_orange_gradient,
-              hoverBorderWidth: 2,
-              hoverBorderColor: 'purple'
-          }]
+    type: "bar",
+    data: {
+      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [12, 19, 3, 8, 14, 5],
+          backgroundColor: purple_orange_gradient,
+          hoverBackgroundColor: purple_orange_gradient,
+          hoverBorderWidth: 2,
+          hoverBorderColor: "purple",
+        },
+      ],
+    },
+    options: {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
       },
-      options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }]
-          }
-      }
+    },
   });
 }
 
 /*======== 32. Double Bar Line Chart ========*/
 
 var baremlctx = document.getElementById("myBarChart");
-if(typeof baremlctx !== 'undefined' && baremlctx !== null) {
-
-  var ctx = baremlctx.getContext('2d');
+if (typeof baremlctx !== "undefined" && baremlctx !== null) {
+  var ctx = baremlctx.getContext("2d");
   var myBarChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-          datasets: [{
-              label: '# of Votes',
-              data: [12, 19, 3, 5, 2, 3],
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255,99,132,1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
-              borderWidth: 1
-          },
-          
+    type: "bar",
+    data: {
+      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+          ],
+          borderColor: [
+            "rgba(255,99,132,1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)",
+          ],
+          borderWidth: 1,
+        },
+
+        {
+          label: "# of Votes2",
+          data: [24, 38, 6, 10, 4, 6],
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+          ],
+          borderColor: [
+            "rgba(255,99,132,1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)",
+          ],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        yAxes: [
           {
-          label: '# of Votes2',
-              data: [24,38, 6, 10, 4, 6],
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255,99,132,1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
-              borderWidth: 1
+            ticks: {
+              beginAtZero: true,
+            },
           },
-      
-          
-          ]
+        ],
       },
-      options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero:true
-                  }
-              }]
-          }
-      },
+    },
 
-
-      
-      onClick:function(e){
+    onClick: function (e) {
       /*var activePoints = myBarChart.getElementsAtEvent(e);
       var selectedIndex = activePoints[0]._index; */
       /* alert(this.data.datasets[0].data[selectedIndex]);
       console.log(this.data.datasets[0].data[selectedIndex]);
       */
-      }
+    },
   });
 
   /* https://github.com/chartjs/Chart.js/issues/2292 */
   document.getElementById("myBarChart").onclick = function (evt) {
-          var activePoints = myBarChart.getElementsAtEventForMode(evt, 'point', myBarChart.options);
-          var firstPoint = activePoints[0];
-          var label = myBarChart.data.labels[firstPoint._index];
-          var value = myBarChart.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
-          alert(label + ": " + value);
+    var activePoints = myBarChart.getElementsAtEventForMode(
+      evt,
+      "point",
+      myBarChart.options
+    );
+    var firstPoint = activePoints[0];
+    var label = myBarChart.data.labels[firstPoint._index];
+    var value =
+      myBarChart.data.datasets[firstPoint._datasetIndex].data[
+        firstPoint._index
+      ];
+    alert(label + ": " + value);
   };
 }
 
-/*======== 33. Color Curve Bar Progressive Chart ========*/  
+/*======== 33. Color Curve Bar Progressive Chart ========*/
 
 var curveeml_ctx = document.getElementById("chartCurveBar");
 
-if(typeof curveeml_ctx !== 'undefined' && curveeml_ctx !== null) {
-  var ctx = curveeml_ctx.getContext('2d');
+if (typeof curveeml_ctx !== "undefined" && curveeml_ctx !== null) {
+  var ctx = curveeml_ctx.getContext("2d");
 
   var gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
   gradientStroke.addColorStop(0, "#ff6c00");
@@ -2534,79 +2530,84 @@ if(typeof curveeml_ctx !== 'undefined' && curveeml_ctx !== null) {
 
   var draw = Chart.controllers.line.prototype.draw;
   Chart.controllers.line = Chart.controllers.line.extend({
-      draw: function() {
-          draw.apply(this, arguments);
-          var ctx = this.chart.chart.ctx;
-          var _stroke = ctx.stroke;
-          ctx.stroke = function() {
-              ctx.save();
-              //ctx.shadowColor = 'rgba(244,94,132,0.8)';
-              ctx.shadowBlur = 8;
-              ctx.shadowOffsetX = 0;
-              ctx.shadowOffsetY = 6;
-              _stroke.apply(this, arguments)
-              ctx.restore();
-          }
-      }
+    draw: function () {
+      draw.apply(this, arguments);
+      var ctx = this.chart.chart.ctx;
+      var _stroke = ctx.stroke;
+      ctx.stroke = function () {
+        ctx.save();
+        //ctx.shadowColor = 'rgba(244,94,132,0.8)';
+        ctx.shadowBlur = 8;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 6;
+        _stroke.apply(this, arguments);
+        ctx.restore();
+      };
+    },
   });
 
   var chart = new Chart(ctx, {
-      // The type of chart we want to create
-      type: 'line',
+    // The type of chart we want to create
+    type: "line",
 
-      // The data for our dataset
-      data: {
-          labels: ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"],
-          datasets: [{
-              label: "Income",
-              backgroundColor: gradientBkgrd,
-              borderColor: gradientStroke,
-              data: [5500, 2500, 10000, 6000, 14000, 1500, 7000,20000],
-              pointBorderColor: "rgba(255,255,255,0)",
-              pointBackgroundColor: "rgba(255,255,255,0)",
-              pointBorderWidth: 0,
-              pointHoverRadius: 8,
-              pointHoverBackgroundColor: gradientStroke,
-              pointHoverBorderColor: "rgba(220,220,220,1)",
-              pointHoverBorderWidth: 4,
-              pointRadius: 1,
-              borderWidth: 5,
-              pointHitRadius: 16,
-          }]
-      },
-
-      // Configuration options go here
-      options: {
-        tooltips: {
-          backgroundColor:'#fff',
-          displayColors:false,
-            titleFontColor: '#000',
-          bodyFontColor: '#000'
-          
-          },      
-        legend: {
-              display: false
+    // The data for our dataset
+    data: {
+      labels: ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"],
+      datasets: [
+        {
+          label: "Income",
+          backgroundColor: gradientBkgrd,
+          borderColor: gradientStroke,
+          data: [5500, 2500, 10000, 6000, 14000, 1500, 7000, 20000],
+          pointBorderColor: "rgba(255,255,255,0)",
+          pointBackgroundColor: "rgba(255,255,255,0)",
+          pointBorderWidth: 0,
+          pointHoverRadius: 8,
+          pointHoverBackgroundColor: gradientStroke,
+          pointHoverBorderColor: "rgba(220,220,220,1)",
+          pointHoverBorderWidth: 4,
+          pointRadius: 1,
+          borderWidth: 5,
+          pointHitRadius: 16,
         },
-          scales: {
-              xAxes: [{
-                  gridLines: {
-                      display:false
-                  }
-              }],
-              yAxes: [{
-                  ticks: {
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                          return (value / 1000) + 'K';
-                      }
-                  }
-              }],
-          }
-      }
+      ],
+    },
+
+    // Configuration options go here
+    options: {
+      tooltips: {
+        backgroundColor: "#fff",
+        displayColors: false,
+        titleFontColor: "#000",
+        bodyFontColor: "#000",
+      },
+      legend: {
+        display: false,
+      },
+      scales: {
+        xAxes: [
+          {
+            gridLines: {
+              display: false,
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              // Include a dollar sign in the ticks
+              callback: function (value, index, values) {
+                return value / 1000 + "K";
+              },
+            },
+          },
+        ],
+      },
+    },
   });
 }
 
-/*======== 34. Color Curve Bar Progressive Chart ========*/  
+/*======== 34. Color Curve Bar Progressive Chart ========*/
 
 // var labels = ["January", "February", "March", "April", "May", "June", "July"];
 // var getRandomValues = function() {

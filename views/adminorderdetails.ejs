@@ -112,7 +112,7 @@
 										<th>Quantity</th>
 										<th>Unit_Cost</th>
 										<th>Total</th>
-                                        <th>action</th>
+                                        <!-- <th>action</th> -->
 									</tr>
 								</thead>
 
@@ -125,31 +125,30 @@
 										<td><%=userorder.items[i].product.description%></td>
 										<td><%=userorder.items[i].quantity%></td>
 										<td>$<%=userorder.items[i].product.price%></td>
-										<td>$<%=userorder.total%></td>
+										<td>$<%=userorder.items[i].total%></td>
                                         <td>
-                                           <div class="btn-group mb-1">
-															<button type="button"
-																class="btn btn-outline-success">Info</button>
-															<button type="button"
-																class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
-																data-bs-toggle="dropdown" aria-haspopup="true"
-																aria-expanded="false" data-display="static">
-																<span class="sr-only">Info</span>
-															</button>
-
-															<div class="dropdown-menu">
-																<a class="dropdown-item" onclick="status('<%=userorder._id%>','pending')" href="">pending</a>
-																<a class="dropdown-item" onclick="status('<%=userorder._id%>','delivered')"  href="#">delivered</a>
-
-                                                                
-																<a class="dropdown-item" onclick="status('<%=userorder._id%>','Cancelled')"  href="#">Cancel</a>
-                                                                
-															</div>
-														</div> 
+                                           
                                         </td>
 									</tr>
                                     <%}%>
-									
+									<div class="btn-group mb-1">
+										<button id="status" type="button"
+											class="btn btn-outline-success"><%=userorder.orderstatus%></button>
+										<button type="button"
+											class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
+											data-bs-toggle="dropdown" aria-haspopup="true"
+											aria-expanded="false" data-display="static">
+											<span class="sr-only"><%=userorder._id%></span>
+										</button>
+
+										<div class="dropdown-menu">
+											<a class="dropdown-item" onclick="status('<%=userorder._id%>','pending')" href="">pending</a>
+											<a class="dropdown-item" onclick="status('<%=userorder._id%>','delivered')"  href="#">delivered</a>
+											<a class="dropdown-item" onclick="status('<%=userorder._id%>','returned')"  href="#">return</a>
+											<a class="dropdown-item" id="cancel" onclick="status('<%=userorder._id%>','Cancelled')"  href="#">Cancel</a>
+											 
+										</div>
+									</div> 
 								</tbody>
 							</table>
 						</div>
@@ -164,6 +163,12 @@
 									<!-- <li class="mid pb-3 text-dark">Vat(10%)
 										<span class="d-inline-block float-right text-default">$100.00</span>
 									</li> -->
+									<li class="pb-3 text-dark">Discount
+										<span class="d-inline-block float-right">$<%=userorder.discount%></span>
+									</li>
+									<li class="pb-3 text-dark">deleveryCharge
+										<span class="d-inline-block float-right">$30</span>
+									</li>
 
 									<li class="pb-3 text-dark">Total
 										<span class="d-inline-block float-right">$<%=userorder.total%></span>
@@ -209,5 +214,20 @@
         event.preventDefault()
         console.log(status,'jjjjjjjjjjjjjjjjj');
     axios.put(`status?orderid=${orderid}`,{status})
+	.then((res)=>{
+		if(res.data.cancel){
+			
+			document.getElementById('status').innerHTML='Cancelled'
+		}else if(res.data.delivered){
+		
+			document.getElementById('status').innerHTML='delivered'
+		}else if(res.data.pending){
+			
+            document.getElementById('status').innerHTML='pending'
+			
+		}else if(res.data.return){
+			document.getElementById('status').innerHTML='returned'
+		}
+	})
     }
 </script>

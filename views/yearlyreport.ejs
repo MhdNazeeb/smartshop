@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Ekka - Admin Dashboard HTML Template.">
+
+	<title>Ekka - Admin Dashboard HTML Template.</title>
+
+	<!-- GOOGLE FONTS -->
+	<script src="https://kit.fontawesome.com/bf625ee5bc.js" crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com/">
+	<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800&amp;family=Poppins:wght@300;400;500;600;700;800;900&amp;family=Roboto:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+
+	<link href="../../../../cdn.jsdelivr.net/npm/%40mdi/font%404.4.95/css/materialdesignicons.min.css" rel="stylesheet" />
+
+	<!-- PLUGINS CSS STYLE -->
+	<link href="/color/plugins/simplebar/simplebar.css" rel="stylesheet" />
+
+	<!-- Data-Tables -->
+	<link href='/color/plugins/data-tables/datatables.bootstrap5.min.css' rel='stylesheet'>
+	<link href='/color/plugins/data-tables/responsive.datatables.min.css' rel='stylesheet'>
+
+	<!-- Ekka CSS -->
+	<link id="ekka-css" rel="stylesheet" href="/color/css/ekka.css" />
+
+	<!-- FAVICON -->
+	<link href="/color/img/favicon.png" rel="shortcut icon" />
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+</head>
+
+<body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+
+	<!-- WRAPPER -->
+	<div class="wrapper">
+
+		<!-- LEFT MAIN SIDEBAR -->
+        <%-include('./partials/adminSidebar.ejs')%>
+		
+
+		<!-- PAGE WRAPPER -->
+		<div class="ec-page-wrapper">
+
+			<!-- Header -->
+            <%-include('./partials/adminHeader.ejs')%>
+
+			<!-- CONTENT WRAPPER -->
+			<div class="ec-content-wrapper">
+				<div class="content">
+					<div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
+						<div>
+						  <h1>Daily Report</h1>
+						  <p class="breadcrumbs">
+							<span><a href="/index">Home</a></span>
+							<span><i class="mdi mdi-chevron-right"></i></span>Daily Report
+						  </p>
+						</div>
+						<!-- <div>
+						  <button onclick="generatePdf()" class="btn btn-primary"> Download </button>
+						</div> -->
+					  </div>
+					<div class="row">
+						<div class="col-12">
+							<div class="card card-default">
+								<div class="card-body">
+									<div class="table-responsive">
+										<div id="invoice">
+											<table id="example" class="table" style="width:100%">
+												<thead>
+                                                      
+													<tr>
+														<th>Month</th>
+														<th>Total Order</th>
+														<th>Total Product</th>
+														<th>Total</th>
+														<th>Profit</th>
+											
+													</tr>
+                                                   
+												</thead>
+	
+												<tbody>
+													<%for(i=0;i<yearlyreport.length ;i++){%> 
+													<tr>
+														<td><%=yearlyreport[i]._id.year%></td>
+														<td><%=yearlyreport[i].count%></td>
+														<td><%=yearlyreport[i].items%></td>
+														<td>$<%=yearlyreport[i].totalprice%></td>
+														<td>$<%=yearlyreport[i].totalprice*15/100%></td>
+														
+												
+													</tr>
+                                                    <%}%>
+													
+                                                   
+												
+													
+													
+	
+												</tbody>
+											</table>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- End Content -->
+			</div> <!-- End Content Wrapper -->
+
+
+			<!-- Footer -->
+			<%-include('./partials/adminFooter.ejs')%>
+
+		</div> <!-- End Page Wrapper -->
+	</div> <!-- End Wrapper -->
+	<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
+
+
+	<!-- Common Javascript -->
+	<!-- <script src="/color/plugins/jquery/jquery-3.5.1.min.js"></script> -->
+	<script src="/color/js/bootstrap.bundle.min.js"></script>
+	<script src="/color/plugins/simplebar/simplebar.min.js"></script>
+	<script src="/color/plugins/jquery-zoom/jquery.zoom.min.js"></script>
+	<script src="/color/plugins/slick/slick.min.js"></script>
+
+	<!-- Data-Tables -->
+	<!-- <script src='/color/plugins/data-tables/jquery.datatables.min.js'></script>
+	<script src='/color/plugins/data-tables/datatables.bootstrap5.min.js'></script>
+	<script src='/color/plugins/data-tables/datatables.responsive.min.js'></script> -->
+
+	<!-- Option Switcher -->
+	<script src="/color/plugins/options-sidebar/optionswitcher.js"></script>
+
+	<!-- Ekka Custom -->
+	<script src="/color/js/ekka.js"></script>
+</body>
+
+
+
+</html>

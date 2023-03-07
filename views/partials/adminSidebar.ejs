@@ -14,7 +14,7 @@
             <ul class="nav sidebar-inner" id="sidebar-menu">
                 <!-- Dashboard -->
                 <li>
-                    <a class="sidenav-item-link" href="index.html">
+                    <a class="sidenav-item-link" href="/admin/dashboard">
                         <i class="mdi mdi-view-dashboard-outline"></i>
                         <span class="nav-text">Dashboard</span>
                     </a>
@@ -131,6 +131,8 @@
                         </ul>
                     </div>
                 </li>
+                
+
 
                 <!-- Orders -->
                 <li class="has-sub">
@@ -163,7 +165,7 @@
                         </ul>
                     </div>
                 </li>
-
+                
                 <!-- Reviews -->
                 <li>
                     <a class="sidenav-item-link" href="/admin/coupon">
@@ -171,32 +173,56 @@
                         <span class="nav-text">Coupon</span>
                     </a>
                 </li>
-
-                <!-- Brands -->
-                <li>
-                    <a class="sidenav-item-link" href="/coupon">
-                        <i class="mdi mdi-tag-faces"></i>
-                        <span class="nav-text">Brands</span>
+                <li class="has-sub">
+                    <a class="sidenav-item-link" href="javascript:void(0)">
+                        <i class="mdi mdi-palette-advanced"></i>
+                        <span class="nav-text">OrderReport</span> <b class="caret"></b>
                     </a>
-                    <hr>
+                    <div class="collapse">
+                        <ul class="sub-menu" id="products" data-parent="#sidebar-menu">
+                            <li class="">
+                                <a class="sidenav-item-link" href="/admin/dailyreport">
+                                    <span class="nav-text">DailyReport</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a class="sidenav-item-link" href="/admin/monthlyreport">
+                                    <span class="nav-text">MonthlyReport</span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a class="sidenav-item-link" href="/admin/yearlyreport">
+                                    <span class="nav-text">YearlyReport</span>
+                                </a>
+                            </li>
+                           <!-- <li class="">
+                                <a class="sidenav-item-link" href="product-detail.html">
+                                    <span class="nav-text">Product Detail</span>
+                                </a>
+                            </li>   -->
+                        </ul>
+                    </div>
                 </li>
 
+
+                <!-- Brands -->
+                
                 <!-- Authentication -->
                 <li class="has-sub">
                     <a class="sidenav-item-link" href="javascript:void(0)">
                         <i class="mdi mdi-login"></i>
-                        <span class="nav-text">Authentication</span> <b class="caret"></b>
+                        <span class="nav-text">Banner</span> <b class="caret"></b>
                     </a>
                     <div class="collapse">
                         <ul class="sub-menu" id="authentication" data-parent="#sidebar-menu">
                             <li class="">
-                                <a href="sign-in.html">
-                                    <span class="nav-text">Sign In</span>
+                                <a href="/admin/banner">
+                                    <span class="nav-text">addbanner</span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="sign-up.html">
-                                    <span class="nav-text">Sign Up</span>
+                                <a href="/admin/listbanner">
+                                    <span class="nav-text">banner List</span>
                                 </a>
                             </li>
                         </ul>

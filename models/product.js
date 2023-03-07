@@ -35,6 +35,11 @@ const ProductSchema = new mongoose.Schema({
    type: Array,
    required: true
   },
+  status:{
+    type:String,
+    required:true,
+    default:'false'
+  },
   updated:{ type: Date, default: moment(Date.now()).format("DD MMM YYYY")},
   created:{ type: Date, default: moment(Date.now()).format("DD MMM YYYY")}
 });

@@ -177,16 +177,16 @@
                                                 </a>
                                                 <button onclick="deleteWish('<%=findwish[0].items[i].product._id%>')"><span class="ec-com-remove ec-remove-wish"><a   href="">×</a></span></button>
                                                 <span class="percentage">20%</span>
-                                                <a href="#" class="quickview" data-link-action="quickview"
+                                                <!-- <a href="#" class="quickview" data-link-action="quickview"
                                                     title="Quick view" data-bs-toggle="modal"
                                                     data-bs-target="#ec_quickview_modal"><img
                                                         src="assets/images/icons/quickview.svg" class="svg_img pro_svg"
-                                                        alt="" /></a>
+                                                        alt="" /></a> -->
                                                 <div class="ec-pro-actions">
-                                                    <a href="compare.html" class="ec-btn-group compare"
+                                                    <!-- <a href="compare.html" class="ec-btn-group compare"
                                                         title="Compare"><img src="assets/images/icons/compare.svg"
-                                                            class="svg_img pro_svg" alt="" /></a>
-                                                    <button title="Add To Cart" class=" add-to-cart"><img
+                                                            class="svg_img pro_svg" alt="" /></a> -->
+                                                    <button  onclick="addCart('<%=findwish[0].items[i].product._id%>')" title="Add To Cart" class=" add-to-cart"><img
                                                             src="assets/images/icons/cart.svg" class="svg_img pro_svg"
                                                             alt="" /> Add To Cart</button>
                                                     <a class="ec-btn-group wishlist" title="Wishlist"><img
@@ -863,4 +863,39 @@
     console.log('delete here');
      axios.delete(`wishPro?proid=${proid}`)
     }
+    function addCart(proid){
+        console.log('hhhhhhhhhhhhhhhhhh');
+        event.preventDefault()
+        console.log(proid)
+     axios.get(`/cart?proid=${proid}&quantity=${1}`)
+     .then((res)=>{
+        console.log(res.data,"res data mssge")
+        if(res.data.cartCreated){
+           
+            console.log('cart made');
+            location.href='/cartList'
+        }else if(res.data.incriment){
+            console.log('incriment sucess ')
+            swal("Good job!", "You clicked the button!", "success");
+            window.location.replace='/productDetails'
+              
+        }else if(res.data.push){
+            console.log('cart updated')
+            swal("Good job!", "You clicked the button!", "success");
+            window.location.replace='/productDetails'
+
+        }else if(res.data.outofstock){
+            console.log('incriment sucess ')
+            swal("oops!", "out of stock", "error");
+            window.location.replace='/productDetails'
+        }else if(res.data.session){
+            swal("Hello world!");
+            location.href='/login'
+          
+
+        }
+
+     })
+    }
+    
 </script>
