@@ -40,6 +40,7 @@ const getsignup = (req, res) => {
 };
 const getLogin = (req, res) => {
   try {
+   
     res.render("login", { message: req.flash("message") });
   } catch (error) {
     res.render("user404");
@@ -110,6 +111,7 @@ const postLogin = async (req, res) => {
           const id = await signup.findOne({ email: email }, { _id: 1 });
           req.session.userlogin = id._id;
           req.session.loginuser = true;
+         
           res.redirect("/");
         } else {
           req.flash("message", "aA");
@@ -169,7 +171,7 @@ const postNumber = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
-
+     
     res.render("user404");
   }
 };
@@ -767,9 +769,11 @@ const verifyPayment = async function (req, res, next) {
 };
 const getProfile =async (req, res) => {
   const {userlogin}=req.session
+  const findUser=await signup.findOne({_id:userlogin})
+  console.log(findUser,'this find user');
   const findAddress=await address.findOne({user:userlogin})
   console.log(findAddress,'this is address');
-  res.render("userprofile",{findAddress});
+  res.render("userprofile",{findAddress,findUser});
 };
 const getOrderHistory = async (req, res) => {
   const { userlogin } = req.session;
@@ -823,7 +827,22 @@ const orderCancel = async (req, res) => {
 
 }
 };
+const updateProfile=async(req,res)=>{
+  let {name,email,phone}=req.body
+  let {userlogin}=req.session
+  console.log(name,email,phone,'this profile');
+  console.log(req.body,'this profile');
+  const upadte=await signup.updateOne({_id:userlogin},{$set:{
+    name:name,
+    phone:phone,
+    email:email
+  }})
+  console.log(upadte,);
+  res.json({updated:true})
+}
+const forgotPassword=async(req,res)=>{
 
+}
 
 
 
@@ -860,6 +879,7 @@ module.exports = {
   getOrderHistory,
   orderDetails,
   orderCancel,
+  updateProfile
 
   
 };

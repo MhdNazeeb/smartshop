@@ -1,5 +1,6 @@
 const mongoose= require('mongoose')
-const url = "mongodb://127.0.0.1:27017/smartshop";
+require("dotenv/config");
+const url = process.env.database;
 
 mongoose.set("strictQuery", false);
 mongoose

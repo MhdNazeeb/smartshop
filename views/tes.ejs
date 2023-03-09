@@ -20,17 +20,19 @@
 	<link href="../../../../cdn.jsdelivr.net/npm/%40mdi/font%404.4.95/css/materialdesignicons.min.css" rel="stylesheet" />
 
 	<!-- PLUGINS CSS STYLE -->
-	<link href="/color//plugins/simplebar/simplebar.css" rel="stylesheet" />
+	<link href="/color/plugins/simplebar/simplebar.css" rel="stylesheet" />
 
 	<!-- Data-Tables -->
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+	<link href='/color/plugins/data-tables/datatables.bootstrap5.min.css' rel='stylesheet'>
+	<link href='/color/plugins/data-tables/responsive.datatables.min.css' rel='stylesheet'>
 
 	<!-- Ekka CSS -->
-	<link id="ekka-css" rel="stylesheet" href="/color//css/ekka.css" />
+	<link id="ekka-css" rel="stylesheet" href="/color/css/ekka.css" />
 
 	<!-- FAVICON -->
-	<link href="/color//img/favicon.png" rel="shortcut icon" />
+	<link href="/color/img/favicon.png" rel="shortcut icon" />
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
 </head>
 
 <body class="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
@@ -39,7 +41,7 @@
 	<div class="wrapper">
 
 		<!-- LEFT MAIN SIDEBAR -->
-		<%-include('./partials/adminSidebar.ejs')%>
+        <%-include('./partials/adminSidebar.ejs')%>
 		
 
 		<!-- PAGE WRAPPER -->
@@ -53,10 +55,10 @@
 				<div class="content">
 					<div class="breadcrumb-wrapper d-flex align-items-center justify-content-between">
 						<div>
-						  <h1>monthly Report Report</h1>
+						  <h1>Daily Report</h1>
 						  <p class="breadcrumbs">
 							<span><a href="/index">Home</a></span>
-							<span><i class="mdi mdi-chevron-right"></i></span>Monthly Report
+							<span><i class="mdi mdi-chevron-right"></i></span>Daily Report
 						  </p>
 						</div>
 						<!-- <div>
@@ -71,32 +73,39 @@
 										<div id="invoice">
 											<table id="example" class="table" style="width:100%">
 												<thead>
+                                                      
 													<tr>
-														<th>Date</th>
+														<th>Month</th>
 														<th>Total Order</th>
 														<th>Total Product</th>
 														<th>Total</th>
 														<th>Profit</th>
-														
+											
 													</tr>
+                                                   
 												</thead>
 	
 												<tbody>
-													<tr>   
-														<% for( let i = 0; i<monthlyReport.length; i++ ) { %>
-														<td><%=month[i]%>/<%=monthlyReport[i]._id.year%></td>
-														<td><%=monthlyReport[i].count%></td>
-														<td><%=monthlyReport[i].items%></td>
-														<td>$<%=monthlyReport[i].totalprice%></td>
-														<td>$<%=monthlyReport[i].totalprice*15/100%></td>
-														<!-- <td>PAID</td> -->
+													<%for(i=0;i<yearlyreport.length ;i++){%> 
+													<tr>
+														<td><%=yearlyreport[i]._id.year%></td>
+														<td><%=yearlyreport[i].count%></td>
+														<td><%=yearlyreport[i].items%></td>
+														<td>$<%=yearlyreport[i].totalprice%></td>
+														<td>$<%=yearlyreport[i].totalprice*15/100%></td>
 														
+												
 													</tr>
-													<% } %>
+                                                    <%}%>
+													
+                                                   
+												
+													
 													
 	
 												</tbody>
 											</table>
+
 										</div>
 									</div>
 								</div>
@@ -105,22 +114,14 @@
 					</div>
 				</div> <!-- End Content -->
 			</div> <!-- End Content Wrapper -->
-			<%-include('./partials/adminFooter.ejs')%>
+
 
 			<!-- Footer -->
-			<footer class="footer mt-auto">
-				<div class="copyright bg-white">
-					<p>
-						Copyright &copy; <span id="ec-year"></span><a class="text-primary"
-							href="https://themeforest.net/user/ashishmaraviya" target="_blank"> Ekka Admin
-							Dashboard</a>. All Rights Reserved.
-					</p>
-				</div>
-			</footer>
+			<%-include('./partials/adminFooter.ejs')%>
 
 		</div> <!-- End Page Wrapper -->
 	</div> <!-- End Wrapper -->
-		<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -128,35 +129,27 @@
     <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-	<script>
-	
-		$(document).ready(function() {
-            $('#example').DataTable({
-            dom: 'Bfrtip',
-            buttons: [ 'copy', 'csv', 'excel', 'pdf', 'print']
-            });
-        });
-	</script>
+
+
 
 
 	<!-- Common Javascript -->
-	<!-- <script src="/color//plugins/jquery/jquery-3.5.1.min.js"></script> -->
-	<script src="/color//js/bootstrap.bundle.min.js"></script>
-	<script src="/color//plugins/simplebar/simplebar.min.js"></script>
-	<script src="/color//plugins/jquery-zoom/jquery.zoom.min.js"></script>
-	<script src="/color//plugins/slick/slick.min.js"></script>
+	<!-- <script src="/color/plugins/jquery/jquery-3.5.1.min.js"></script> -->
+	<script src="/color/js/bootstrap.bundle.min.js"></script>
+	<script src="/color/plugins/simplebar/simplebar.min.js"></script>
+	<script src="/color/plugins/jquery-zoom/jquery.zoom.min.js"></script>
+	<script src="/color/plugins/slick/slick.min.js"></script>
 
 	<!-- Data-Tables -->
-	<!-- <script src='/color//plugins/data-tables/jquery.datatables.min.js'></script>
-	<script src='/color//plugins/data-tables/datatables.bootstrap5.min.js'></script>
-	<script src='/color//plugins/data-tables/datatables.responsive.min.js'></script> -->
+	<!-- <script src='/color/plugins/data-tables/jquery.datatables.min.js'></script>
+	<script src='/color/plugins/data-tables/datatables.bootstrap5.min.js'></script>
+	<script src='/color/plugins/data-tables/datatables.responsive.min.js'></script> -->
 
 	<!-- Option Switcher -->
-	<script src="/color//plugins/options-sidebar/optionswitcher.js"></script>
+	<script src="/color/plugins/options-sidebar/optionswitcher.js"></script>
 
 	<!-- Ekka Custom -->
-	<script src="/color//js/ekka.js"></script>
+	<script src="/color/js/ekka.js"></script>
 </body>
 
 

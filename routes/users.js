@@ -36,6 +36,7 @@ const {
   getOrderHistory,
   orderDetails,
   orderCancel,
+  updateProfile
 } = require("../controller/user");
 /* GET users listing. */
 
@@ -71,5 +72,6 @@ router.post("/verifyPayment", axiosSession, verifyPayment);
 router.get("/orderHistory", session, getOrderHistory);
 router.get("/orderdetails", session, orderDetails);
 router.put("/cancelorder", orderCancel);
+router.put("/profile", updateProfile);
 
 module.exports = router;

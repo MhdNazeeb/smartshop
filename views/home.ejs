@@ -3506,11 +3506,15 @@
         }else if(res.data.incriment){
             console.log('incriment sucess ')
             swal("Good job!", "You clicked the button!", "success");
+    
             window.location.replace='/productDetails'
               
         }else if(res.data.push){
             console.log('cart updated')
             swal("Good job!", "You clicked the button!", "success");
+            let count = document.getElementById("count").innerHTML
+            console.log(count)
+               document.getElementById("count").innerHTML= +count + 1;
             window.location.replace='/productDetails'
 
         }else if(res.data.outofstock){
@@ -3534,11 +3538,17 @@
                 swal("oops!", " already exisits!", "error");
             }else if(res.data.push){
                 swal("Good job!", "add sucess!", "success");
+                let wishcount = document.getElementById("wishcount").innerHTML
+            console.log(wishcount)
+               document.getElementById("wishcount").innerHTML= +wishcount + 1;
+            window.location.replace='/productDetails'
+
                
             }else if(res.data.session){
                 location.href='/login'
             }else if(res.data.created){
                 swal("Good job!", "add sucess!", "success");
+           
             }
         })
     }

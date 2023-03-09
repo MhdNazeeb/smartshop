@@ -862,7 +862,7 @@
                                             class="svg_img pro_svg" alt="" /></a>
                                             <button  title="Add To Cart" class=" add-to-cart"><img
                                             src="assets/images/icons/cart.svg" class="svg_img pro_svg" 
-                                            alt="" /> Add To Cart</button>
+                                            onclick="addCart('<%=findProduct[i]._id%>')" alt="" /> Add To Cart</button>
                                     <a class="ec-btn-group wishlist" onclick="wishlist('<%=findProduct[i]._id%>')" title="Wishlist"><img
                                             src="assets/images/icons/wishlist.svg"
                                             class="svg_img pro_svg"  alt="" /></a>
@@ -1593,7 +1593,7 @@
         console.log(proid)
        const quantity =document.getElementById('quantity').value
        console.log(quantity)
-     axios.get(`/cart?proid=${proid}&quantity=${quantity}`)
+     axios.get(`cart?proid=${proid}&quantity=${quantity}`)
      .then((res)=>{
         console.log(res.data,"res data mssge")
         if(res.data.cartCreated){
@@ -1608,6 +1608,9 @@
         }else if(res.data.push){
             console.log('cart updated')
             swal("Good job!", "You clicked the button!", "success");
+            let count = document.getElementById("count").innerHTML
+            console.log(count)
+               document.getElementById("count").innerHTML= +count + 1;
             window.location.replace='/productDetails'
 
         }else if(res.data.outofstock){
@@ -1630,6 +1633,9 @@
                 swal("oops!", " already exisits!", "error");
             }else if(res.data.push){
                 swal("Good job!", "add sucess!", "success");
+                let wishcount = document.getElementById("wishcount").innerHTML
+            console.log(wishcount)
+               document.getElementById("wishcount").innerHTML= +wishcount + 1;
                
             }else if(res.data.session){
                 location.href='/login'

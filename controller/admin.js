@@ -425,7 +425,9 @@ const graph = async (req, res) => {
         },
         total: { $sum: "$subtotal" },
       },
+
     },
+    {$sort:{_id: -1}}
   ]);
   console.log(soldProduct, "this gggggggggggggg");
   let dailysale = [];
@@ -436,6 +438,7 @@ const graph = async (req, res) => {
     dailyprofit.push((soldProduct[i].total * 15) / 100);
     datetime.push(soldProduct[i]._id.date);
   }
+  console.log(dailysale, dailyprofit, datetime,'4eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
   res.json({ dailysale, dailyprofit, datetime });
 };
 const pieChart = async (req, res) => {

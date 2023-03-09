@@ -69,14 +69,14 @@
                     <a href="wishlist.html" class="ec-header-btn ec-header-wishlist">
                         <div class="header-icon"><img src="assets/images/icons/wishlist.svg"
                                 class="svg_img header_svg" alt="" /></div>
-                        <span class="ec-header-count">4</span>
+                        <span class="ec-header-count"></span>
                     </a>
                     <!-- Header Cart End -->
                     <!-- Header Cart Start -->
                     <a href="#ec-side-cart" class="ec-header-btn ec-side-toggle">
                         <div class="header-icon"><img src="assets/images/icons/cart.svg"
                                 class="svg_img header_svg" alt="" /></div>
-                        <span class="ec-header-count cart-count-lable">3</span>
+                        <span class="ec-header-count cart-count-lable"></span>
                     </a>
                     <!-- Header Cart End -->
                     <a href="javascript:void(0)" class="ec-header-btn ec-sidebar-toggle">
@@ -131,8 +131,14 @@
                                     src="assets/images/icons/user.svg" class="svg_img header_svg" alt="" /></button>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <!-- <li><a class="dropdown-item" href="register.html">Register</a></li> -->
+                               <%if(!locals.session.loginuser){%>
                                 <li><a class="dropdown-item" href="/profile">Profile</a></li>
                                 <li><a class="dropdown-item" href="login">Login</a></li>
+                                <% } else{ %>
+                              
+                                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                <li><a class="dropdown-item" href="login">logout</a></li>
+                                <% } %>
                             </ul>
                         </div>
                         <!-- Header User End -->
@@ -140,14 +146,14 @@
                         <a href="/wish" class="ec-header-btn ec-header-wishlist">
                             <div class="header-icon"><img src="assets/images/icons/wishlist.svg"
                                     class="svg_img header_svg" alt="" /></div>
-                            <span class="ec-header-count">4</span>
+                            <span class="ec-header-count" id="wishcount"><%=Wishcount%></span>
                         </a>
                         <!-- Header wishlist End -->
                         <!-- Header Cart Start -->
                         <a href="/cartList" class="ec-header-btn ">
                             <div class="header-icon"><img src="assets/images/icons/cart.svg"
                                     class="svg_img header_svg" alt="" /></div>
-                            <span class="ec-header-count cart-count-lable">3</span>
+                            <span id="count" class="ec-header-count "><%=count%></span>
                         </a>
                         <!-- Header Cart End -->
                     </div>
@@ -692,3 +698,8 @@
 </div>
 <!-- ekka mobile Menu End -->
 </header>
+<script>
+    if(!count==0){
+        console.log('ddddddddddddddddddddddddddd');
+    }
+</script>
