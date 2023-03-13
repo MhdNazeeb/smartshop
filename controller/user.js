@@ -604,10 +604,12 @@ const showddress = async (req, res) => {
 };
 const aaplyCoupon = async (req, res) => {
   const { eccoupan } = req.query;
+  console.log(eccoupan,'<<<<<<<<<<>>>>>>>>>>');
   const { userlogin } = req.session;
   console.log(userlogin, "THIS USER ID");
   console.log(eccoupan, "this coupon code");
   const findCoupon = await coupon.findOne({ code: eccoupan });
+  
   console.log(findCoupon, "this is findCoupon");
   if (findCoupon) {
     const minamount = findCoupon.mincartAmout;
