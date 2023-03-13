@@ -10,6 +10,7 @@ const { ObjectId } = require("mongodb");
 const coupon = require("../models/coupon");
 const order = require("../models/order");
 const banner = require("../models/banner");
+const { find } = require("../models/product");
 
 const login = async (req, res) => {
   if (req.session.login) {
@@ -34,7 +35,6 @@ const login = async (req, res) => {
     ]);
 
     console.log(profit, "this profit");
-
     const totalprice = profit[0].totalprice;
     console.log(totalprice, "this total");
     const revenue = (totalprice * 15) / 100;
@@ -206,8 +206,8 @@ const getEditProduct = async (req, res) => {
   try {
     const { id } = req.query;
 
-    const findProduct = await product.findOne({ _id: id }).populate('category');
-    
+    const findProduct = await product.findOne({ _id: id }).populate("category");
+
     const findCategory = await category.find({});
 
     res.render("editeProduct", { findProduct, findCategory });
@@ -218,11 +218,12 @@ const getEditProduct = async (req, res) => {
 const editeProduct = async (req, res) => {
   const { id } = req.query;
 
-  console.log(req.body,'this category id');
+  console.log(req.body, "this category id");
 
   trimmed_id = id.trim();
-  let { Description, Price, size, Stock, name, color, position,categories } = req.body;
-  
+  let { Description, Price, size, Stock, name, color, position, categories } =
+    req.body;
+
   position = JSON.parse(req.body.position);
   const files = req.files;
   let images = files.map((val) => val.filename);
@@ -235,7 +236,7 @@ const editeProduct = async (req, res) => {
     image[val] = images[i];
     i++;
   });
- 
+
   console.log(image, "this image for every ne want");
   const editePro = await product.updateOne(
     { _id: ObjectId(trimmed_id) },
@@ -425,9 +426,8 @@ const graph = async (req, res) => {
         },
         total: { $sum: "$subtotal" },
       },
-
     },
-    {$sort:{_id: -1}}
+    { $sort: { _id: -1 } },
   ]);
   console.log(soldProduct, "this gggggggggggggg");
   let dailysale = [];
@@ -438,7 +438,12 @@ const graph = async (req, res) => {
     dailyprofit.push((soldProduct[i].total * 15) / 100);
     datetime.push(soldProduct[i]._id.date);
   }
-  console.log(dailysale, dailyprofit, datetime,'4eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+  console.log(
+    dailysale,
+    dailyprofit,
+    datetime,
+    "4eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  );
   res.json({ dailysale, dailyprofit, datetime });
 };
 const pieChart = async (req, res) => {
@@ -512,6 +517,164 @@ const GetEditBanner = async (req, res) => {
   const findMatchedBanner = await banner.findOne({ _id: bannerid });
   res.render("editbanner", { findMatchedBanner });
 };
+const donut = async (req, res) => {
+  const findProduct = await order.aggregate([
+    { $unwind: "$items" },
+    {
+      $lookup: {
+        from: "products",
+        localField: "items.product",
+        foreignField: "_id",
+        as: "productDetails",
+      },
+    },
+    {
+      $group: {
+        _id: "$productDetails.category",
+        total: { $sum: "$productDetails.category" },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "_id",
+        foreignField: "_id",
+        as: "categoryDetails",
+      },
+    },
+    {
+      $group: {
+        _id: {
+          category: "$categoryDetails.name",
+          count: "$count",
+        },
+      },
+    },
+  ]);
+  console.log(findProduct, "this findProduct");
+  let categoryName = [];
+  let categoryCount = [];
+  for (let i = 0; i < findProduct.length; i++) {
+    categoryName.push(findProduct[i]._id.category[0]);
+    categoryCount.push(findProduct[i]._id.count);
+  }
+  res.json({ categoryName, categoryCount });
+};
+const barChart = async (req, res) => {
+  const weeklysale = await order.aggregate([
+    {
+      $group: {
+        _id: {
+          week: { $week: "$createdAt" },
+          month: { $month: "$createdAt" },
+        },
+        totalprice: { $sum: "$subtotal" },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { _id: 1 } },
+  ]);
+
+  let weeklsalesgraph = [];
+  let weeklycount = [];
+  for (i = 0; i < weeklysale.length; i++) {
+    weeklsalesgraph.push(weeklysale[i]._id.week);
+    weeklycount.push(weeklysale[i].count);
+  }
+
+  res.json({ weeklycount, weeklsalesgraph });
+};
+const filterByDate = async (req, res) => {
+  console.log("function callling....for loop");
+  let { todate, fromdate } = req.body;
+  let startDate = new Date(fromdate);
+  let endDate = new Date(todate);
+  const monthlyReport = await order.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: startDate, $lte: endDate },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          year: { $year: "$createdAt" },
+          month: { $month: "$createdAt" },
+        },
+        totalprice: { $sum: "$subtotal" },
+        items: { $sum: { $size: "$items" } },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { createdAt: -1 } },
+  ]);
+  function getMonthName(monthNumber) {
+    const date = new Date();
+
+    date.setMonth(monthNumber - 1);
+    return date.toLocaleDateString("en-US", { month: "long" });
+  }
+  let month = [];
+  for (let i = 0; i < monthlyReport.length; i++) {
+    month.push(getMonthName(monthlyReport[i]._id.month));
+  }
+  res.json({ month, monthlyReport });
+};
+const dailyFilter = async (req, res) => {
+  let { todate, fromdate } = req.body;
+  let startDate = new Date(fromdate);
+  let endDate = new Date(todate);
+  const dailyreport = await order.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: startDate, $lte: endDate },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          year: { $year: "$createdAt" },
+          month: { $month: "$createdAt" },
+          daily: { $dayOfMonth: "$createdAt" },
+        },
+        totalprice: { $sum: "$subtotal" },
+        items: { $sum: { $size: "$items" } },
+        count: { $sum: 1 },
+      },
+    },
+    { $sort: { createdAt: -1 } },
+  ]);
+  console.log(dailyreport, "thisdaily filter");
+  res.json({ dailyreport });
+};
+const yearlyFilter = async (req, res) => {
+  let { todate, fromdate } = req.body;
+  let startDate = new Date(fromdate);
+  let endDate = new Date(todate);
+  const yearlyreport = await order.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: startDate, $lte: endDate },
+      },
+    },
+    {
+      $group: {
+        _id: { year: { $year: "$createdAt" } },
+        totalprice: { $sum: "$subtotal" },
+        items: { $sum: { $size: "$items" } },
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+  console.log(yearlyreport, "this yearly report");
+  res.json(yearlyreport);
+};
+const adminLogout = (req, res) => {
+  req.session.login = false;
+  res.redirect('/admin/')
+};
+
 module.exports = {
   login,
   postLogin,
@@ -543,4 +706,10 @@ module.exports = {
   LisetBanner,
   EditBanner,
   GetEditBanner,
+  donut,
+  barChart,
+  filterByDate,
+  dailyFilter,
+  yearlyFilter,
+  adminLogout
 };

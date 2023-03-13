@@ -32,7 +32,13 @@ const {
   CreateBanner,
   LisetBanner,
   GetEditBanner,
-  EditBanner
+  EditBanner,
+  donut,
+  barChart,
+  filterByDate,
+  dailyFilter,
+  yearlyFilter,
+  adminLogout
 } = require("../controller/admin");
 
 /* GET home page. */
@@ -54,17 +60,23 @@ router.get("/coupon", session, getCoupon);
 router.post("/coupon", session, crateCoupon);
 router.get("/order", session, orderHistory);
 router.get("/orderdetails", session, orderDetails);
-router.put('/status',session,status)
-router.get('/dailyreport',session,dailyReport)
-router.get('/monthlyreport',session,monthlyReport)
-router.get('/yearlyreport',session,yearlyReport)
-router.get('/graph',session,graph)
-router.get('/piechart',session,pieChart)
-router.get('/dashboard',session,dashboard)
-router.get('/banner',session,GetBanner)
-router.get('/listbanner',session,LisetBanner)
-router.put('/banner',session,multter.array("files",1),EditBanner)
-router.get('/banneres',session,GetEditBanner)
-router.post('/banner',session,multter.array("files",1),CreateBanner)
+router.put("/status", session, status);
+router.get("/dailyreport", session, dailyReport);
+router.get("/monthlyreport", session, monthlyReport);
+router.get("/yearlyreport", session, yearlyReport);
+router.get("/graph", session, graph);
+router.get("/piechart", session, pieChart);
+router.get("/dashboard", session, dashboard);
+router.get("/banner", session, GetBanner);
+router.get("/listbanner", session, LisetBanner);
+router.put("/banner", session, multter.array("files", 1), EditBanner);
+router.get("/banneres", session, GetEditBanner);
+router.post("/banner", session, multter.array("files", 1), CreateBanner);
+router.get("/donut", session, donut);
+router.get("/barchart", session, barChart);
+router.post("/filter", filterByDate);
+router.post("/dailyfilter", dailyFilter);
+router.post("/yearfilter", yearlyFilter);
+router.get("/logout", session, adminLogout);
 
 module.exports = router;

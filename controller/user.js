@@ -10,7 +10,7 @@ const { ObjectId } = require("mongodb");
 const { findOne } = require("../models/singnup");
 const wishList = require("../models/wishlist");
 const address = require("../models/address");
-const banner=require('../models/banner')
+const banner = require("../models/banner");
 const accountSid = process.env.account_id;
 const authToken = process.env.authToken;
 const client = require("twilio")(accountSid, authToken);
@@ -27,29 +27,25 @@ const coupon = require("../models/coupon");
 const order = require("../models/order");
 const moment = require("moment");
 const home = async (req, res) => {
-
   const findProduct = await product.find({});
   const findCategory = await category.find({});
-  console.log(findProduct,'this find product');
-  const findBanner=await banner.find({})
-  console.log(findBanner,'this find banner');
-  res.render("home", { findProduct, findCategory,findBanner });
+  console.log(findProduct, "this find product");
+  const findBanner = await banner.find({});
+  console.log(findBanner, "this find banner");
+  res.render("home", { findProduct, findCategory, findBanner });
 };
 const getsignup = (req, res) => {
   res.render("signup");
 };
 const getLogin = (req, res) => {
   try {
-   
     res.render("login", { message: req.flash("message") });
   } catch (error) {
     res.render("user404");
   }
 };
 const getShop = async (req, res) => {
- 
   try {
-   
     let findProduct;
     let findCategory;
     const { id } = req.query;
@@ -67,7 +63,6 @@ const getShop = async (req, res) => {
   }
 };
 const postSignup = async (req, res) => {
-  
   try {
     const { firstname, password, password1, email } = req.body;
     const { newusermobile } = req.session;
@@ -111,7 +106,7 @@ const postLogin = async (req, res) => {
           const id = await signup.findOne({ email: email }, { _id: 1 });
           req.session.userlogin = id._id;
           req.session.loginuser = true;
-         
+
           res.redirect("/");
         } else {
           req.flash("message", "aA");
@@ -144,9 +139,14 @@ const getOtp = (req, res) => {
   }
 };
 const postNumber = async (req, res) => {
+  
   console.log("hhhhhhhhhhhh");
   const { userlogin } = req.session;
+  let{type,number}=req.query
+  console.log(type,'this type');
   try {
+    if(type!=='rest'){
+      console.log('reach if case');
     const { newusermobile } = req.body;
     console.log("here is find user");
     const findUser = await signup.findOne({ phone: newusermobile });
@@ -169,18 +169,45 @@ const postNumber = async (req, res) => {
       req.flash("message", "m");
       res.redirect("/phone");
     }
+  }else{
+    
+    console.log("here is find user");
+    req.session.forgotuser=number
+    const findUser = await signup.findOne({ phone:number });
+    if (findUser) {
+      console.log(findUser, "this is findUser");
+
+      await client.verify.v2
+        .services(serviceid)
+        .verifications.create({
+          to: `+91${number}`,
+          channel: "sms",
+        })
+        .then((verification) => {
+          res.json({otp:true})
+        });
+    } else {
+      console.log("here is all ready exisits");
+      req.flash("message", "m");
+      res.redirect("/phone");
+    }
+
+  }
   } catch (error) {
     console.log(error.message);
-     
+
     res.render("user404");
   }
 };
 const verifyOtp = async (req, res) => {
   console.log("this verifypage");
-  const { newusermobile } = req.session;
-  console.log(newusermobile);
-
+  let { newusermobile,forgotuser } = req.session;
+  console.log(newusermobile,forgotuser);
+  let{otp,type}=req.query
+  console.log(otp,type,'this verifyquery');
+  
   try {
+    if(type!=='user'){
     const { enteredotp } = req.body;
     console.log(enteredotp, "this enter otp");
     await client.verify.v2
@@ -198,6 +225,25 @@ const verifyOtp = async (req, res) => {
           res.redirect("/otp");
         }
       });
+    }else{
+      console.log('forgot password');
+      await client.verify.v2
+        .services(serviceid)
+        .verificationChecks.create({
+          to: `+91${forgotuser}`,
+          code: otp,
+        })
+        .then((verification_check) => {
+          console.log("verifid");
+          if (verification_check.status == "approved") {
+             res.json({verify:true})
+          } else {
+            
+           
+          }
+        });
+
+    }
   } catch (error) {
     console.log(error, "otp");
     res.render("user404");
@@ -454,30 +500,28 @@ const removeFromWish = async (req, res) => {
 };
 const checkout = async (req, res) => {
   const { userlogin } = req.session;
-  req.session.Discount=0;
+  req.session.Discount = 0;
   const cartItems = await cart.findOne({ user: userlogin });
-   if(!cartItems.items[0]==''){
-  console.log("this is check out page");
-  let findAddress = await address.findOne({ user: userlogin });
-  const subamount = await cart
-    .findOne({ user: userlogin })
-    .populate("items.product", "quantity");
+  if (!cartItems.items[0] == "") {
+    console.log("this is check out page");
+    let findAddress = await address.findOne({ user: userlogin });
+    const subamount = await cart
+      .findOne({ user: userlogin })
+      .populate("items.product", "quantity");
 
- 
+    const stock = await product.find({ user: userlogin });
+    console.log(subamount, "this is subamount");
 
-  const stock = await product.find({ user: userlogin });
-  console.log(subamount, "this is subamount");
+    console.log(findAddress, "this find address");
 
-  console.log(findAddress, "this find address");
-
-  res.render("checkout", {
-    findAddress,
-    subamount,
-    clientId: process.env.clientId,
-  });
-}else{
- res.redirect('/')
-}
+    res.render("checkout", {
+      findAddress,
+      subamount,
+      clientId: process.env.clientId,
+    });
+  } else {
+    res.redirect("/");
+  }
 };
 const addAddress = async (req, res) => {
   console.log("this address page");
@@ -767,13 +811,13 @@ const verifyPayment = async function (req, res, next) {
     console.log(err);
   }
 };
-const getProfile =async (req, res) => {
-  const {userlogin}=req.session
-  const findUser=await signup.findOne({_id:userlogin})
-  console.log(findUser,'this find user');
-  const findAddress=await address.findOne({user:userlogin})
-  console.log(findAddress,'this is address');
-  res.render("userprofile",{findAddress,findUser});
+const getProfile = async (req, res) => {
+  const { userlogin } = req.session;
+  const findUser = await signup.findOne({ _id: userlogin });
+  console.log(findUser, "this find user");
+  const findAddress = await address.findOne({ user: userlogin });
+  console.log(findAddress, "this is address");
+  res.render("userprofile", { findAddress, findUser });
 };
 const getOrderHistory = async (req, res) => {
   const { userlogin } = req.session;
@@ -796,55 +840,83 @@ const orderDetails = async (req, res) => {
   res.render("orderdetails", { userorder, OrderedAddress });
 };
 const orderCancel = async (req, res) => {
-  const{status}=req.body
-  if(status=='cancel'){
-  const { orderid } = req.query;
-  const orderUpdate = await order.findByIdAndUpdate(orderid, {
-    orderstatus: "Cancelled",
-  });
-  const products = orderUpdate.items;
-  products.forEach(async (element) => {
-    let update = await product.findByIdAndUpdate(element.product, {
-      $inc: { quantity: element.quantity },
+  const { status } = req.body;
+  if (status == "cancel") {
+    const { orderid } = req.query;
+    const orderUpdate = await order.findByIdAndUpdate(orderid, {
+      orderstatus: "Cancelled",
     });
-    console.log(update, "this is update");
-  });
-  res.json({ cancel: true });
-}else{
-  console.log('reach return order');
-  const { orderid } = req.query;
-  const orderUpdate = await order.findByIdAndUpdate(orderid, {
-    orderstatus: "returned",
-  });
-  const products = orderUpdate.items;
-  products.forEach(async (element) => {
-    let update = await product.findByIdAndUpdate(element.product, {
-      $inc: { quantity: element.quantity },
+    const products = orderUpdate.items;
+    products.forEach(async (element) => {
+      let update = await product.findByIdAndUpdate(element.product, {
+        $inc: { quantity: element.quantity },
+      });
+      console.log(update, "this is update");
     });
-    console.log(update, "this is update");
-  });
-  res.json({ return: true });
-
-}
+    res.json({ cancel: true });
+  } else {
+    console.log("reach return order");
+    const { orderid } = req.query;
+    const orderUpdate = await order.findByIdAndUpdate(orderid, {
+      orderstatus: "returned",
+    });
+    const products = orderUpdate.items;
+    products.forEach(async (element) => {
+      let update = await product.findByIdAndUpdate(element.product, {
+        $inc: { quantity: element.quantity },
+      });
+      console.log(update, "this is update");
+    });
+    res.json({ return: true });
+  }
 };
-const updateProfile=async(req,res)=>{
-  let {name,email,phone}=req.body
-  let {userlogin}=req.session
-  console.log(name,email,phone,'this profile');
-  console.log(req.body,'this profile');
-  const upadte=await signup.updateOne({_id:userlogin},{$set:{
-    name:name,
-    phone:phone,
-    email:email
-  }})
-  console.log(upadte,);
-  res.json({updated:true})
+const updateProfile = async (req, res) => {
+  let { name, email, phone } = req.body;
+  let { userlogin } = req.session;
+  console.log(name, email, phone, "this profile");
+  console.log(req.body, "this profile");
+  const upadte = await signup.updateOne(
+    { _id: userlogin },
+    {
+      $set: {
+        name: name,
+        phone: phone,
+        email: email,
+      },
+    }
+  );
+  console.log(upadte);
+  res.json({ updated: true });
+};
+const search = async (req, res) => {
+  let { searchwise } = req.body;
+  const regex = new RegExp(`^${searchwise}`, "i");
+  const findProduct = await product.find({ name: { $regex: regex } });
+  console.log(findProduct, "this is findproduct");
+  res.json({ findProduct });
+};
+const userLogout = (req, res) => {
+  req.session.loginuser = false;
+  res.redirect('/login')
+};
+const forgotPassword=(req,res)=>{
+  res.render('forgotpassword')
 }
-const forgotPassword=async(req,res)=>{
-
+const updatePassword=async(req,res)=>{
+  let{forgotuser}=req.session
+ 
+let {secondpass,firstpass}=req.query
+if(secondpass&&firstpass){
+const hashedpassword = await bcrypt.hash(firstpass, 10);
+      const hashedconfirmpassword = await bcrypt.hash(secondpass, 10);
+const updatepassword=await signup.updateOne({phone:forgotuser},{$set:{
+  password:hashedpassword,
+  confirm_password:hashedconfirmpassword
+}})
+console.log(updatepassword,'this passwrd update');
+res.json({updated:true})
 }
-
-
+}
 
 module.exports = {
   home,
@@ -879,7 +951,9 @@ module.exports = {
   getOrderHistory,
   orderDetails,
   orderCancel,
-  updateProfile
-
-  
+  updateProfile,
+  search,
+  userLogout,
+  forgotPassword,
+  updatePassword
 };

@@ -186,7 +186,7 @@
                     <!-- Shop content Start -->
                     <div class="shop-pro-content">
                         <div class="shop-pro-inner">
-                            <div class="row">
+                            <div class="row" id="shopproducts">
                                 <% for(let i=0; i<findProduct.length ; i++){%>
                                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content">
                                     <div class="ec-product-inner">
@@ -704,6 +704,107 @@
     <script src="assets/js/main.js"></script>
 
 </body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const search=()=>{
+    event.preventDefault()
+    console.log('here is data');
+    const form=document.getElementById('searchform')
+        const formData = new FormData(form)
+        let data = Object.fromEntries(formData)
+		axios.post('/search',data)
+        .then((res)=>{
+         let products=res.data.findProduct
+         console.log(products,'this products');
+         let div=``
+            
+                for (let i = 0; i < products.length; i++) {
+
+                    
+
+                   div += `<div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content">
+                                    <div class="ec-product-inner">
+                                        <div class="ec-pro-image-outer">
+                                            <div class="ec-pro-image">
+                                                <a href="product-left-sidebar.html" class="image">
+                                                    <img class="main-image"
+                                                        src="/images/uploads/${products[i].image[0]}" alt="Product" />
+                                                    <img class="hover-image"
+                                                        src="/images/uploads/${products[i].image[2]}" alt="Product" />
+                                                </a>
+                                                
+                                                <!-- <a href="#" class="quickview" data-link-action="quickview"
+                                                    title="Quick view" data-bs-toggle="modal"
+                                                    data-bs-target="#ec_quickview_modal"><img
+                                                        src="/images/uploads/${products[i].image[0]}" class="svg_img pro_svg"
+                                                        alt="" /></a>
+                                                <div class="ec-pro-actions">
+                                                    <a href="compare.html" class="ec-btn-group compare"
+                                                        title="Compare"><img src="assets/images/icons/compare.svg"
+                                                            class="svg_img pro_svg" alt="" /></a>
+                                                    <button title="Add To Cart" class=" add-to-cart"><img
+                                                            src="assets/images/icons/cart.svg" class="svg_img pro_svg"
+                                                            alt="" /> Add To Cart</button>
+                                                    <a class="ec-btn-group wishlist" title="Wishlist"><img
+                                                            src="assets/images/icons/wishlist.svg"
+                                                            class="svg_img pro_svg" alt="" /></a>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="ec-pro-content">
+                                            <h5 class="ec-pro-title"><a href="/productDetails?id=${products[i]._id}">${products[i].name}</a></h5>
+                                            <div class="ec-pro-rating">
+                                                <i class="ecicon eci-star fill"></i>
+                                                <i class="ecicon eci-star fill"></i>
+                                                <i class="ecicon eci-star fill"></i>
+                                                <i class="ecicon eci-star fill"></i>
+                                                <i class="ecicon eci-star"></i>
+                                            </div>
+                                            <div class="ec-pro-list-desc">${products[i].description}</div>
+                                            <span class="ec-price">
+                                                
+                                                <span class="new-price">$${products[i].price}</span>
+                                            </span>
+                                            <div class="ec-pro-option">
+                                                <div class="ec-pro-color">
+                                                    <span class="ec-pro-opt-label">Color</span>
+                                                    <ul class="ec-opt-swatch ec-change-img">
+                                                        <li class="active"><a href="#" class="ec-opt-clr-img"
+                                                                data-src="assets/images/product-image/6_1.jpg"
+                                                                data-src-hover="assets/images/product-image/6_1.jpg"
+                                                                data-tooltip="Gray"><span
+                                                                    style="background-color:#e8c2ff;"></span></a></li>
+                                                        <li><a href="#" class="ec-opt-clr-img"
+                                                                data-src="assets/images/product-image/6_2.jpg"
+                                                                data-src-hover="assets/images/product-image/6_2.jpg"
+                                                                data-tooltip="Orange"><span
+                                                                    style="background-color:#9cfdd5;"></span></a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="ec-pro-size">
+                                                    <span class="ec-pro-opt-label">Size</span>
+                                                    <ul class="ec-opt-size">
+                                                        <li class="active"><a href="#" class="ec-opt-sz"
+                                                                data-old="$25.00" data-new="$20.00"
+                                                                data-tooltip="Small">S</a></li>
+                                                        <li><a href="#" class="ec-opt-sz" data-old="$27.00"
+                                                                data-new="$22.00" data-tooltip="Medium">${products[i].size}</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`
+                    
+                }
+                document.getElementById('shopproducts').innerHTML=div
+                
+            
+        })
+    
+   }
+ 
+ </script>
 
 <!-- Mirrored from loopinfosol.in/themeforest/ekka-html-v33/ekka-html/shop-left-sidebar-col-4.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jan 2023 23:18:37 GMT -->
 </html>

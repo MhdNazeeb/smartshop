@@ -63,6 +63,20 @@
 						  <button onclick="generatePdf()" class="btn btn-primary"> Download </button>
 						</div> -->
 					  </div>
+					  <form id="dateform">
+						<div style="width: 987px;height: 100px;background-color: rgb(255, 255, 255);display: flex; color: black;">
+						  FROM<div style="width: 200px;height: 100px;background-color: rgb(255, 255, 255);"><input type="date"  name="fromdate" style="margin-top: 60px;">
+  
+						  </div>
+						  TO<div style="width: 160px;height: 100px;background-color: rgb(255, 255, 255);flex-direction: row;"><input type="date" name="todate" style="margin-top: 60px;">
+  
+						  </div>
+						  <div style="width: 200px;height: 100px;background-color: rgb(255, 255, 255);">
+							  <button type="button" style="margin-top: 54px; "class=" btn btn-primary" onclick="filter()">Download</button>
+  
+						  </div>
+						</div>
+					  </form>
 					<div class="row">
 						<div class="col-12">
 							<div class="card card-default">
@@ -81,7 +95,7 @@
 													</tr>
 												</thead>
 	
-												<tbody>
+												<tbody  id="dilyreport">
 													<tr>   
 														<%for(i=0;i<dailyreport.length ;i++){%>
 														<td><%=dailyreport[i]._id.daily%>/<%= dailyreport[i]._id.month%>/<%= dailyreport[i]._id.year%></td>
@@ -131,12 +145,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 	<script>
 	
-		$(document).ready(function() {
-            $('#example').DataTable({
-            dom: 'Bfrtip',
-            buttons: [ 'copy', 'csv', 'excel', 'pdf', 'print']
-            });
-        });
+	let table = $('#example').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
+    });
 	</script>
 
 
@@ -162,3 +176,38 @@
 
 
 </html>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+	
+	const filter=async()=>{
+		const form=document.getElementById('dateform')
+        const formData = new FormData(form)
+        let data = Object.fromEntries(formData)
+		console.log('clalling arrayyyy')
+		axios.post('/admin/dailyfilter',data)
+		.then((res)=>{
+			table.destroy()
+          let{dailyreport}=res.data
+		  div=``
+		  for(i=0;i<dailyreport.length;i++){
+			div+=`<tr>   
+														<td>${dailyreport[i]._id.daily+'/'+ dailyreport[i]._id.month+'/'+ dailyreport[i]._id.year}</td>
+														<td>${dailyreport[i].count}</td>
+														<td>${dailyreport[i].items}</td>
+														<td>$${dailyreport[i].totalprice}</td>
+														<td>$${dailyreport[i].totalprice*15/100}</td>
+														
+														
+													</tr>`
+		  }
+		  document.getElementById('dilyreport').innerHTML=div
+		  table = $('#example').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
+    })
+
+		})
+	}
+</script>

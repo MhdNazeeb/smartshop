@@ -164,7 +164,89 @@
 									</div>
 								</div>
 							</div>
+							
 						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-xl-8 col-md-12 p-b-15">
+							<!-- Sales Graph -->
+							<div id="user-acquisition" class="card card-default">
+								<div class="card-header">
+									<h2>Sales Report</h2>
+								</div>
+								<div class="card-body">
+									<!-- <ul class="nav nav-tabs nav-style-border justify-content-between justify-content-lg-start border-bottom"
+										role="tablist">
+										<li class="nav-item">
+											<a class="nav-link active" data-bs-toggle="tab" href="#todays" role="tab"
+												aria-selected="true">Today's</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" data-bs-toggle="tab" href="#monthly" role="tab"
+												aria-selected="false">Monthly </a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" data-bs-toggle="tab" href="#yearly" role="tab"
+												aria-selected="false">Yearly</a>
+										</li>
+									</ul> -->
+									<!-- <div class="tab-content pt-4" id="chart">
+										<div class="tab-pane fade show active" id="source-medium" role="tabpanel">
+											<div class="mb-6" style="max-height:247px">
+												<canvas id="acquisition" class="chartjs2"></canvas>
+												<div id="acqLegend" class="customLegend mb-2"></div>
+											</div>
+										</div>
+									</div> -->
+									<div id="barchart" class="customLegend mb-2"></div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xl-4 col-md-12 p-b-15">
+							<!-- Doughnut Chart -->
+							<div class="card card-default">
+								<div class="card-header justify-content-center">
+									<h2>Orders Overview</h2>
+								</div>
+								<div id="chartdountcategory" class="card-body">
+									<canvas ></canvas>
+								</div>
+								<a href="#" class="pb-5 d-block text-center text-muted"><i
+										class="mdi mdi-download mr-2"></i> </a>
+								<div class="card-footer d-flex flex-wrap bg-white p-0">
+									<div class="col-6">
+										<div class="p-20">
+											<ul class="d-flex flex-column justify-content-between">
+												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
+														style="color: #4c84ff"></i></li>
+												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
+														style="color: #80e1c1 "></i></li>
+												<!-- <li><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
+														style="color: #ff7b7b "></i> returned</li>
+												<li><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
+														style="color: #ff7b7b "></i> Cancelled</li> -->
+											</ul>
+										</div>
+									</div>
+									<div class="col-6 border-left">
+										<div class="p-20">
+											<ul class="d-flex flex-column justify-content-between">
+												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
+														style="color: #8061ef"></i></li>
+												<li class="mb-2"><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
+														style="color: #ffa128"></i> </li>
+												<!-- <li><i class="mdi mdi-checkbox-blank-circle-outline mr-2"
+														style="color: #7be6ff"></i>Order Broken</li> -->
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+						
 					</div>
 
 					<!-- <div class="row">
@@ -810,15 +892,16 @@
 
 <script>
 	axios.get('/admin/graph').then((res)=>{
+		console.log(res.data.dailysale,res.data.dailyprofit,res.data.datetime,'this chaaar');
 		
 		if(res.data){
 			var options = {
           series: [{
-          name: 'Sales',
-		  data:res.data.dailysale
+          name: 'series1',
+          data: res.data.dailysale
         }, {
-          name: 'Profit',
-		  data: res.data.dailyprofit,
+          name: 'series2',
+          data: res.data.dailyprofit
         }],
           chart: {
           height: 350,
@@ -831,8 +914,8 @@
           curve: 'smooth'
         },
         xaxis: {
-          type: '',
-          categories: res.data.datetime,
+          type: 'datetime',
+          categories: res.data.datetime
         },
         tooltip: {
           x: {
@@ -845,5 +928,63 @@
         chart.render();
 
 		}
+		
 	})
+
+	axios.get('/admin/donut').then((res)=>{
+		if(res.data){
+		var options = {
+          series: res.data.categoryCount,
+          chart: {
+          width: 380,
+          type: 'pie',
+        },
+        labels:res.data.categoryName,
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chartdountcategory"), options);
+        chart.render();
+	}
+	})
+	axios.get('/admin/barchart').then((res)=>{
+		let {weeklsalesgraph,weeklycount}=res.data
+		var options = {
+          series: [{
+          data: weeklycount
+        }],
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            horizontal: true,
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          categories: weeklsalesgraph,
+        }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#barchart"), options);
+        chart.render();
+
+	})
+	
+	
 </script>

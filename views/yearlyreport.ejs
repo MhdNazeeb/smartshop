@@ -63,6 +63,20 @@
 						  <button onclick="generatePdf()" class="btn btn-primary"> Download </button>
 						</div> -->
 					  </div>
+					  <form id="dateform">
+						<div style="width: 987px;height: 100px;background-color: rgb(255, 255, 255);display: flex; color: black;">
+						  FROM<div style="width: 200px;height: 100px;background-color: rgb(255, 255, 255);"><input type="date"  name="fromdate" style="margin-top: 60px;">
+  
+						  </div>
+						  TO<div style="width: 160px;height: 100px;background-color: rgb(255, 255, 255);flex-direction: row;"><input type="date" name="todate" style="margin-top: 60px;">
+  
+						  </div>
+						  <div style="width: 200px;height: 100px;background-color: rgb(255, 255, 255);">
+							  <button type="button" style="margin-top: 54px; "class=" btn btn-primary" onclick="filter()">Download</button>
+  
+						  </div>
+						</div>
+					  </form>
 					<div class="row">
 						<div class="col-12">
 							<div class="card card-default">
@@ -81,7 +95,7 @@
 													</tr>
 												</thead>
 	
-												<tbody>
+												<tbody id="dailyreport">
 													<tr>   
 														<%for(i=0;i<yearlyreport.length ;i++){%> 
 														<td><%=yearlyreport[i]._id.year%></td>
@@ -131,12 +145,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 	<script>
 	
-		$(document).ready(function() {
-            $('#example').DataTable({
-            dom: 'Bfrtip',
-            buttons: [ 'copy', 'csv', 'excel', 'pdf', 'print']
-            });
-        });
+	let table = $('#example').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
+    });
 	</script>
 
 
@@ -154,6 +168,7 @@
 
 	<!-- Option Switcher -->
 	<script src="/color//plugins/options-sidebar/optionswitcher.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 	<!-- Ekka Custom -->
 	<script src="/color//js/ekka.js"></script>
@@ -162,3 +177,38 @@
 
 
 </html>
+<script>
+	const filter=async()=>{
+		const form=document.getElementById('dateform')
+        const formData = new FormData(form)
+        let data = Object.fromEntries(formData)
+		console.log('clalling arrayyyy')
+		axios.post('/admin/yearfilter',data)
+		.then((res)=>{
+			table.destroy()
+			console.log(res.data);
+          const yearlyreport=res.data
+		  console.log(yearlyreport,'<<<<<<<<<<<<<<<<>>>>>>>>>>');
+		  div=``
+		  for(i=0;i<yearlyreport.length; i++){
+			div+=`<tr>   
+														<td>${yearlyreport[i]._id.year}</td>
+														<td>${yearlyreport[i].count}</td>
+														<td>${yearlyreport[i].items}</td>
+														<td>$${yearlyreport[i].totalprice}</td>
+														<td>$${yearlyreport[i].totalprice*15/100}</td>
+														
+														
+													</tr>`
+		  }
+		  document.getElementById('dailyreport').innerHTML=div
+		  table = $('#example').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
+    })
+
+		})
+	}
+</script>

@@ -225,52 +225,6 @@
                                                   
                                                 </div>
                                             </div>
-
-                                            <div class="col-md-6 col-sm-12">
-                                                <div class="ec-vendor-detail-block ec-vendor-block-address mar-b-30">
-                                                    <h6 >  <a  data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                                        Address
-                                                      </a></h6>
-                                                    <p>
-                                                      
-                                                       
-                                                      </p>
-                                                      <%for(i=0;i<findAddress.address.length ;i++){%>
-                                                      <div class="collapse" id="collapseExample">
-                                                        <div class="card card-body">
-                                                            <div style="border:black 1px solid;background-color: rgb(244, 244, 239);" class="card card-body mt-2" id="<%=findAddress.address[i]._id%>" >
-                                                            <i  type="button"  data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="showAddress('<%=findAddress.address[i]._id%>')" class="fa-solid fa-pen-to-square" style="color: blue;width: 30px;height: 30px;"></i>
-                                                          <i class="fa-solid fa-trash" onclick="deleteAddress('<%=findAddress.address[i]._id%>')" style="color:red" type="button" class="close" data-dismiss="modal" aria-label="Close"></i>
-                                                       <div class="col-lg-12 border-pt-4" style="border:rgb(6, 5, 5) 1px solid;background-color: rgb(245, 244, 241);" >
-                                                          
-                                                        <span>
-                                                        <input type="radio" style="width:15px" name="address" value="<%=findAddress.address[i]._id%>" checked>
-                                                        </span>
-                                                       
-                                                          <b><h5 style="color: black;"><%=findAddress.address[i].Name%>
-                                                              
-                                                          </h5></b>
-                                                          <li><%=findAddress.address[i].address1%>
-                                                             
-                                                          </li>
-                                                          <li><%=findAddress.address[i].address2%>
-                                                            
-                                                          </li>
-                                                          <li><%=findAddress.address[i].email%>
-                                                           
-                                                          </li>
-                                                          <li><%=findAddress.address[i].phone%>
-                                                              
-                                                          </li>
-                                                        
-                                                      </div>
-                                                      </div>
-                                                        </div>
-                                                        <%}%>
-                                                      </div>
-                                                 
-                                                </div>
-                                            </div>
                                             <div class="col-md-6 col-sm-12">
                                                 <div class="ec-vendor-detail-block ec-vendor-block-address">
                                                    <input type="text" value="<%=findUser.phone%>"  style="background-color: #f7f7f7;border: none;color: #696d62;" name="phone" >
@@ -278,10 +232,75 @@
                                                 </div>
                                             </div>
                                            
-                                           
+                                            
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="ec-vendor-detail-block ec-vendor-block-address mar-b-30">
+                                                    <%if(findAddress){%>
+                                                    <h6 >  <a  data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                        Address
+                                                      </a></h6>
+                                                      
+                                                    <p>
+                                                      
+                                                       
+                                                      </p>
+                                                      
+                                                      <%for(i=0;i<findAddress.address.length ;i++){%>
+                                                      <div class="collapse" id="collapseExample">
+                                                        <div class="card card-body">
+                                                            <div style="border:black 1px solid;background-color: rgb(255, 255, 255);" class="card card-body mt-2" id="<%=findAddress.address[i]._id%>" >
+                                                                <div class="d-flex justify-content-between" style="background-color: rgb(16, 13, 31);">
+                                                                <div class="p-2">
+                                                                    <h5 class="text-white">Address</h5>
+                                                                </div>
+                                                                <div class="d-flex justify-content-end p-2" >
+                                                                    <i  type="button"  data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="showAddress('<%=findAddress.address[i]._id%>')" class="fa-solid fa-pen-to-square" style="color: blue;width: 30px;height: 30px;"></i>
+                                                                    <i class="fa-solid fa-trash" onclick="deleteAddress('<%=findAddress.address[i]._id%>')" style="color:red" type="button" class="close" data-dismiss="modal" aria-label="Close"></i>
+                                                                 </div>
+                                                             </div>
+                                                          
+                                                        <span>
+                                                        <input type="radio" style="width:15px" name="address" value="<%=findAddress.address[i]._id%>" checked>
+                                                        </span >
+                                                       
+                                                          <b><h5 style="color: black;padding-right: 10px;"><%=findAddress.address[i].Name%>
+                                                              
+                                                          </h5></b>
+                                                          <li style="margin-left: 15px;color: black;"><%=findAddress.address[i].address1%>
+                                                             
+                                                          </li>
+                                                          <li style="margin-left: 15px;color: black;"><%=findAddress.address[i].address2%>
+                                                            
+                                                          </li>
+                                                          <li style="margin-left: 15px;color: black;"><%=findAddress.address[i].email%>
+                                                           
+                                                          </li>
+                                                          <li style="margin-left: 15px;color: black;"><%=findAddress.address[i].phone%>
+                                                              
+                                                          </li>
+                                                        
+                                                      </div>
+                                                      </div>
+                                                        </div>
+                                                        <%}%>
+                                                        <%}%>
+                                                      </div>
+                                                 
+                                                </div>
+                                               
+                                            </div>
+                                            
+                                          
+
+                                
                                         </div>
+                                        
+                                        
+                                        
                                     </div>
-                                    <button type="button"  onclick="editeProfile()" class="btn btn-primary">updateProfile</button>
+                                    
+                                    
+                                    <button type="button" style="width:200px;padding-bottom: 30px;" onclick="editeProfile()" class="btn btn-primary">updateProfile</button>
                                 </form>
                                 </div>
                             </div>

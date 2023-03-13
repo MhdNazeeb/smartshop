@@ -84,7 +84,10 @@ $(document).ready(function () {
       },
     });
   }
+  
 });
+
+
 
   /*======== 1. DUAL LINE CHART2 ========*/
   var dual3 = document.getElementById("dual-line3");

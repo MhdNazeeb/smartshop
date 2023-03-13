@@ -20,7 +20,7 @@
             <!-- Header Top Message Start -->
             <div class="col text-center header-top-center">
                 <div class="header-top-message text-upper">
-                    <span>Free Shipping</span>This Week Order Over - $75
+                    <!-- <span>Free Shipping</span>This Week Order Over - $75 -->
                 </div>
             </div>
             <!-- Header Top Message End -->
@@ -112,9 +112,9 @@
                 <!-- Ec Header Search Start -->
                 <div class="align-self-center">
                     <div class="header-search">
-                        <form class="ec-btn-group-form" action="#">
-                            <input class="form-control ec-search-bar" placeholder="Search products..." type="text">
-                            <button class="submit" type="submit"><img src="assets/images/icons/search.svg"
+                        <form class="ec-btn-group-form" action="#" id="searchform">
+                            <input class="form-control ec-search-bar" onkeyup="search()" placeholder="Search products..." type="text" name="searchwise">
+                            <button class="submit" type="submit" ><img src="assets/images/icons/search.svg"
                                     class="svg_img header_svg" alt="" /></button>
                         </form>
                     </div>
@@ -137,7 +137,7 @@
                                 <% } else{ %>
                               
                                 <li><a class="dropdown-item" href="/profile">Profile</a></li>
-                                <li><a class="dropdown-item" href="login">logout</a></li>
+                                <li><a class="dropdown-item" href="/logout">logout</a></li>
                                 <% } %>
                             </ul>
                         </div>
@@ -146,14 +146,22 @@
                         <a href="/wish" class="ec-header-btn ec-header-wishlist">
                             <div class="header-icon"><img src="assets/images/icons/wishlist.svg"
                                     class="svg_img header_svg" alt="" /></div>
+                            <%if(Wishcount){%>
                             <span class="ec-header-count" id="wishcount"><%=Wishcount%></span>
+                             <%}else{%>
+                                <span class="ec-header-count" id="wishcount">0</span>
+                                <%}%>
                         </a>
                         <!-- Header wishlist End -->
                         <!-- Header Cart Start -->
                         <a href="/cartList" class="ec-header-btn ">
                             <div class="header-icon"><img src="assets/images/icons/cart.svg"
                                     class="svg_img header_svg" alt="" /></div>
+                            <%if(count){%>
                             <span id="count" class="ec-header-count "><%=count%></span>
+                            <%}else{%>
+                                <span id="count" class="ec-header-count ">0</span>
+                                <%}%>
                         </a>
                         <!-- Header Cart End -->
                     </div>
@@ -180,10 +188,11 @@
             <!-- Ec Header Search Start -->
             <div class="col">
                 <div class="header-search">
-                    <form class="ec-btn-group-form" action="#">
-                        <input class="form-control ec-search-bar" placeholder="Search products..." type="text">
+                    <form class="ec-btn-group-form" >
+                        <input class="form-control ec-search-bar" placeholder="Search products..." type="text" >
                         <button class="submit" type="submit"><img src="assets/images/icons/search.svg"
-                                class="svg_img header_svg" alt="icon" /></button>
+                            class="svg_img header_svg" alt="icon" />
+                        </button>
                     </form>
                 </div>
             </div>
@@ -698,8 +707,7 @@
 </div>
 <!-- ekka mobile Menu End -->
 </header>
-<script>
-    if(!count==0){
-        console.log('ddddddddddddddddddddddddddd');
-    }
-</script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+   
+   

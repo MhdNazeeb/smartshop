@@ -36,7 +36,11 @@ const {
   getOrderHistory,
   orderDetails,
   orderCancel,
-  updateProfile
+  updateProfile,
+  search,
+  userLogout,
+  forgotPassword,
+  updatePassword,
 } = require("../controller/user");
 /* GET users listing. */
 
@@ -71,7 +75,11 @@ router.get("/profile", session, getProfile);
 router.post("/verifyPayment", axiosSession, verifyPayment);
 router.get("/orderHistory", session, getOrderHistory);
 router.get("/orderdetails", session, orderDetails);
-router.put("/cancelorder", orderCancel);
-router.put("/profile", updateProfile);
+router.put("/cancelorder", session, orderCancel);
+router.put("/profile", session, updateProfile);
+router.post("/search", search);
+router.get("/logout", session, userLogout);
+router.get("/forgot", forgotPassword);
+router.put("/forgotpassword", updatePassword);
 
 module.exports = router;
