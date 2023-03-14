@@ -672,7 +672,7 @@ const yearlyFilter = async (req, res) => {
 };
 const adminLogout = (req, res) => {
   req.session.login = false;
-  res.redirect('/admin/')
+  res.redirect("/admin/");
 };
 
 module.exports = {
@@ -711,5 +711,5 @@ module.exports = {
   filterByDate,
   dailyFilter,
   yearlyFilter,
-  adminLogout
+  adminLogout,
 };
