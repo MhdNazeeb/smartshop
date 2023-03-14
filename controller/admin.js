@@ -186,7 +186,7 @@ const deleteUser = async (req, res) => {
 const getProductList = async (req, res) => {
   try {
     const findProduct = await product.find({});
-    res.render("adminProductList", { findProduct });
+    res.render("adminproductList", { findProduct });
   } catch (error) {
     res.render("404");
   }
